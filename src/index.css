@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #c67c4e;
+  --color-subprimary: #edd6c8;
+  --color-darkpallete: #313131;
+  --color-graypallete: #e3e3e3;
+  --color-slowprimary: #f9f2ed;
+  --color-highgray: #a2a2a2;
+  --color-slowgray: #ededed;
+  --color-backgroundcolor: #f9f9f9;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("../font/IRANYekanXFaNum-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: light;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("../font/IRANYekanXFaNum-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("../font/IRANYekanXFaNum-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: bold;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("../font/IRANYekanXFaNum-Black.ttf") format("truetype");
+  font-weight: 800;
+  font-style: ExtraBold;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("../font/IRANYekanXFaNum-ExtraBlack.ttf") format("truetype");
+  font-weight: 900;
+  font-style: Black;
+}
+
+* {
+  font-family: "IranYekan";
+  direction: rtl;
+}
