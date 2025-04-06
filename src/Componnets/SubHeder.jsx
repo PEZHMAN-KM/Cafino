@@ -297,34 +297,38 @@ function SubHeder({ hideIcons, className }) {
         <div className="flex justify-baseline items-center gap-5 px-5 py-2 w-full overflow-x-auto">
           <div
             className={`bg-darkpallete p-2 hidden shrink-0 font-bold rounded-2xl ${
-              hideIcons === false ? "hidden" : "md:block"
+              !hideIcons ? "hidden" : "md:block"
             }`}>
             {hideIcons && <TopMenu />}
           </div>
           <div
             className={`bg-graypallete p-3 shrink-0 font-bold rounded-2xl ${
-              hideIcons === false ? "hidden" : "block"
+              !hideIcons ? "hidden" : "block"
             }`}>
             {hideIcons && <SearchIcon />}
           </div>
           <div
             className={`bg-primary shrink-0 font-bold rounded-2xl text-white ${
-              hideIcons === false
+              !hideIcons
                 ? "p-2 md:w-40 w-34 flex justify-center items-center flex-col gap-3 text-xl md:text-2xl"
-                : "p-3 text-2xl"
+                : "p-3 text-2xl text-center"
             }`}>
-            {!hideIcons && <Coffee className={"w-15 h-15 md:w-20 md:h-20"} />}
+            <Coffee
+              className={`w-15 h-15 md:w-20 md:h-20 transition-all ${
+                !hideIcons ? "scale-100" : "scale-0 !max-h-0"
+              }`}
+            />
             <h1>کافه</h1>
           </div>
           <div
             className={`bg-slowprimary shrink-0 font-bold rounded-2xl text-primary flex justify-center items-center gap-3 ${
-              hideIcons === false
+              !hideIcons
                 ? "p-2 md:w-40 w-34 flex-col text-xl md:text-2xl"
-                : "p-2 text-2xl"
+                : "p-2 text-2xl text-center"
             }`}>
             <Off
-              className={`${
-                hideIcons === false
+              className={`transition-all ${
+                !hideIcons
                   ? "w-15 h-15 md:w-20 md:h-20 "
                   : "w-9 h-9 md:w-10 md:h-10"
               }`}
@@ -333,42 +337,54 @@ function SubHeder({ hideIcons, className }) {
           </div>
           <div
             className={`bg-graypallete shrink-0 font-bold rounded-2xl text-black ${
-              hideIcons === false
+              !hideIcons
                 ? "p-2 md:w-40 w-34 flex justify-center items-center flex-col gap-3 text-xl md:text-2xl"
-                : "p-3 text-2xl"
+                : "p-3 text-2xl text-center"
             }`}>
-            {!hideIcons && <Cake className={"w-15 h-15 md:w-20 md:h-20"} />}
+            <Cake
+              className={`w-15 h-15 md:w-20 md:h-20 transition-all ${
+                !hideIcons ? "scale-100" : "scale-0 !max-h-0"
+              }`}
+            />
             <h1>کیک و دسر</h1>
           </div>
           <div
             className={`bg-graypallete shrink-0 font-bold rounded-2xl text-black ${
-              hideIcons === false
+              !hideIcons
                 ? "p-2 md:w-40 w-34 flex justify-center items-center flex-col gap-3 text-xl md:text-2xl"
-                : "p-3 text-2xl"
+                : "p-3 text-2xl text-center"
             }`}>
-            {!hideIcons && (
-              <WarmDrink className={"w-15 h-15 md:w-20 md:h-20"} />
-            )}
+            <WarmDrink
+              className={`w-15 h-15 md:w-20 md:h-20 transition-all ${
+                !hideIcons ? "scale-100" : "scale-0 !max-h-0"
+              }`}
+            />
             <h1>نوشیدنی گرم</h1>
           </div>
           <div
             className={`bg-graypallete shrink-0 font-bold rounded-2xl text-black ${
-              hideIcons === false
+              !hideIcons
                 ? "p-2 md:w-40 w-34 flex justify-center items-center flex-col gap-3 text-xl md:text-2xl"
-                : "p-3 text-2xl"
+                : "p-3 text-2xl text-center"
             }`}>
-            {!hideIcons && (
-              <ColdDrink className={"w-15 h-15 md:w-20 md:h-20"} />
-            )}
+            <ColdDrink
+              className={`w-15 h-15 md:w-20 md:h-20 transition-all ${
+                !hideIcons ? "scale-100" : "scale-0 !max-h-0"
+              }`}
+            />
             <h1>نوشیدنی سرد</h1>
           </div>
           <div
             className={`bg-graypallete shrink-0 font-bold rounded-2xl text-black ${
-              hideIcons === false
+              !hideIcons
                 ? "p-2 md:w-40 w-34 flex justify-center items-center flex-col gap-3 text-xl md:text-2xl"
-                : "p-3 text-2xl"
+                : "p-3 text-2xl text-center"
             }`}>
-            {!hideIcons && <Food className={"w-15 h-15 md:w-20 md:h-20"} />}
+            <Food
+              className={`w-15 h-15 md:w-20 md:h-20 transition-all ${
+                !hideIcons ? "scale-100" : "scale-0 !max-h-0"
+              }`}
+            />
             <h1>غذا</h1>
           </div>
         </div>

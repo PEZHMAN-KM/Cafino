@@ -61,7 +61,7 @@ const OrderItem = ({ title, description }) => (
 );
 
 const OrderBox = () => (
-  <div className="pt-8 mb-4 border-b-4 border-slowprimary">
+  <div className="pt-2 mb-4 border-b-4 border-slowprimary">
     <h2 className="font-extrabold text-3xl px-8">آیتم های خرید</h2>
     <div className="divide-y lg:divide-x divide-highgray grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:border-b-1 lg:border-highgray">
       {[
