@@ -147,7 +147,7 @@ function Order() {
           </div>
         </div>
       </div>
-      <Footer page={3} />
+      <Footer page={3} CostMoney={200} />
     </>
   );
 }

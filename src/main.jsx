@@ -9,6 +9,7 @@ import Item from "./Pages/Item.jsx";
 import Order from "./Pages/Order.jsx";
 import ContactUs from "./Pages/ContactUs.jsx";
 import FavoritePage from "./Pages/FavoritePage.jsx";
+import AdminHome from "./AdminPages/AdminHome.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/Order" element={<Order />}></Route>
         <Route path="/ContactUs" element={<ContactUs />}></Route>
         <Route path="/FavoritePage" element={<FavoritePage />}></Route>
+        <Route path="/AdminHome" element={<AdminHome />}></Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>

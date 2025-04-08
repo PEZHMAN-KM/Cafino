@@ -9,6 +9,10 @@
   --color-highgray: #a2a2a2;
   --color-slowgray: #ededed;
   --color-backgroundcolor: #f9f9f9;
+
+  --color-adminBackgroundColor: #f1f5f7;
+  --color-adminPrimary: #809FB8;
+  --color-adminAction: #217EFD;
 }
 
 @font-face {

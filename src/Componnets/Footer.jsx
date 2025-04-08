@@ -109,7 +109,7 @@ const Home = ({ className }) => (
   </svg>
 );
 
-function Footer({ page }) {
+function Footer({ page, CostMoney = null }) {
   return (
     <>
       <div className="bg-white p-6 rounded-t-3xl fixed w-screen bottom-0 md:hidden">
@@ -118,9 +118,17 @@ function Footer({ page }) {
             <div className="flex justify-between w-full items-center pb-3">
               <div className="flex items-center gap-2">
                 <Wallet />
-                <h1 className="text-2xl font-bold">مبلغ کل سفارشات</h1>
+                <h1 className="text-2xl font-bold">مبلغ کل سفارشات:</h1>
               </div>
-              <h1 className="text-2xl font-bold text-primary">215 تومان</h1>
+              <h1 className="text-3xl font-bold text-primary">
+                {CostMoney !== null ? (
+                  <>
+                    {CostMoney} <span className="text-sm">تومان</span>
+                  </>
+                ) : (
+                  "نامشخص"
+                )}
+              </h1>
             </div>
             <button className="w-full p-5 rounded-2xl bg-primary text-white text-2xl">
               پرداخت
