@@ -11,8 +11,24 @@
   --color-backgroundcolor: #f9f9f9;
 
   --color-adminBackgroundColor: #f1f5f7;
-  --color-adminPrimary: #809FB8;
-  --color-adminAction: #217EFD;
+  --color-adminPrimary: #809fb8;
+  --color-adminAction: #217efd;
+  --color-adminError: #ea3a3d;
+
+  /* Dark mode colors */
+  --color-primaryDark: #8b5636;
+  --color-subprimaryDark: #614a3b;
+  --color-darkpalleteDark: #1a1a1a;
+  --color-graypalleteDark: #404040;
+  --color-slowprimaryDark: #3d3834;
+  --color-highgrayDark: #595959;
+  --color-slowgrayDark: #333333;
+  --color-backgroundcolorDark: #1f1f1f;
+
+  --color-adminBackgroundColorDark: #1a2327;
+  --color-adminPrimaryDark: #4a6b82;
+  --color-adminActionDark: #1659b7;
+  --color-adminErrorDark: #a82729;
 }
 
 @font-face {

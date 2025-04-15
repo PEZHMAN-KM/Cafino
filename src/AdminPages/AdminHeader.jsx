@@ -71,11 +71,11 @@ const TopMenu = ({ className, stroke }) => {
 function AdminHeader() {
   return (
     <>
-      <div className="p-2">
-        <div className="bg-white rounded-3xl py-3 px-4 flex justify-between items-center">
+      <div className="p-2 sticky top-0 z-10 bg-adminBackgroundColor rounded-b-3xl">
+        <div className="bg-white w-full rounded-3xl py-3 px-4 flex justify-between items-center">
           <div className="hidden md:flex gap-4 text-xl font-bold">
-            <a href="">خانه</a>
-            <a href="">سفارشات</a>
+            <a href="/adminhome">خانه</a>
+            <a href="/itemmanager">آیتم ها</a>
             <a href="">گزارش گیری</a>
           </div>
           <div className="flex md:hidden">

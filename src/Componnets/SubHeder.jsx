@@ -294,7 +294,7 @@ function SubHeder({ hideIcons, className }) {
   return (
     <>
       <div className={className}>
-        <div className="flex justify-baseline items-center gap-5 px-5 py-2 w-full overflow-x-auto">
+        <div className="z-10 flex justify-baseline items-center gap-5 px-5 py-2 w-full overflow-x-auto">
           <div
             className={`bg-darkpallete p-2 hidden shrink-0 font-bold rounded-2xl ${
               !hideIcons ? "hidden" : "md:block"

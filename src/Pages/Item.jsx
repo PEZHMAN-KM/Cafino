@@ -1,4 +1,5 @@
 import itemImage from "../../public/Banner.jpg";
+import { useState } from "react";
 
 const ArrowIcon = ({ className }) => {
   return (
@@ -34,33 +35,88 @@ const Like = ({ className }) => (
   </svg>
 );
 
+// This component is used to display the size options for the item. (Not used in the current version)
+const Size = () => (
+  <div className="p-2">
+    <h1 className="text-2xl font-bold p-1">اندازه</h1>
+    <div className="flex justify-between items-center px-2 pt-3">
+      <button className="border-2 border-primary bg-slowprimary w-30 px-8 py-3 rounded-2xl">
+        کوچک
+      </button>
+      <button className="border-2 border-slowgray bg-white w-30 px-8 py-3 rounded-2xl">
+        متوسط
+      </button>
+      <button className="border-2  border-slowgray bg-white w-30 px-8 py-3 rounded-2xl">
+        بزرگ
+      </button>
+    </div>
+  </div>
+);
+
+const NamePanel = ({ className }) => (
+  <div className={className}>
+    <div className="p-2 bg-slowprimary rounded-2xl border-1 border-primary">
+      <h1 className="text-2xl font-extrabold p-1">کافه موکا</h1>
+      <h3 className="text-xl font-bold p-1 pt-0">گرم</h3>
+    </div>
+  </div>
+);
+
+const Description = ({ className }) => (
+  <div className={className}>
+    <div className="p-2">
+      <h1 className="text-2xl font-bold p-1">توضیحات</h1>
+      <p className="px-3 pt-1">
+        250 میلی لیتر. یک شات اسپرسو 20% عربیکا و 80% روبوستا. شیر. سیروپ کارامل
+      </p>
+    </div>
+  </div>
+);
+
 function Item() {
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleLikeClick = () => {
+    setIsLiked(!isLiked);
+  };
   return (
     <>
       <div className="lg:flex">
-        <div className="overflow-auto lg:flex-2/3 xl:flex-1/3 bg-backgroundcolor pb-30 lg:pb-0 h-screen overflow-x-hidden">
-          <div className="relative">
+        <div className="overflow-auto lg:flex-1/2 xl:flex-1/3 lg:flex lg:justify-center lg:items-center bg-backgroundcolor pb-25 lg:pb-0 h-screen overflow-x-hidden">
+          <div className="relative lg:absolute">
             <img
               className="w-screen aspect-square object-cover p-2 rounded-3xl"
               src={itemImage}
               alt=""
             />
-            <div className="flex lg:justify-between lg:items-center lg:gap-3">
-              <div className="absolute lg:static lg:top-auto lg:left-auto lg:w-1/2 lg:p-2 lg:pt-0 top-5 right-5">
-                <button className="bg-white p-5 rounded-2xl lg:w-full flex items-center gap-3">
-                  <Like className={"w-8 stroke-highgray fill-highgray"} />
-                  <h1 className="hidden lg:block text-2xl font-bold text-highgray">
+            <div className="flex lg:justify-between p-2 lg:items-center lg:gap-2">
+              <div className="absolute lg:static lg:top-auto lg:left-auto lg:w-1/2 lg:pt-0 top-5 right-5">
+                <button
+                  onClick={handleLikeClick}
+                  className={`bg-white p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray transition-all duration-200 group
+                    ${
+                      isLiked
+                        ? "bg-slowprimary text-red-500"
+                        : "hover:bg-slowprimary hover:text-black"
+                    }`}>
+                  <Like
+                    className={`w-8 transition-all duration-200 
+                      ${
+                        isLiked
+                          ? "stroke-red-500 fill-red-500"
+                          : "stroke-highgray fill-highgray group-hover:fill-black group-hover:stroke-black"
+                      }`}
+                  />
+                  <h1 className="hidden lg:block text-2xl font-bold">
                     علاقه مندی
                   </h1>
                 </button>
               </div>
-              <div className="absolute lg:static lg:top-auto lg:right-auto lg:w-1/2 lg:p-2 lg:pt-0 top-5 left-5">
+              <div className="absolute lg:static lg:top-auto lg:right-auto lg:w-1/2 lg:pt-0 top-5 left-5">
                 <a href="Home">
-                  <div className="bg-white p-5 rounded-2xl lg:w-full flex items-center gap-3">
-                    <ArrowIcon
-                      className={"w-8 rotate-180 stroke-3 stroke-highgray"}
-                    />
-                    <h1 className="hidden lg:block text-2xl font-bold text-highgray">
+                  <div className="bg-white p-5 rounded-2xl lg:w-full flex items-center text-highgray gap-3 hover:bg-slowprimary transition-all duration-200 hover:text-black">
+                    <ArrowIcon className={"w-8 rotate-180 stroke-3 "} />
+                    <h1 className="hidden lg:block text-2xl font-bold ">
                       برگشت
                     </h1>
                   </div>
@@ -70,36 +126,14 @@ function Item() {
           </div>
           <div>
             <div className="w-screen lg:w-auto p-2 pt-0">
-              <div className="p-2 bg-slowprimary rounded-2xl border-1 border-primary">
-                <h1 className="text-2xl font-extrabold p-1">کافه موکا</h1>
-                <h3 className="text-xl font-bold p-1 pt-0">گرم</h3>
-              </div>
-              <div className="p-2">
-                <h1 className="text-2xl font-bold p-1">توضیحات</h1>
-                <p className="px-3 pt-1">
-                  250 میلی لیتر. یک شات اسپرسو 20% عربیکا و 80% روبوستا. شیر.
-                  سیروپ کارامل
-                </p>
-              </div>
-              <div className="p-2">
-                <h1 className="text-2xl font-bold p-1">اندازه</h1>
-                <div className="flex justify-between items-center px-2 pt-3">
-                  <button className="border-2 border-primary bg-slowprimary w-30 px-8 py-3 rounded-2xl">
-                    کوچک
-                  </button>
-                  <button className="border-2 border-slowgray bg-white w-30 px-8 py-3 rounded-2xl">
-                    متوسط
-                  </button>
-                  <button className="border-2  border-slowgray bg-white w-30 px-8 py-3 rounded-2xl">
-                    بزرگ
-                  </button>
-                </div>
-              </div>
+              <NamePanel className={"block lg:hidden"} />
+              <Description className={"block lg:hidden"} />
+              {/* <Size /> */}
             </div>
           </div>
         </div>
-        <div className="lg:flex-1/3 xl:flex-2/3 flex lg:flex-col-reverse lg:justify-center fixed bottom-0 w-screen p-5 bg-white lg:bg-backgroundcolor rounded-t-2xl lg:static lg:bottom-auto lg:w-auto">
-          <div className="flex justify-between w-full items-center lg:flex-col-reverse lg:justify-center lg:gap-8 bg-white lg:px-3 lg:py-6 lg:rounded-3xl">
+        <div className="lg:flex-1/2 xl:flex-2/3 flex md:flex-col-reverse md:justify-center fixed bottom-0 w-screen p-5 lg:p-2 bg-white lg:bg-backgroundcolor rounded-t-2xl lg:static lg:bottom-auto lg:w-auto">
+          <div className="flex justify-between w-full items-center lg:flex-col-reverse lg:justify-center lg:gap-4 bg-white lg:px-3 lg:py-6 lg:rounded-3xl">
             <div>
               <button className="bg-primary text-white text-2xl font-bold px-5 py-3 rounded-2xl">
                 افزودن به سبد خرید
@@ -112,10 +146,8 @@ function Item() {
                 <h3 className="font-normal lg:text-5xl">تومان</h3>
               </div>
             </div>
-            <div className="hidden lg:block w-full ">
-              <h1 className="text-4xl text-center pb-4">کافی نو</h1>
-              <hr className="border-1 border-highgray" />
-            </div>
+            <Description className={"hidden lg:block w-full"} />
+            <NamePanel className={"hidden lg:block w-full"} />
           </div>
         </div>
       </div>

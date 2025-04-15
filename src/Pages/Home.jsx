@@ -69,7 +69,7 @@ function Home() {
             alt=""
           />
         </div>
-        <div className="grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 grid-cols-2 gap-y-4 gap-x-2 mt-2 justify-evenly items-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 gap-y-4 gap-x-2 mt-2 justify-center items-center">
           {[
             { id: 0 },
             { id: 1 },

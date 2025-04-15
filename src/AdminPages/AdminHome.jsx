@@ -110,13 +110,12 @@ const OrderTable = ({ name, cost, table }) => (
       <TableNumber tableNumber={table} />
       <Cost CostNumber={cost} />
     </div>
-    <div className="flex justify-center items-center flex-col pb-2">
-      <h1 className="text-xl font-normal text-center pb-2">
-        به نام:
-        <span className="text-2xl font-bold "> {name}</span>
-      </h1>
-      <button className="bg-white border-adminAction border-2 px-3 py-2 rounded-xl text-xl text-adminAction hover:bg-adminAction hover:border-white hover:text-white transition-all">
+    <div className="flex justify-center items-center gap-2 pb-2">
+      <button className="bg-white border-adminAction border-2 px-3 py-2 rounded-xl text-xl text-adminAction hover:bg-adminAction hover:text-white transition-all">
         سفارش آماده شد
+      </button>
+      <button className="bg-white border-adminError border-2 px-3 py-2 rounded-xl text-xl text-adminError hover:bg-adminError hover:text-white transition-all">
+        لغو سفارش
       </button>
     </div>
   </div>
@@ -125,36 +124,34 @@ const OrderTable = ({ name, cost, table }) => (
 function AdminHome() {
   return (
     <>
-      <div className="bg-adminBackgroundColor h-screen w-screen">
+      <div className="bg-adminBackgroundColor h-screen">
         <AdminHeader />
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 h-fit bg-adminBackgroundColor">
           <div className="bg-white rounded-2xl">
-            <h1 className="text-3xl font-extrabold pr-8 pt-4">لیست سفارشات</h1>
+            <h1 className="text-3xl font-extrabold pr-8 py-4">لیست سفارشات</h1>
             {[
               {
                 id: 0,
-                name: "پژمان کاظمی میر",
                 cost: "2615",
                 table: "3",
               },
               {
-                id: 0,
-                name: "سید حسین کاظمی میر",
+                id: 1,
+                cost: "2915",
+                table: "9",
+              },
+              {
+                id: 2,
                 cost: "7878",
                 table: "23",
               },
             ].map((item) => (
               <div key={item.id}>
-                <OrderTable
-                  name={item.name}
-                  cost={item.cost}
-                  table={item.table}
-                />
+                <OrderTable cost={item.cost} table={item.table} />
               </div>
             ))}
           </div>
         </div>
-        
       </div>
     </>
   );

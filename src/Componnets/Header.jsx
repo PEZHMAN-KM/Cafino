@@ -93,7 +93,7 @@ function Header({ page, text }) {
   return (
     <>
       <div
-        className={`flex justify-center items-center max-w-screen gap-3 p-5 py-3 bg-backgroundcolor ${
+        className={`z-10 flex justify-center items-center max-w-screen gap-3 p-5 py-3 bg-backgroundcolor ${
           page !== 1 ? "sticky top-0" : ""
         }`}>
         <div className="hidden md:flex-1/4 md:flex">
