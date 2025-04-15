@@ -12,6 +12,7 @@ import FavoritePage from "./Pages/FavoritePage.jsx";
 import AdminHome from "./AdminPages/AdminHome.jsx";
 import AddItem from "./AdminPages/AddItem.jsx";
 import ItemManager from "./AdminPages/ItemManager.jsx";
+import WaiterPage from "./AdminPages/WaiterPage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -27,6 +28,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/AdminHome" element={<AdminHome />}></Route>
         <Route path="/AddItem" element={<AddItem />}></Route>
         <Route path="/ItemManager" element={<ItemManager />}></Route>
+        <Route path="/WaiterPage" element={<WaiterPage />}></Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>
