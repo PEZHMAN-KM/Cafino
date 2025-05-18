@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import AdminHeader from "./AdminHeader";
 import itemImage from "../../public/2.jpg";
+import { useNavigate } from "react-router-dom";
 
 const TableIcon = ({ stroke }) => (
   <svg
@@ -53,36 +55,48 @@ const OrderItem = ({ title, description, count }) => (
       <img className="p-2 rounded-3xl" src={itemImage} alt="" />
     </div>
     <div className="flex flex-col justify-center flex-1 overflow-hidden">
-      <h1 className="text-xl font-extrabold truncate">{title}</h1>
-      <h3 className="text-lg font-normal truncate">{description}</h3>
+      <h1 className="text-xl font-extrabold truncate dark:text-white transition-colors duration-300">
+        {title}
+      </h1>
+      <h3 className="text-lg font-normal truncate dark:text-highgrayDark transition-colors duration-300">
+        {description}
+      </h3>
     </div>
     <div>
-      <h1 className="text-3xl font-bold">X{count}</h1>
+      <h1 className="text-3xl font-bold dark:text-white transition-colors duration-300">
+        X{count}
+      </h1>
     </div>
   </div>
 );
 
-const TableNumber = ({ tableNumber }) => (
-  <div className=" bg-white p-1 min-w-36 h-10 rounded-2xl border-2 border-adminBackgroundColor flex justify-center items-center gap-2">
-    <TableIcon stroke={"#809FB8"} />
-    <h1 className="text-lg font-bold text-center">میز شماره {tableNumber}</h1>
+const TableNumber = ({ tableNumber, isDark }) => (
+  <div className=" bg-white dark:bg-darkpalleteDark transition-colors duration-300 p-1 min-w-36 h-10 rounded-2xl border-2 border-adminBackgroundColor dark:border-graypalleteDark flex justify-center items-center gap-2">
+    <TableIcon stroke={isDark ? "#4a6b82" : "#809FB8"} />
+    <h1 className="text-lg font-bold text-center dark:text-white transition-colors duration-300">
+      میز شماره {tableNumber}
+    </h1>
   </div>
 );
 
-const Cost = ({ CostNumber }) => (
-  <div className=" bg-white p-1 min-w-50 h-10 rounded-2xl border-2 border-adminBackgroundColor flex justify-center items-center gap-2">
-    <Wallet stroke={"#809FB8"} />
-    <h1 className="text-lg font-bold text-center">
+const Cost = ({ CostNumber, isDark }) => (
+  <div className="bg-white transition-colors duration-300 dark:bg-darkpalleteDark p-1 min-w-50 h-10 rounded-2xl border-2 border-adminBackgroundColor dark:border-graypalleteDark flex justify-center items-center gap-2">
+    <Wallet stroke={isDark ? "#4a6b82" : "#809FB8"} />
+    <h1 className="text-lg font-bold text-center dark:text-white">
       مبلغ کل:
-      <span className="text-adminPrimary text-xl font-bold">{CostNumber}</span>
-      <span className="text-adminPrimary text-sm">تومان</span>
+      <span className="text-adminPrimary dark:text-adminPrimaryDark text-xl font-bold transition-colors duration-300">
+        {CostNumber}
+      </span>
+      <span className="text-adminPrimary dark:text-adminPrimaryDark text-sm transition-colors duration-300">
+        تومان
+      </span>
     </h1>
   </div>
 );
 
 const OrderTable = ({ name, cost, table }) => (
-  <div className="m-2 border-2 border-adminPrimary rounded-3xl">
-    <div className="border-b-4 border-adminBackgroundColor ">
+  <div className="m-2 border-2 border-adminPrimary dark:border-adminPrimaryDark rounded-3xl transition-colors duration-300">
+    <div className="border-b-4 border-adminBackgroundColor dark:border-graypalleteDark transition-colors duration-300">
       {[
         {
           id: 0,
@@ -111,10 +125,10 @@ const OrderTable = ({ name, cost, table }) => (
       <Cost CostNumber={cost} />
     </div>
     <div className="flex justify-center items-center gap-2 pb-2">
-      <button className="bg-white border-adminAction border-2 px-3 py-2 rounded-xl text-xl text-adminAction hover:bg-adminAction hover:text-white transition-all">
+      <button className="bg-white  dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
         سفارش آماده شد
       </button>
-      <button className="bg-white border-adminError border-2 px-3 py-2 rounded-xl text-xl text-adminError hover:bg-adminError hover:text-white transition-all">
+      <button className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
         لغو سفارش
       </button>
     </div>
@@ -122,13 +136,40 @@ const OrderTable = ({ name, cost, table }) => (
 );
 
 function AdminHome() {
+  const [isDark, setIsDark] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    ConectToBack();
+    if (document.documentElement.classList.contains("dark")) {
+      setIsDark(true);
+    }
+  }, []);
+
+  async function ConectToBack() {
+    const token = localStorage.getItem("access_token");
+    const response = await fetch("http://127.0.0.1:8000/check-token", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 401) {
+      navigate("/adminlogin");
+      localStorage.clear();
+    }
+  }
+
   return (
     <>
-      <div className="bg-adminBackgroundColor h-screen">
+      <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen transition-colors duration-300">
         <AdminHeader />
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 h-fit bg-adminBackgroundColor">
-          <div className="bg-white rounded-2xl">
-            <h1 className="text-3xl font-extrabold pr-8 py-4">لیست سفارشات</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 h-fit bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300">
+          <div className="bg-white dark:bg-darkpalleteDark rounded-2xl transition-colors duration-300">
+            <h1 className="text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
+              لیست سفارشات
+            </h1>
             {[
               {
                 id: 0,

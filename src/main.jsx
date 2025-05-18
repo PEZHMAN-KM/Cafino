@@ -13,6 +13,7 @@ import AdminHome from "./AdminPages/AdminHome.jsx";
 import AddItem from "./AdminPages/AddItem.jsx";
 import ItemManager from "./AdminPages/ItemManager.jsx";
 import WaiterPage from "./AdminPages/WaiterPage.jsx";
+import AdminLogin from "./AdminPages/AdminLogin.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -29,6 +30,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/AddItem" element={<AddItem />}></Route>
         <Route path="/ItemManager" element={<ItemManager />}></Route>
         <Route path="/WaiterPage" element={<WaiterPage />}></Route>
+        <Route path="/AdminLogin" element={<AdminLogin />}></Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>

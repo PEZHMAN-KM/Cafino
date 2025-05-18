@@ -22,7 +22,7 @@ function Landing() {
             </div>
             <a
               href="/Home"
-              className="px-15 py-3 bg-primary mt-5 rounded-2xl text-2xl font-medium">
+              className="px-15 py-3 bg-primary mt-5 rounded-2xl text-2xl font-medium  hover:bg-subprimary hover:text-primaryDark transition-colors duration-300">
               منوی سفارشات
             </a>
           </div>

@@ -109,28 +109,24 @@ const Home = ({ className }) => (
   </svg>
 );
 
-function Footer({ page, CostMoney = null }) {
+function Footer({ page, CostMoney }) {
   return (
     <>
-      <div className="bg-white p-6 rounded-t-3xl fixed w-screen bottom-0 md:hidden">
+      <div className="bg-white dark:bg-darkpalleteDark p-6 rounded-t-3xl fixed w-screen bottom-0 md:hidden transition-colors duration-300">
         {page == 3 ? (
           <div className="flex justify-center flex-col items-center w-full pb-5">
             <div className="flex justify-between w-full items-center pb-3">
               <div className="flex items-center gap-2">
                 <Wallet />
-                <h1 className="text-2xl font-bold">مبلغ کل سفارشات:</h1>
+                <h1 className="text-2xl font-bold dark:text-white transition-colors duration-300">
+                  مبلغ کل سفارشات
+                </h1>
               </div>
-              <h1 className="text-3xl font-bold text-primary">
-                {CostMoney !== null ? (
-                  <>
-                    {CostMoney} <span className="text-sm">تومان</span>
-                  </>
-                ) : (
-                  "نامشخص"
-                )}
+              <h1 className="text-2xl font-bold text-primary">
+                {CostMoney} تومان
               </h1>
             </div>
-            <button className="w-full p-5 rounded-2xl bg-primary text-white text-2xl">
+            <button className="w-full p-5 rounded-2xl bg-primary text-white text-2xl dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
               پرداخت
             </button>
           </div>
@@ -140,7 +136,7 @@ function Footer({ page, CostMoney = null }) {
             {page == 4 ? (
               <Call className="stroke-primary fill-primary w-12" />
             ) : (
-              <Call className="stroke-highgray fill-highgray w-12" />
+              <Call className="stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark w-12 transition-colors duration-300" />
             )}
           </a>
           <a href="Order" className="relative">
@@ -150,21 +146,21 @@ function Footer({ page, CostMoney = null }) {
             {page == 3 ? (
               <Bag className="stroke-primary w-12" />
             ) : (
-              <Bag className="stroke-highgray w-12" />
+              <Bag className="stroke-highgray dark:stroke-highgrayDark w-12 transition-colors duration-300" />
             )}
           </a>
           <a href="FavoritePage">
             {page == 2 ? (
               <Favorite className="stroke-primary fill-primary w-12" />
             ) : (
-              <Favorite className="stroke-highgray fill-highgray w-12" />
+              <Favorite className="stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark w-12 transition-colors duration-300" />
             )}
           </a>
           <a href="Home">
             {page == 1 ? (
               <Home className="stroke-primary fill-primary w-12" />
             ) : (
-              <Home className="stroke-highgray fill-highgray w-12" />
+              <Home className="stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark w-12 transition-colors duration-300" />
             )}
           </a>
         </div>

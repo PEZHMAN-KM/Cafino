@@ -163,49 +163,49 @@ const Cake = ({ className }) => (
     className={className}>
     <path
       d="M1.6665 43.8335H43.3332"
-      stroke="#292D32"
+      stroke="black"
       strokeWidth={2.5}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M3.979 43.8335V25.0835C3.979 21.6252 7.08317 18.8335 10.9165 18.8335H34.0624C37.8957 18.8335 40.9999 21.6252 40.9999 25.0835V43.8335"
-      stroke="#292D32"
+      stroke="black"
       strokeWidth={2.5}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M9.0835 18.8334V12.9376C9.0835 10.4376 11.3335 8.41675 14.1252 8.41675H30.8961C33.6669 8.41675 35.9169 10.4376 35.9169 12.9376V18.8334"
-      stroke="#292D32"
+      stroke="black"
       strokeWidth={2.5}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M4.854 27.125L5.62484 27.1458C7.1665 27.1667 8.39567 28.4167 8.39567 29.9583V30.6458C8.39567 32.1875 9.64567 33.4583 11.2082 33.4583C12.7498 33.4583 14.0207 32.2083 14.0207 30.6458V30C14.0207 28.4583 15.2707 27.1875 16.8332 27.1875C18.3748 27.1875 19.6456 28.4375 19.6456 30V30.6458C19.6456 32.1875 20.8956 33.4583 22.4581 33.4583C23.9998 33.4583 25.2706 32.2083 25.2706 30.6458V30C25.2706 28.4583 26.5206 27.1875 28.0831 27.1875C29.6248 27.1875 30.8956 28.4375 30.8956 30V30.6458C30.8956 32.1875 32.1456 33.4583 33.7081 33.4583C35.2498 33.4583 36.5206 32.2083 36.5206 30.6458V30C36.5206 28.4583 37.7706 27.1875 39.3331 27.1875H40.2706"
-      stroke="#292D32"
+      stroke="black"
       strokeWidth={2.5}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M14.1665 8.41667V4.25"
-      stroke="#292D32"
+      stroke="black"
       strokeWidth={2.5}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M30.833 8.41667V4.25"
-      stroke="#292D32"
+      stroke="black"
       strokeWidth={2.5}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M22.5 8.41675V2.16675"
-      stroke="#292D32"
+      stroke="black"
       strokeWidth={2.5}
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -308,7 +308,7 @@ function SubHeder({ hideIcons, className }) {
             {hideIcons && <SearchIcon />}
           </div>
           <div
-            className={`bg-primary shrink-0 font-bold rounded-2xl text-white ${
+            className={`bg-primary dark:bg-primaryDark shrink-0 font-bold rounded-2xl text-white transition-colors duration-300 ${
               !hideIcons
                 ? "p-2 md:w-40 w-34 flex justify-center items-center flex-col gap-3 text-xl md:text-2xl"
                 : "p-3 text-2xl text-center"
@@ -336,7 +336,7 @@ function SubHeder({ hideIcons, className }) {
             <h1>تخفیفات ویژه</h1>
           </div>
           <div
-            className={`bg-graypallete shrink-0 font-bold rounded-2xl text-black ${
+            className={`bg-graypallete dark:bg-graypalleteDark shrink-0 font-bold rounded-2xl text-black dark:text-white transition-colors duration-300 ${
               !hideIcons
                 ? "p-2 md:w-40 w-34 flex justify-center items-center flex-col gap-3 text-xl md:text-2xl"
                 : "p-3 text-2xl text-center"
@@ -349,7 +349,7 @@ function SubHeder({ hideIcons, className }) {
             <h1>کیک و دسر</h1>
           </div>
           <div
-            className={`bg-graypallete shrink-0 font-bold rounded-2xl text-black ${
+            className={`bg-graypallete dark:bg-graypalleteDark shrink-0 font-bold rounded-2xl text-black dark:text-white transition-colors duration-300 ${
               !hideIcons
                 ? "p-2 md:w-40 w-34 flex justify-center items-center flex-col gap-3 text-xl md:text-2xl"
                 : "p-3 text-2xl text-center"
@@ -362,7 +362,7 @@ function SubHeder({ hideIcons, className }) {
             <h1>نوشیدنی گرم</h1>
           </div>
           <div
-            className={`bg-graypallete shrink-0 font-bold rounded-2xl text-black ${
+            className={`bg-graypallete dark:bg-graypalleteDark shrink-0 font-bold rounded-2xl text-black dark:text-white transition-colors duration-300 ${
               !hideIcons
                 ? "p-2 md:w-40 w-34 flex justify-center items-center flex-col gap-3 text-xl md:text-2xl"
                 : "p-3 text-2xl text-center"
@@ -375,7 +375,7 @@ function SubHeder({ hideIcons, className }) {
             <h1>نوشیدنی سرد</h1>
           </div>
           <div
-            className={`bg-graypallete shrink-0 font-bold rounded-2xl text-black ${
+            className={`bg-graypallete dark:bg-graypalleteDark shrink-0 font-bold rounded-2xl text-black dark:text-white transition-colors duration-300 ${
               !hideIcons
                 ? "p-2 md:w-40 w-34 flex justify-center items-center flex-col gap-3 text-xl md:text-2xl"
                 : "p-3 text-2xl text-center"

@@ -38,15 +38,17 @@ const Like = ({ className }) => (
 // This component is used to display the size options for the item. (Not used in the current version)
 const Size = () => (
   <div className="p-2">
-    <h1 className="text-2xl font-bold p-1">اندازه</h1>
+    <h1 className="text-2xl font-bold p-1 dark:text-white transition-colors duration-300">
+      اندازه
+    </h1>
     <div className="flex justify-between items-center px-2 pt-3">
-      <button className="border-2 border-primary bg-slowprimary w-30 px-8 py-3 rounded-2xl">
+      <button className="border-2 border-primary dark:border-primaryDark bg-slowprimary dark:bg-subprimaryDark w-30 px-8 py-3 rounded-2xl transition-colors duration-300">
         کوچک
       </button>
-      <button className="border-2 border-slowgray bg-white w-30 px-8 py-3 rounded-2xl">
+      <button className="border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark w-30 px-8 py-3 rounded-2xl transition-colors duration-300">
         متوسط
       </button>
-      <button className="border-2  border-slowgray bg-white w-30 px-8 py-3 rounded-2xl">
+      <button className="border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark w-30 px-8 py-3 rounded-2xl transition-colors duration-300">
         بزرگ
       </button>
     </div>
@@ -55,9 +57,13 @@ const Size = () => (
 
 const NamePanel = ({ className }) => (
   <div className={className}>
-    <div className="p-2 bg-slowprimary rounded-2xl border-1 border-primary">
-      <h1 className="text-2xl font-extrabold p-1">کافه موکا</h1>
-      <h3 className="text-xl font-bold p-1 pt-0">گرم</h3>
+    <div className="p-2 bg-slowprimary dark:bg-subprimaryDark rounded-2xl border-1 border-primary dark:border-primaryDark transition-colors duration-300">
+      <h1 className="text-2xl font-extrabold p-1 dark:text-white transition-colors duration-300">
+        کافه موکا
+      </h1>
+      <h3 className="text-xl font-bold p-1 pt-0 dark:text-slowgray transition-colors duration-300">
+        گرم
+      </h3>
     </div>
   </div>
 );
@@ -65,8 +71,10 @@ const NamePanel = ({ className }) => (
 const Description = ({ className }) => (
   <div className={className}>
     <div className="p-2">
-      <h1 className="text-2xl font-bold p-1">توضیحات</h1>
-      <p className="px-3 pt-1">
+      <h1 className="text-2xl font-bold p-1 dark:text-white transition-colors duration-300">
+        توضیحات
+      </h1>
+      <p className="px-3 pt-1 dark:text-slowgray transition-colors duration-300">
         250 میلی لیتر. یک شات اسپرسو 20% عربیکا و 80% روبوستا. شیر. سیروپ کارامل
       </p>
     </div>
@@ -82,7 +90,7 @@ function Item() {
   return (
     <>
       <div className="lg:flex">
-        <div className="overflow-auto lg:flex-1/2 xl:flex-1/3 lg:flex lg:justify-center lg:items-center bg-backgroundcolor pb-25 lg:pb-0 h-screen overflow-x-hidden">
+        <div className="overflow-auto lg:flex-1/2 xl:flex-1/3 lg:flex lg:justify-center lg:items-center bg-backgroundcolor dark:bg-backgroundcolorDark pb-25 lg:pb-0 h-screen overflow-x-hidden transition-colors duration-300">
           <div className="relative lg:absolute">
             <img
               className="w-screen aspect-square object-cover p-2 rounded-3xl"
@@ -93,30 +101,30 @@ function Item() {
               <div className="absolute lg:static lg:top-auto lg:left-auto lg:w-1/2 lg:pt-0 top-5 right-5">
                 <button
                   onClick={handleLikeClick}
-                  className={`bg-white p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray transition-all duration-200 group
-                    ${
-                      isLiked
-                        ? "bg-slowprimary text-red-500"
-                        : "hover:bg-slowprimary hover:text-black"
-                    }`}>
+                  className={`bg-white dark:bg-darkpalleteDark p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-200 group
+                  ${
+                    isLiked
+                      ? "bg-slowprimary dark:bg-darkpalleteDark text-red-500"
+                      : "hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white"
+                  }`}>
                   <Like
                     className={`w-8 transition-all duration-200 
-                      ${
-                        isLiked
-                          ? "stroke-red-500 fill-red-500"
-                          : "stroke-highgray fill-highgray group-hover:fill-black group-hover:stroke-black"
-                      }`}
+                    ${
+                      isLiked
+                        ? "stroke-red-500 fill-red-500"
+                        : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark group-hover:fill-black dark:group-hover:fill-white group-hover:stroke-black dark:group-hover:stroke-white"
+                    }`}
                   />
-                  <h1 className="hidden lg:block text-2xl font-bold">
+                  <h1 className="hidden lg:block text-2xl font-bold dark:text-white">
                     علاقه مندی
                   </h1>
                 </button>
               </div>
               <div className="absolute lg:static lg:top-auto lg:right-auto lg:w-1/2 lg:pt-0 top-5 left-5">
                 <a href="Home">
-                  <div className="bg-white p-5 rounded-2xl lg:w-full flex items-center text-highgray gap-3 hover:bg-slowprimary transition-all duration-200 hover:text-black">
-                    <ArrowIcon className={"w-8 rotate-180 stroke-3 "} />
-                    <h1 className="hidden lg:block text-2xl font-bold ">
+                  <div className="bg-white dark:bg-darkpalleteDark p-5 rounded-2xl lg:w-full flex items-center text-highgray dark:text-highgrayDark gap-3 hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white transition-all duration-200">
+                    <ArrowIcon className="w-8 rotate-180 stroke-3  dark:hover:text-white" />
+                    <h1 className="hidden lg:block text-2xl font-bold dark:text-white">
                       برگشت
                     </h1>
                   </div>
@@ -132,18 +140,24 @@ function Item() {
             </div>
           </div>
         </div>
-        <div className="lg:flex-1/2 xl:flex-2/3 flex md:flex-col-reverse md:justify-center fixed bottom-0 w-screen p-5 lg:p-2 bg-white lg:bg-backgroundcolor rounded-t-2xl lg:static lg:bottom-auto lg:w-auto">
-          <div className="flex justify-between w-full items-center lg:flex-col-reverse lg:justify-center lg:gap-4 bg-white lg:px-3 lg:py-6 lg:rounded-3xl">
+        <div className="lg:flex-1/2 xl:flex-2/3 flex md:flex-col-reverse md:justify-center fixed bottom-0 w-screen p-5 lg:p-2 bg-white rounded-t-2xl lg:rounded-none lg:bg-backgroundcolor dark:bg-darkpalleteDark lg:dark:bg-backgroundcolorDark lg:static lg:bottom-auto lg:w-auto transition-colors duration-300">
+          <div className="flex justify-between w-full items-center lg:flex-col-reverse lg:justify-center lg:gap-4 bg-white dark:bg-darkpalleteDark lg:bg-white dark:lg:bg-darkpalleteDark lg:px-3 lg:py-6 lg:rounded-3xl transition-colors duration-300">
             <div>
-              <button className="bg-primary text-white text-2xl font-bold px-5 py-3 rounded-2xl">
+              <button className="bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary text-white text-2xl font-bold px-5 py-3 rounded-2xl transition-colors duration-300">
                 افزودن به سبد خرید
               </button>
             </div>
             <div className="w-20 lg:w-auto">
-              <h1 className="text-xl font-bold lg:text-6xl">قیمت</h1>
+              <h1 className="text-xl font-bold lg:text-6xl dark:text-white transition-colors duration-300">
+                قیمت
+              </h1>
               <div className="flex justify-baseline items-center gap-1 lg:pt-5">
-                <h1 className="text-3xl font-extrabold lg:text-9xl">85</h1>
-                <h3 className="font-normal lg:text-5xl">تومان</h3>
+                <h1 className="text-3xl font-extrabold lg:text-9xl dark:text-white transition-colors duration-300">
+                  85
+                </h1>
+                <h3 className="font-normal lg:text-5xl dark:text-slowgray transition-colors duration-300">
+                  تومان
+                </h3>
               </div>
             </div>
             <Description className={"hidden lg:block w-full"} />

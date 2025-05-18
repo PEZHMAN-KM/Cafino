@@ -7,17 +7,29 @@ import itemImage from "../../public/2.jpg";
 import bannerImage from "../../public/Banner.jpg";
 
 const HomeItem = () => (
-  <div className="bg-white rounded-3xl w-fit h-fit p-3 m-auto">
-    <img className="w-43 h-43 rounded-2xl" src={itemImage} alt="" />
-    <h1 className="text-2xl font-bold mt-2">کافه موکا</h1>
-    <h3 className="text-balance mt-1">مینی توضیحات</h3>
+  <div className="bg-white dark:bg-darkpalleteDark rounded-3xl w-fit h-fit p-3 m-auto transition-colors duration-300">
+    <img
+      className="w-43 h-43 rounded-2xl dark:opacity-90 transition-opacity duration-300"
+      src={itemImage}
+      alt=""
+    />
+    <h1 className="text-2xl font-bold mt-2 dark:text-white transition-colors duration-300">
+      کافه موکا
+    </h1>
+    <h3 className="text-balance mt-1 dark:text-slowgray transition-colors duration-300">
+      مینی توضیحات
+    </h3>
     <div className="flex mt-3 justify-between items-center">
-      <button className="flex justify-center items-center text-2xl rounded-2xl bg-primary text-white w-10 h-10">
+      <button className="flex justify-center items-center text-2xl rounded-2xl bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary text-white w-10 h-10 transition-colors duration-300">
         +
       </button>
       <div className="flex justify-center items-end gap-1">
-        <h1 className="text-3xl font-bold">85</h1>
-        <h3>تومان</h3>
+        <h1 className="text-3xl font-bold dark:text-white transition-colors duration-300">
+          85
+        </h1>
+        <h3 className="dark:text-slowgray transition-colors duration-300">
+          تومان
+        </h3>
       </div>
     </div>
   </div>
@@ -32,7 +44,6 @@ function Home() {
 
     const handleScroll = () => {
       const scrollTop = scrollContainer.scrollTop;
-      console.log("Scroll position:", scrollTop);
 
       if (scrollTop > 50) {
         setHideIcons(true);
@@ -56,11 +67,13 @@ function Home() {
     <>
       <div
         ref={scrollContainerRef}
-        className="bg-backgroundcolor w-screen h-screen overflow-y-auto overflow-x-hidden pb-26 md:pb-5">
+        className="bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto overflow-x-hidden pb-26 md:pb-5 transition-colors duration-300">
         <Header page={1} />
         <SubHeder
           hideIcons={hideIcons}
-          className={"sticky top-0 bg-backgroundcolor"}
+          className={
+            "sticky top-0 z-10 bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300"
+          }
         />
         <div className="flex justify-center items-center w-screen">
           <img

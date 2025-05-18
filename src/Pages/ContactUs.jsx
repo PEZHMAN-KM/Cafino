@@ -80,27 +80,31 @@ const Instagram = () => (
 );
 
 const Waiter = () => (
-  <div className="bg-white flex justify-between gap-1 items-center w-screen m-5 my-2 py-3 px-4 rounded-3xl border-2 border-highgray">
+  <div className="bg-white dark:bg-darkpalleteDark flex justify-between gap-1 items-center w-screen m-5 my-2 py-3 px-4 rounded-3xl border-2 border-highgray dark:border-graypalleteDark transition-colors duration-300">
     <div>
-      <h1 className="text-2xl font-extrabold">تماس با سالندار</h1>
-      <h3 className="text-sm">از درست بودن شماره میز اطمینان حاصل کنید</h3>
+      <h1 className="text-2xl font-extrabold dark:text-white transition-colors duration-300">
+        تماس با سالندار
+      </h1>
+      <h3 className="text-sm dark:text-slowgray transition-colors duration-300">
+        از درست بودن شماره میز اطمینان حاصل کنید
+      </h3>
     </div>
     <div className="flex items-center gap-3">
       <div>
         <input
-          className="w-15 h-15 text-4xl font-bold text-center border-2 border-slowgray text-highgray rounded-2xl"
+          className="w-15 h-15 text-4xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl transition-colors duration-300"
           type="number"
           defaultValue={3}
         />
       </div>
-      <button className=" w-15 h-15 bg-primary rounded-2xl flex items-center justify-center">
+      <button className="w-15 h-15 bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary rounded-2xl flex items-center justify-center transition-colors duration-300">
         <BellIcon className={"w-10 stroke-white"} />
       </button>
     </div>
   </div>
 );
 const Location = () => (
-  <button className="bg-darkpallete p-5 pb-3 rounded-3xl">
+  <button className="bg-darkpallete dark:bg-darkpalleteDark p-5 pb-3 rounded-3xl transition-colors duration-300">
     <img className="rounded-2xl w-50" src={itemImage} alt="" />
     <div className="flex justify-between items-center px-4 text-white pt-2">
       <LocationIcon className={"w-8"} />
@@ -109,13 +113,13 @@ const Location = () => (
   </button>
 );
 const PhoneNumber = () => (
-  <button className="bg-primary w-60 px-8 py-2 rounded-2xl flex items-center justify-between">
+  <button className="bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary w-60 px-8 py-2 rounded-2xl flex items-center justify-between transition-colors duration-300">
     <Call className="stroke-white fill-white w-8" />
     <h1 className="text-xl font-bold text-white">0912-345-6789</h1>
   </button>
 );
 const InstagramPage = () => (
-  <button className="bg-purple-700 w-60 px-8 py-2 rounded-2xl flex items-center justify-between">
+  <button className="bg-purple-700 dark:bg-purple-800 hover:bg-purple-900 dark:hover:bg-purple-600 w-60 px-8 py-2 rounded-2xl flex items-center justify-between transition-colors duration-300">
     <Instagram />
     <h1 className="text-xl font-bold text-white">KMP STUDIO</h1>
   </button>
@@ -124,7 +128,7 @@ const InstagramPage = () => (
 function ContactUs() {
   return (
     <>
-      <div className="bg-backgroundcolor h-screen w-screen overflow-y-auto pb-26 md:pb-0">
+      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark h-screen w-screen overflow-y-auto pb-26 md:pb-0">
         <Header page={4} text={"تماس با ما"} />
         <div className="grid grid-cols-1">
           <div className="col-span-1 flex justify-center items-start">
