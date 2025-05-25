@@ -136,31 +136,6 @@ const OrderTable = ({ name, cost, table }) => (
 );
 
 function AdminHome() {
-  const [isDark, setIsDark] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    ConectToBack();
-    if (document.documentElement.classList.contains("dark")) {
-      setIsDark(true);
-    }
-  }, []);
-
-  async function ConectToBack() {
-    const token = localStorage.getItem("access_token");
-    const response = await fetch("http://127.0.0.1:8000/check-token", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (response.status === 401) {
-      navigate("/adminlogin");
-      localStorage.clear();
-    }
-  }
-
   return (
     <>
       <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen transition-colors duration-300">

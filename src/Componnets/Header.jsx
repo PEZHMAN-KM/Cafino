@@ -127,10 +127,13 @@ const TopMenu = () => {
 
 function Header({ page, text }) {
   const [isDark, setIsDark] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
-  // بررسی حالت ذخیره شده یا سیستم کاربر هنگام لود اولیه صفحه
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+  };
+
   useEffect(() => {
-    // حالت ذخیره شده در localStorage
     const savedTheme = localStorage.getItem("theme");
 
     if (savedTheme) {
@@ -141,7 +144,6 @@ function Header({ page, text }) {
         document.documentElement.classList.remove("dark");
       }
     } else {
-      // اگر ذخیره نشده بود، حالت پیش‌فرض سیستم کاربر
       const prefersDark = window.matchMedia(
         "(prefers-color-scheme: dark)"
       ).matches;
@@ -154,7 +156,6 @@ function Header({ page, text }) {
     }
   }, []);
 
-  // وقتی دکمه کلیک شد، حالت رو تغییر بده و ذخیره کن
   const toggleDarkMode = () => {
     if (isDark) {
       document.documentElement.classList.remove("dark");
@@ -173,8 +174,10 @@ function Header({ page, text }) {
         className={`z-10 flex justify-center items-center max-w-screen gap-3 p-5 py-3 bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300 ${
           page !== 1 ? "sticky top-0" : ""
         }`}>
-        <div className="hidden md:flex-1/4 md:flex gap-2">
-          <TopMenu />
+        <div className="hidden md:flex-1/4 md:flex gap-2 ">
+          <div onClick={toggleMenu}>
+            <TopMenu />
+          </div>
           <button onClick={toggleDarkMode}>
             {isDark ? (
               <DarkMode
@@ -187,6 +190,32 @@ function Header({ page, text }) {
             )}
           </button>
         </div>
+        {showMenu && (
+          <div className="absolute right-5 top-12 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50">
+            <div className="py-1">
+              <a
+                href="/home"
+                className="block text-start w-full px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                خانه
+              </a>
+              <a
+                href="/favoritepage"
+                className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                علاقه مندی ها
+              </a>
+              <a
+                href="/order"
+                className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                سفارشات
+              </a>
+              <a
+                href="/contactus"
+                className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                تماس با ما
+              </a>
+            </div>
+          </div>
+        )}
         {page == 1 ? (
           <div className="flex-3/4 flex justify-center items-center bg-slowgray dark:bg-graypalleteDark p-1.5 gap-2 rounded-xl md:flex-2/4">
             <SearchIcon />

@@ -1,5 +1,5 @@
 import itemImage from "../../public/Banner.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ArrowIcon = ({ className }) => {
   return (
@@ -83,6 +83,14 @@ const Description = ({ className }) => (
 
 function Item() {
   const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("theme") == "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  });
 
   const handleLikeClick = () => {
     setIsLiked(!isLiked);

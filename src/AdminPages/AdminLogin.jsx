@@ -1,50 +1,86 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import UseAuth from "../UseAuth";
+import { BASE_PATH } from "../constants/paths";
 
 function AdminLogin() {
   const navigate = useNavigate();
+  const [textError, setTextError] = useState(null);
+  const { isAuthenticated } = UseAuth();
+
+  const [nameError, setNameError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
   useEffect(() => {
-    ConectToBack();
+    if (isAuthenticated) {
+      const data = JSON.parse(localStorage.getItem("user_data"));
+      if (data.is_admin == true) {
+        navigate("/adminhome");
+      } else if (data.is_waitress == true) {
+        navigate("/waiterpage");
+      }
+    }
   });
 
-  async function ConectToBack() {
-    const token = localStorage.getItem("access_token");
-    const response = await fetch("http://127.0.0.1:8000/check-token", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (response.status === 200) {
-      navigate("/adminhome");
-    } else if (response.status === 401) {
-      localStorage.clear();
+  useEffect(() => {
+    if (localStorage.getItem("theme") == "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
     }
-  }
+  });
 
   async function login(e) {
     e.preventDefault();
-
     try {
-      const formData = new FormData(e.target);
+      const formData = new FormData();
+
+      const form = e.target;
+
+      if (!form.username.value.trim()) {
+        setTextError("نام کاربری نمی‌تواند خالی باشد.");
+        setNameError(true);
+        return;
+      }
+      formData.append("username", form.username.value);
+
+      if (!form.password.value.trim()) {
+        setTextError("پسورد نمی‌تواند خالی باشد.");
+        setPasswordError(true);
+        return;
+      }
+      formData.append("password", form.password.value);
+
       const data = Object.fromEntries(formData.entries());
 
-      const response = await axios.post("http://127.0.0.1:8000/login", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        `${BASE_PATH}/authentication/token`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+
       if (response.status === 200) {
-        localStorage.setItem("access_token", response.data.access_token);
-        navigate("/adminhome");
+        localStorage.setItem("user_data", JSON.stringify(response.data));
+        if (response.data.is_admin == true) {
+          navigate("/adminhome");
+        } else if (response.data.is_waitress == true) {
+          navigate("/waiterpage");
+        }
       }
     } catch (error) {
       console.error("Login error:", error);
-      if (error.response?.status === 401) {
-        localStorage.clear();
+      if (error.response?.status === 404) {
+        localStorage.removeItem("user_data");
+        if (error.response?.data.detail == "Invalid Username.") {
+          setTextError("نام کاربری اشتباه است.");
+        } else if (error.response?.data.detail == "Invalid Password.") {
+          setTextError("پسورد اشتباه است.");
+        }
       }
     }
   }
@@ -63,7 +99,11 @@ function AdminLogin() {
                 id="username"
                 name="username"
                 placeholder="نام کاربری"
-                className="w-full p-3 rounded-xl border-2 border-adminBackgroundColor dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-darkpallete dark:text-white focus:border-adminPrimary dark:focus:border-adminPrimaryDark outline-none transition-all"
+                className={`w-full p-3 rounded-xl border-2 bg-white dark:bg-darkpalleteDark text-darkpallete dark:text-white focus:border-adminPrimary dark:focus:border-adminPrimaryDark  outline-none transition-all ${
+                  nameError
+                    ? "border-adminError dark:border-adminErrorDark placeholder:text-adminError placeholder:dark:*:text-adminErrorDark"
+                    : "border-adminBackgroundColor dark:border-graypalleteDark"
+                }`}
               />
             </div>
 
@@ -73,7 +113,11 @@ function AdminLogin() {
                 id="password"
                 name="password"
                 placeholder="رمز عبور"
-                className="w-full p-3 rounded-xl border-2 border-adminBackgroundColor dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-darkpallete dark:text-white focus:border-adminPrimary dark:focus:border-adminPrimaryDark outline-none transition-all"
+                className={`w-full p-3 rounded-xl border-2 bg-white dark:bg-darkpalleteDark text-darkpallete dark:text-white focus:border-adminPrimary dark:focus:border-adminPrimaryDark  outline-none transition-all ${
+                  passwordError
+                    ? "border-adminError dark:border-adminErrorDark placeholder:text-adminError placeholder:dark:*:text-adminErrorDark"
+                    : "border-adminBackgroundColor dark:border-graypalleteDark"
+                }`}
               />
             </div>
 
@@ -82,6 +126,7 @@ function AdminLogin() {
               className="bg-adminAction hover:bg-adminActionHover dark:bg-adminActionDark dark:hover:bg-adminActionDark text-white font-bold py-3 rounded-xl transition-colors mt-4">
               ورود
             </button>
+            <p className="text-black dark:text-white">{textError}</p>
           </form>
         </div>
       </div>

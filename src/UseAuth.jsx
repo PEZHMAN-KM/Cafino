@@ -1,30 +1,32 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import { BASE_PATH } from "./constants/paths";
 
 function UseAuth() {
-  const navigate = useNavigate();
-  const [userToken, setUserToken] = useState(() => {
-    return localStorage.getItem("access_token") || null;
-  });
+  // const navigate = useNavigate();
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    const token = JSON.parse(localStorage.getItem("user_data"));
     async function Authorize() {
-      const token = localStorage.getItem("access_token");
       if (!token) {
-        navigate("/adminlogin");
+        // navigate("/adminlogin");
+        setIsAuthenticated(false);
         return;
       }
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/check-token", {
+        const response = await fetch(`${BASE_PATH}/user/get_self_info`, {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token.access_token}`,
           },
         });
 
         if (response.status === 200) {
-          console.log("OK!!");
+          console.log("توکن اکسپایر نشده");
+          setIsAuthenticated(true);
         } else if (response.status === 401) {
           await refreshToken();
         } else {
@@ -37,25 +39,22 @@ function UseAuth() {
     }
 
     async function refreshToken() {
-      const refreshToken = localStorage.getItem("refresh_token");
-      if (!refreshToken) {
-        logout();
-        return;
-      }
       try {
-        const response = await fetch("http://127.0.0.1:8000/refresh-token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ refresh_token: refreshToken }),
-        });
+        const response = await fetch(
+          `${BASE_PATH}/authentication/refresh_token`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token.refresh_token}`,
+            },
+          }
+        );
 
         if (response.status === 200) {
           const data = await response.json();
-          localStorage.setItem("access_token", data.access_token);
-          setUserToken(data.access_token);
-          console.log("OK!!");
+          localStorage.setItem("user_data", JSON.stringify(data));
+          console.log("توکن رفرش شده است");
+          setIsAuthenticated(true);
         } else {
           logout();
         }
@@ -66,16 +65,15 @@ function UseAuth() {
     }
 
     function logout() {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      setUserToken(null);
-      navigate("/adminlogin");
+      console.log("توکن ها مشکل دارن");
+      localStorage.removeItem("user_data");
+      // navigate("/adminlogin");
     }
 
     Authorize();
-  }, [navigate]);
+  });
 
-  return { userToken };
+  return { isAuthenticated };
 }
 
 export default UseAuth;

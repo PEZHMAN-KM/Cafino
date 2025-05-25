@@ -1,6 +1,6 @@
 import AdminHeader from "./AdminHeader";
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import axios, { Axios } from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_PATH } from "../constants/paths";
 
@@ -22,76 +22,107 @@ const ArrowIcon = ({ className }) => {
   );
 };
 
-function AddItem() {
+function EditItem() {
+  const id = Number(localStorage.getItem("edit_food"));
   const [showOffValue, setShowOffValue] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const fileInputRef = useRef(null);
   const [textError, setTextError] = useState(null);
-  const navigate = useNavigate();
 
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+  const [price, setPrice] = useState("");
+  const [inSale, setInSale] = useState(false);
+  const [salePrice, setSalePrice] = useState("");
+
+  const navigate = useNavigate();
   const [nameError, setNameError] = useState(false);
   const [priceError, setPriceError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
 
-  async function addFood(e) {
+  useEffect(() => {
+    async function fetchItem() {
+      try {
+        const response = await axios.post(
+          `${BASE_PATH}/food/get_food_list_by_id`,
+          [id],
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = response.data[0];
+
+        setName(data.name || "");
+        setDescription(data.description || "");
+        setCategoryId(data.category_id?.toString() || "");
+        setPrice(data.price?.toString() || "");
+        setInSale(data.in_sale || false);
+        setShowOffValue(data.in_sale || false);
+        setSalePrice(data.sale_price?.toString() || "");
+        if (data.pic_url) {
+          setPreviewUrl(data.pic_url);
+        }
+      } catch (error) {
+        console.error("Error loading item:", error);
+      }
+    }
+
+    if (id) fetchItem();
+  }, [id]);
+
+  async function updateFood(e) {
     e.preventDefault();
 
     try {
-      const formData = new FormData();
-
-      const form = e.target;
-      if (!form.name.value.trim()) {
+      if (!name.trim()) {
         setTextError("نام آیتم نمی‌تواند خالی باشد.");
-        setNameError(true);
         return;
       }
-      formData.append("name", form.name.value);
-      formData.append("description", form.description.value);
-      formData.append("category_id", Number(form.category_id.value));
-      formData.append("price", Number(form.price.value));
-      if (!form.price.value.trim()) {
+      if (!price.trim()) {
         setTextError("قیمت نمی‌تواند خالی باشد.");
-        setPriceError(true);
+        return;
+      }
+      if (!categoryId) {
+        setTextError("دسته بندی انتخاب نشده است.");
         return;
       }
 
-      if (form.sale.checked) {
-        formData.append("in_sale", true);
-        formData.append("sale_price", Number(form.sale_price.value));
-      } else {
-        formData.append("in_sale", false);
-        // formData.append("sale_price", null);
-      }
-      if (form.profile_image.files.length > 0) {
-        formData.append("pic_url", form.profile_image.files[0]);
-      }
+      // داده ها را به صورت آبجکت JSON آماده می‌کنیم
+      const dataToSend = {
+        food_id: id, // شناسه آیتم که از localStorage گرفتید
+        name: name,
+        description: description,
+        category_id: Number(categoryId),
+        price: Number(price),
+        in_sale: inSale,
+        sale_price: inSale ? Number(salePrice) : 0,
+        // pic_url نمی‌توان به صورت JSON فایل ارسال کرد؛ باید جداگانه مدیریت شود
+      };
+
       const token = JSON.parse(localStorage.getItem("user_data"));
-      const response = await axios.post(
-        `${BASE_PATH}/admin/food/add_food`,
-        formData,
+
+      const response = await axios.put(
+        `${BASE_PATH}/admin/food/update_food`,
+        dataToSend,
         {
           headers: {
             Authorization: `Bearer ${token.access_token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
-      if (response.status === 201) {
-        console.log("Item added successfully:", response.data);
-        navigate("/ItemManager");
-      }
     } catch (error) {
-      console.error("Error:", error);
-      if (error.response?.status === 404) {
-        setTextError("دسته بندی نباید خالی باشد");
-        setCategoryError(true);
-      } else if (error.response?.data?.detail) {
-        setTextError(error.response.data.detail);
-      } else {
-        setTextError("خطا در ارسال اطلاعات");
-      }
+      setTextError(error.response?.data.detail || "خطایی رخ داد");
     }
+  }
+
+  function editFood(food_id) {
+    localStorage.removeItem("edit_food");
+    navigate("/itemmanager");
   }
 
   const handleOffChange = (e) => {
@@ -137,9 +168,9 @@ function AddItem() {
             <div className="bg-white dark:bg-darkpalleteDark m-2 rounded-2xl transition-colors duration-300">
               <div className="flex justify-between items-center pl-4 pt-3">
                 <h1 className="text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
-                  اضافه کردن آیتم
+                  اصلاح کردن آیتم
                 </h1>
-                <a href="/Itemmanager">
+                <button onClick={() => editFood()}>
                   <div className="bg-white dark:bg-darkpalleteDark border-2 p-2 rounded-2xl transition-colors duration-300">
                     <ArrowIcon
                       className={
@@ -147,11 +178,11 @@ function AddItem() {
                       }
                     />
                   </div>
-                </a>
+                </button>
               </div>
               <form
                 className="flex flex-col gap-4 px-8 py-4"
-                onSubmit={addFood}>
+                onSubmit={updateFood}>
                 <div
                   className="border-2 border-dashed border-gray-300 dark:border-graypalleteDark rounded-lg p-4 text-center cursor-pointer hover:border-adminAction dark:hover:border-adminActionDark transition-colors"
                   onClick={() => fileInputRef.current.click()}
@@ -189,6 +220,8 @@ function AddItem() {
                   type="text"
                   name="name"
                   id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="نام آیتم"
                   className={`border rounded-lg p-2  dark:text-white dark:bg-darkpalleteDark transition-all duration-300 ${
                     nameError
@@ -200,6 +233,8 @@ function AddItem() {
                   rows="4"
                   cols="50"
                   name="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   id="description"
                   placeholder="توضیحات"
                   className="border border-gray-300 dark:border-graypalleteDark rounded-lg p-2 dark:bg-darkpalleteDark dark:text-white transition-colors duration-300"
@@ -208,15 +243,13 @@ function AddItem() {
                   <select
                     name="category_id"
                     id="category_id"
+                    value={categoryId}
                     className={`border w-full md:w-1/2 rounded-lg p-2 text-gray-600 dark:text-gray-300 dark:bg-darkpalleteDark transition-all duration-300 ${
                       nameError
                         ? "border-adminError dark:border-adminErrorDark"
                         : "border-gray-300 dark:border-graypalleteDark"
                     }`}
-                    defaultValue="">
-                    <option value="" disabled>
-                      دسته بندی
-                    </option>
+                    onChange={(e) => setCategoryId(e.target.value)}>
                     <option value="1">کافه</option>
                     <option value="2">کیک و دسر</option>
                     <option value="3">نوشیدنی گرم</option>
@@ -227,6 +260,8 @@ function AddItem() {
                     type="text"
                     name="price"
                     id="price"
+                    onChange={(e) => setPrice(e.target.value)}
+                    value={price}
                     placeholder="قیمت"
                     className={`border w-full md:w-1/2 rounded-lg p-2 dark:text-white dark:bg-darkpalleteDark transition-all duration-300 ${
                       priceError
@@ -246,14 +281,19 @@ function AddItem() {
                       type="checkbox"
                       name="sale"
                       id="sale"
-                      onChange={handleOffChange}
-                      checked={showOffValue}
+                      checked={inSale}
+                      onChange={(e) => {
+                        setInSale(e.target.checked);
+                        setShowOffValue(e.target.checked); // اگر لازم است
+                      }}
                     />
                   </div>
                   <input
                     type="text"
                     name="sale_price"
                     id="sale_price"
+                    value={salePrice}
+                    onChange={(e) => setSalePrice(e.target.value)}
                     placeholder="قیمت با تخفیف"
                     className={`border border-gray-300 dark:border-graypalleteDark rounded-lg p-2 dark:bg-darkpalleteDark dark:text-white transition-colors duration-300 ${
                       showOffValue
@@ -277,4 +317,4 @@ function AddItem() {
   );
 }
 
-export default AddItem;
+export default EditItem;

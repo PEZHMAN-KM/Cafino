@@ -1,4 +1,8 @@
+import axios, { Axios } from "axios";
 import AdminHeader from "./AdminHeader";
+import { useEffect, useState } from "react";
+import { BASE_PATH } from "../constants/paths";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const ADD = ({ className }) => {
   return (
@@ -152,30 +156,52 @@ const Delete = ({ className }) => {
 //   );
 // };
 
-const ItemTable = ({ className, name, type, cost, off }) => {
+const formatPrice = (num) => {
+  if (num == null || isNaN(num)) return "";
+  return Number(num).toLocaleString("en-US");
+};
+
+const ItemTable = ({
+  id,
+  name,
+  category,
+  price,
+  in_sale,
+  sale_price,
+  deleteFood,
+  editFood,
+}) => {
   return (
     <div
-      className={`grid grid-cols-4 items-center text-center text-sm md:text-xl font-bold gap-2 rounded-xl px-2 md:gap-5 ${
-        off ? "bg-adminAction text-adminBackgroundColor" : "bg-white"
+      className={`grid grid-cols-4 items-center text-center text-sm md:text-xl font-bold gap-2 rounded-xl px-2 md:gap-5 transition-colors duration-300 ${
+        in_sale
+          ? "bg-adminAction text-adminBackgroundColor dark:bg-adminActionDark"
+          : "bg-white dark:bg-darkpalleteDark dark:text-white"
       }`}>
       <div>
         <h1>{name}</h1>
       </div>
       <div>
-        <h1>{type}</h1>
+        <h1>{category}</h1>
       </div>
       <div>
         <h1 className="text-center">
-          <span>{cost}</span>
+          <span>
+            {sale_price ? formatPrice(sale_price) : formatPrice(price)}
+          </span>
           <span className="pr-1">تومان</span>
         </h1>
       </div>
       <div className="flex justify-center items-center gap-2 my-1 md:my-2">
-        <button className="flex justify-center items-center bg-adminError md:px-1 md:py-0.5 text-white rounded-lg">
+        <button
+          onClick={() => deleteFood(id)}
+          className="flex justify-center items-center bg-adminError md:px-1 md:py-0.5 text-white rounded-lg">
           <Delete className="w-8 md:w-6" />
           <h1 className="hidden md:block md:text-sm">پاک کردن</h1>
         </button>
-        <button className="flex justify-center items-center bg-white md:px-1 md:py-0.5 text-black rounded-lg">
+        <button
+          onClick={() => editFood(id)}
+          className="flex justify-center items-center bg-white md:px-1 md:py-0.5 text-black rounded-lg">
           <Edit className="w-8 md:w-6" />
           <h1 className="hidden md:block md:text-sm">اصلاح</h1>
         </button>
@@ -185,15 +211,73 @@ const ItemTable = ({ className, name, type, cost, off }) => {
 };
 
 const ItemManager = () => {
+  const [allFood, setAllFood] = useState([]);
+  const navigate = useNavigate();
+
+  async function allFoods() {
+    try {
+      const response = await fetch(`${BASE_PATH}/food/get_all_foods`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setAllFood(data);
+        console.log(data);
+      }
+    } catch (error) {
+      console.error("Error fetching foods:", error);
+      setAllFood([]);
+    }
+  }
+  async function deleteFood(food_id) {
+    const token = JSON.parse(localStorage.getItem("user_data"));
+    try {
+      const response = await axios.delete(
+        `${BASE_PATH}/admin/food/delete_food`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.access_token}`,
+            "Content-Type": "application/json",
+          },
+          data: { food_id },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Deleted successfully:", response.data);
+        setAllFood((prevFoods) =>
+          prevFoods.filter((item) => item.id !== food_id)
+        );
+      } else {
+        console.error("Delete failed with status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error Deleting food:", error);
+    }
+  }
+
+  function editFood(food_id) {
+    localStorage.setItem("edit_food", food_id);
+    navigate("/EditItem");
+  }
+
+  useEffect(() => {
+    allFoods();
+  }, []);
+
   return (
     <>
-      <div className="bg-adminBackgroundColor h-full">
-        <div className="bg-adminBackgroundColor h-screen overflow-y-auto overflow-x-hidden">
+      <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-full transition-colors duration-300">
+        <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto overflow-x-hidden transition-colors duration-300">
           <AdminHeader />
           <div className="grid grid-cols-1 md:flex justify-center w-screen">
-            <div className="bg-white m-2 rounded-2xl">
+            <div className="bg-white dark:bg-darkpalleteDark m-2 rounded-2xl transition-colors duration-300">
               <div className="flex justify-between items-center pl-4 py-3">
-                <h1 className="text-3xl font-extrabold pr-8 py-4">
+                <h1 className="text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
                   مدیریت آیتم ها
                 </h1>
                 {/* <div className="flex gap-1 md:gap-2">
@@ -206,45 +290,44 @@ const ItemManager = () => {
                 </div> */}
                 <a href="/AddItem">
                   <div className="bg-white flex items-center justify-center gap-1 border-3 p-1 md:p-2 rounded-2xl font-bold">
-                    <ADD className={"w-8 rotate-180 "} />
-                    <h1 className="hidden md:block">اضافه کردن</h1>
+                    <ADD
+                      className={
+                        "w-8 rotate-180 dark:stroke-white transition-colors duration-300"
+                      }
+                    />
+                    <h1 className="hidden md:block text-black transition-colors duration-300">
+                      اضافه کردن
+                    </h1>
                   </div>
                 </a>
               </div>
               <div className="px-2">
-                <div className="grid grid-cols-4 text-center text-balance md:text-xl font-bold gap-2 md:gap-5 pb-2 border-b-2">
+                <div className="grid grid-cols-4 text-center text-balance md:text-xl font-bold gap-2 md:gap-5 pb-2 border-b-2 dark:text-white transition-colors duration-300">
                   <h1>نام آیتم</h1>
                   <h1>دسته بندی</h1>
                   <h1>هزینه</h1>
                   <h1>آپشن</h1>
                 </div>
-                <div>
-                  {[
-                    {
-                      id: 0,
-                      name: "کافه موکا",
-                      type: "نوشیدنی گرم",
-                      cost: "100",
-                      off: 0,
-                    },
-                    {
-                      id: 1,
-                      name: "کافه موکا",
-                      type: "نوشیدنی گرم",
-                      cost: "3785",
-                      off: 1,
-                    },
-                  ].map((item) => (
+                {allFood.length === 0 ? (
+                  <div className="text-center py-4 text-gray-500 dark:text-gray-400 font-semibold transition-colors duration-300">
+                    هیچ آیتمی وجود ندارد.
+                  </div>
+                ) : (
+                  allFood.map((item) => (
                     <div className="my-1" key={item.id}>
                       <ItemTable
+                        id={item.id}
                         name={item.name}
-                        type={item.type}
-                        cost={item.cost}
-                        off={item.off}
+                        category={item.category_name}
+                        price={item.price}
+                        in_sale={item.in_sale}
+                        sale_price={item.sale_price}
+                        deleteFood={deleteFood}
+                        editFood={editFood}
                       />
                     </div>
-                  ))}
-                </div>
+                  ))
+                )}
               </div>
             </div>
           </div>

@@ -21,6 +21,37 @@ const ArrowIcon = ({ className, ...props }) => {
     </svg>
   );
 };
+const Wallet = ({ ...props }) => (
+  <svg
+    className="w-10"
+    viewBox="0 0 19 17"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}>
+    <path
+      d="M17.533 10.497h-3.374a2.244 2.244 0 0 1 0-4.485h3.374m-2.993 2.19h-.259"
+      stroke="#C67C4E"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      clipRule="evenodd"
+      d="M5.957 1h7.202a4.373 4.373 0 0 1 4.373 4.373v5.98a4.373 4.373 0 0 1-4.373 4.374H5.957a4.373 4.373 0 0 1-4.373-4.373v-5.98A4.373 4.373 0 0 1 5.957 1"
+      stroke="#C67C4E"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M5.363 4.782h4.5"
+      stroke="#C67C4E"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 // plus
 {
@@ -159,8 +190,8 @@ const Checkout = () => (
 function Order() {
   return (
     <>
-      <Header page={3} text={"سبد خرید"} />
-      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark h-full overflow-y-auto pb-60 md:pb-5 transition-colors duration-300">
+      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto overflow-x-hidden pb-60 md:pb-0 transition-colors duration-300">
+        <Header page={3} text={"سبد خرید"} />
         <div className="grid grid-cols-1">
           <div className="col-span-1">
             <OrderBox />
@@ -172,8 +203,26 @@ function Order() {
             <Checkout />
           </div>
         </div>
+        <div className="w-full justify-center bottom-0 mt-10 hidden md:flex px-5">
+          <div className="w-2/3 bg-white p-4 rounded-2xl dark:bg-darkpalleteDark">
+            <div className="flex justify-center bg- flex-col items-center w-full pb-5">
+              <div className="flex justify-between w-full items-center pb-3">
+                <div className="flex items-center gap-2">
+                  <Wallet />
+                  <h1 className="text-2xl font-bold dark:text-white transition-colors duration-300">
+                    مبلغ کل سفارشات
+                  </h1>
+                </div>
+                <h1 className="text-2xl font-bold text-primary">300 تومان</h1>
+              </div>
+              <button className="w-full p-5 rounded-2xl bg-primary text-white text-2xl dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
+                پرداخت
+              </button>
+            </div>
+          </div>
+        </div>
+        <Footer page={3} CostMoney={200} />
       </div>
-      <Footer page={3} CostMoney={200} />
     </>
   );
 }
