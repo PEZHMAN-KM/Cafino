@@ -52,10 +52,10 @@ const DarkMode = ({ className }) => {
 };
 
 const TableNumber = ({ tableNumber }) => (
-  <div className=" bg-white dark:bg-black text-black dark:text-white px-4 h-13 w-fit rounded-3xl border-2 border-adminBackgroundColor dark:border-adminBackgroundColorDark flex justify-center items-center gap-5 transition-colors duration-300">
+  <div className=" bg-white dark:bg-black text-black dark:text-white px-4 py-1 w-fit rounded-3xl border-2 border-adminBackgroundColor dark:border-adminBackgroundColorDark flex justify-center items-center gap-5 transition-colors duration-300">
     <TableIcon className="fill-adminPrimary dark:fill-adminPrimaryDark stroke-adminPrimary dark:stroke-adminPrimaryDark transition-colors duration-300" />
     <h1 className="text-2xl font-bold text-center">
-      میز شماره
+      <span>میز شماره </span>
       <span className="text-adminPrimary dark:text-adminPrimaryDark transition-colors duration-300 text-3xl">
         {tableNumber}
       </span>
@@ -63,19 +63,30 @@ const TableNumber = ({ tableNumber }) => (
   </div>
 );
 
-const WaiterRequest = ({ tableNumber }) => (
-  <div className="flex flex-col justify-center items-center my-3">
-    <div className=" bg-white dark:bg-darkpalleteDark transition-colors duration-300 w-5/6 px-7 py-3 rounded-3xl">
+const WaiterRequest = ({ tableNumber, id, message, inProgress, progressNotification, unProgressNotification }) => (
+  <div className="flex flex-col justify-center items-center w-full">
+    <div className=" bg-white dark:bg-darkpalleteDark transition-all hover:scale-102 duration-300 w-9/10 md:w-4/6 xl:w-3/6 px-7 py-2 rounded-3xl">
       <h1 className="text-lg text-black dark:text-white transition-colors duration-300 pb-2">
-        درخواست کمک
+        {message ? "تحویل سفارش" : "درخواست کمک"}
       </h1>
       <div className="flex flex-col justify-center items-center">
         <TableNumber tableNumber={tableNumber} />
       </div>
-      <div className="flex justify-center items-center gap-2 py-4">
-        <button className="bg-white  dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
-          بررسی و انجام شد
+      <div className="flex justify-center items-center gap-2 py-2">
+        {inProgress ?
+        <div>
+          <button onClick={()=>progressNotification(id)}
+         className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+          انجام شد
         </button>
+        <button onClick={()=>unProgressNotification(id)}
+         className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+          لغو بررسی
+        </button>
+        </div> : <button onClick={()=>progressNotification(id)}
+         className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+          پذیرش بررسی
+        </button>}
       </div>
     </div>
   </div>
@@ -86,6 +97,7 @@ function WaiterPage() {
   const [showMenu, setShowMenu] = useState(false);
   const [userData, setUserData] = useState(Object);
   const [profilePic, setProfilePic] = useState(null);
+  const [allNotifications, setAllNotifications] = useState([]);
 
   const navigate = useNavigate();
 
@@ -101,7 +113,6 @@ function WaiterPage() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setUserData(data);
         if (data.is_waitress != true) {
           logOut();
@@ -130,10 +141,72 @@ function WaiterPage() {
       );
 
       const imageBlob = response.data;
-      const imageUrl = URL.createObjectURL(imageBlob);
+      const imageUrl = URL.createObjectURL(imageBlob);      
       setProfilePic(imageUrl);
     } catch (error) {
       console.error("Error fetching profile picture:", error);
+    }
+  }
+
+  async function getNOtification() {
+    try {
+      const response = await axios.get(
+        `${BASE_PATH}/notification/get_notifs_to_show`,
+        {
+          headers: { "accept": "application/json" },
+        }
+      );
+      console.log(response);
+      setAllNotifications([
+            ...response.data.in_progress_notifs,
+            ...response.data.requested_notifs,
+          ]);
+
+    } catch (error) {
+      console.error("خطا در دریافت نوتفیکیشن ها:", error);
+    }
+  }
+  async function progressNotification(notif_id) {
+    const token = JSON.parse(localStorage.getItem("user_data"));
+    try {
+      const response = await axios.put(
+        `${BASE_PATH}/waitress/notification/get_notif_in_progress`,{
+        notif_id: notif_id
+      },
+        {
+          headers: {
+            "accept": "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.access_token}`,
+          },
+        }
+      );
+      console.log(response);
+      await getNOtification();
+    } catch (error) {
+      console.error("خطا در پذیرش بررسی :", error);
+    }
+  }
+  async function unProgressNotification(notif_id) {
+    const token = JSON.parse(localStorage.getItem("user_data"));
+    try {
+      const response = await axios.put(
+        `${BASE_PATH}/notification/get_out_of_progress`,
+        {
+          notif_id: notif_id
+        },
+        {
+          headers: {
+            "accept": "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.access_token}`,
+          },
+        }
+      );
+      console.log(response);
+      await getNOtification();
+    } catch (error) {
+      console.error("خطا در لغو بررسی نوتیف:", error);
     }
   }
 
@@ -142,6 +215,7 @@ function WaiterPage() {
 
     getUserInfo();
     getProfilePic();
+    getNOtification();
 
     if (savedTheme) {
       setIsDark(savedTheme === "dark");
@@ -174,6 +248,14 @@ function WaiterPage() {
     }
   };
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getNOtification();      
+    }, 7000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -184,7 +266,7 @@ function WaiterPage() {
 
   return (
     <>
-      <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen transition-colors duration-300">
+      <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden transition-colors duration-300">
         {/* HEADER */}
         <div className="p-2 sticky top-0 z-10 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300 rounded-b-3xl">
           <div className="bg-white dark:bg-darkpalleteDark transition-colors duration-300 w-full rounded-3xl py-3 px-4 flex justify-between items-center">
@@ -245,17 +327,9 @@ function WaiterPage() {
             </div>
           </div>
         </div>
-        <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-fit pb-2 transition-colors duration-300">
-          {[
-            { id: 0, tableNumber: 3 },
-            { id: 1, tableNumber: 8 },
-            { id: 2, tableNumber: 13 },
-            { id: 3, tableNumber: 33 },
-            { id: 4, tableNumber: 6 },
-          ].map((item) => (
-            <div key={item.id}>
-              <WaiterRequest tableNumber={item.tableNumber} />
-            </div>
+        <div className="bg-adminBackgroundColor flex flex-col gap-3 dark:bg-adminBackgroundColorDark h-fit transition-colors duration-300">
+          {allNotifications.map((item) => (
+              <WaiterRequest key={item.id} id={item.id} tableNumber={item.table_number} message={item.message} inProgress={item.is_in_progress} progressNotification={progressNotification} unProgressNotification={unProgressNotification} />
           ))}
         </div>
       </div>

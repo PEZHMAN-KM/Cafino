@@ -35,7 +35,7 @@ const FavItem = () => (
 function FavoritePage() {
   return (
     <>
-      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto overflow-x-hidden pb-26 md:pb-3 transition-colors duration-300">
+      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 md:pb-3 transition-colors duration-300">
         <Header page={2} text={"علاقه مندی ها"} />
         <div className="grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 grid-cols-2 gap-y-4 gap-x-2 mt-2 justify-evenly items-center">
           {[

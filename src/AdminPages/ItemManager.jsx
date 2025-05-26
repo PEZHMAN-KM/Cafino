@@ -189,7 +189,7 @@ const ItemTable = ({
           <span>
             {sale_price ? formatPrice(sale_price) : formatPrice(price)}
           </span>
-          <span className="pr-1">تومان</span>
+          {/* <span className="pr-1">تومان</span> */}
         </h1>
       </div>
       <div className="flex justify-center items-center gap-2 my-1 md:my-2">
@@ -272,7 +272,7 @@ const ItemManager = () => {
   return (
     <>
       <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-full transition-colors duration-300">
-        <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto overflow-x-hidden transition-colors duration-300">
+        <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden transition-colors duration-300">
           <AdminHeader />
           <div className="grid grid-cols-1 md:flex justify-center w-screen">
             <div className="bg-white dark:bg-darkpalleteDark m-2 rounded-2xl transition-colors duration-300">
@@ -305,7 +305,10 @@ const ItemManager = () => {
                 <div className="grid grid-cols-4 text-center text-balance md:text-xl font-bold gap-2 md:gap-5 pb-2 border-b-2 dark:text-white transition-colors duration-300">
                   <h1>نام آیتم</h1>
                   <h1>دسته بندی</h1>
-                  <h1>هزینه</h1>
+                  <h1>
+                    <span>هزینه  </span>
+                    <span className="text-sm">(تومان)</span>
+                  </h1>
                   <h1>آپشن</h1>
                 </div>
                 {allFood.length === 0 ? (

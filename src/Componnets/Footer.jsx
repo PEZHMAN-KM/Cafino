@@ -132,14 +132,14 @@ function Footer({ page, CostMoney }) {
           </div>
         ) : null}
         <div className="flex items-center justify-between px-5">
-          <a href="ContactUs">
+          <a className="hover:scale-125 transition-all duration-300" href="ContactUs">
             {page == 4 ? (
               <Call className="stroke-primary fill-primary w-12" />
             ) : (
               <Call className="stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark w-12 transition-colors duration-300" />
             )}
           </a>
-          <a href="Order" className="relative">
+          <a href="Order" className="relative hover:scale-125 transition-all duration-300" >
             <div className="absolute -right-1 -top-1 bg-primary w-6 h-6 rounded-full flex justify-center items-center font-bold text-white">
               2
             </div>
@@ -149,14 +149,14 @@ function Footer({ page, CostMoney }) {
               <Bag className="stroke-highgray dark:stroke-highgrayDark w-12 transition-colors duration-300" />
             )}
           </a>
-          <a href="FavoritePage">
+          <a className="hover:scale-125 transition-all duration-300" href="FavoritePage">
             {page == 2 ? (
               <Favorite className="stroke-primary fill-primary w-12" />
             ) : (
               <Favorite className="stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark w-12 transition-colors duration-300" />
             )}
           </a>
-          <a href="Home">
+          <a className="hover:scale-125 transition-all duration-300" href="Home">
             {page == 1 ? (
               <Home className="stroke-primary fill-primary w-12" />
             ) : (

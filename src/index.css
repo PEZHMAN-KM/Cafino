@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin 'tailwind-scrollbar';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -68,7 +69,7 @@
   font-style: Black;
 }
 
-* {
+* { 
   font-family: "IranYekan";
   direction: rtl;
 }

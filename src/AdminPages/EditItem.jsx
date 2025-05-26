@@ -38,9 +38,6 @@ function EditItem() {
   const [salePrice, setSalePrice] = useState("");
 
   const navigate = useNavigate();
-  const [nameError, setNameError] = useState(false);
-  const [priceError, setPriceError] = useState(false);
-  const [categoryError, setCategoryError] = useState(false);
 
   useEffect(() => {
     async function fetchItem() {
@@ -78,22 +75,8 @@ function EditItem() {
     e.preventDefault();
 
     try {
-      if (!name.trim()) {
-        setTextError("نام آیتم نمی‌تواند خالی باشد.");
-        return;
-      }
-      if (!price.trim()) {
-        setTextError("قیمت نمی‌تواند خالی باشد.");
-        return;
-      }
-      if (!categoryId) {
-        setTextError("دسته بندی انتخاب نشده است.");
-        return;
-      }
-
-      // داده ها را به صورت آبجکت JSON آماده می‌کنیم
       const dataToSend = {
-        food_id: id, // شناسه آیتم که از localStorage گرفتید
+        food_id: id,
         name: name,
         description: description,
         category_id: Number(categoryId),
@@ -115,12 +98,13 @@ function EditItem() {
           },
         }
       );
+        exit();
     } catch (error) {
       setTextError(error.response?.data.detail || "خطایی رخ داد");
     }
   }
 
-  function editFood(food_id) {
+  function exit() {
     localStorage.removeItem("edit_food");
     navigate("/itemmanager");
   }
@@ -162,7 +146,7 @@ function EditItem() {
   return (
     <>
       <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-full transition-colors duration-300">
-        <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto overflow-x-hidden transition-colors duration-300">
+        <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden transition-colors duration-300">
           <AdminHeader />
           <div className="grid grid-cols-1 md:flex justify-center w-screen">
             <div className="bg-white dark:bg-darkpalleteDark m-2 rounded-2xl transition-colors duration-300">
@@ -170,7 +154,7 @@ function EditItem() {
                 <h1 className="text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
                   اصلاح کردن آیتم
                 </h1>
-                <button onClick={() => editFood()}>
+                <button onClick={() => exit()}>
                   <div className="bg-white dark:bg-darkpalleteDark border-2 p-2 rounded-2xl transition-colors duration-300">
                     <ArrowIcon
                       className={
@@ -223,11 +207,7 @@ function EditItem() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="نام آیتم"
-                  className={`border rounded-lg p-2  dark:text-white dark:bg-darkpalleteDark transition-all duration-300 ${
-                    nameError
-                      ? "border-adminError dark:border-adminErrorDark placeholder:text-adminError placeholder:dark:*:text-adminErrorDark"
-                      : "border-gray-300 dark:border-graypalleteDark"
-                  }`}
+                  className="border rounded-lg p-2  dark:text-white dark:bg-darkpalleteDark transition-all duration-300 border-gray-300 dark:border-graypalleteDark"
                 />
                 <textarea
                   rows="4"
@@ -244,11 +224,7 @@ function EditItem() {
                     name="category_id"
                     id="category_id"
                     value={categoryId}
-                    className={`border w-full md:w-1/2 rounded-lg p-2 text-gray-600 dark:text-gray-300 dark:bg-darkpalleteDark transition-all duration-300 ${
-                      nameError
-                        ? "border-adminError dark:border-adminErrorDark"
-                        : "border-gray-300 dark:border-graypalleteDark"
-                    }`}
+                    className="border w-full md:w-1/2 rounded-lg p-2 text-gray-600 dark:text-gray-300 dark:bg-darkpalleteDark transition-all duration-300 border-gray-300 dark:border-graypalleteDark"
                     onChange={(e) => setCategoryId(e.target.value)}>
                     <option value="1">کافه</option>
                     <option value="2">کیک و دسر</option>
@@ -263,16 +239,12 @@ function EditItem() {
                     onChange={(e) => setPrice(e.target.value)}
                     value={price}
                     placeholder="قیمت"
-                    className={`border w-full md:w-1/2 rounded-lg p-2 dark:text-white dark:bg-darkpalleteDark transition-all duration-300 ${
-                      priceError
-                        ? "border-adminError dark:border-adminErrorDark placeholder:text-adminError placeholder:dark:*:text-adminErrorDark"
-                        : "border-gray-300 dark:border-graypalleteDark"
-                    }`}
+                    className="border w-full md:w-1/2 rounded-lg p-2 dark:text-white dark:bg-darkpalleteDark transition-all duration-300 border-gray-300 dark:border-graypalleteDark"
                   />
                 </div>
                 <div className="max-h-fit">
                   <div className="flex items-center gap-2 pb-2">
-                    <label
+                  <label
                       htmlFor="off"
                       className="dark:text-white transition-colors duration-300">
                       تخفیف ویژه
@@ -281,20 +253,20 @@ function EditItem() {
                       type="checkbox"
                       name="sale"
                       id="sale"
-                      checked={inSale}
-                      onChange={(e) => {
+                       onChange={(e) => {
                         setInSale(e.target.checked);
                         setShowOffValue(e.target.checked); // اگر لازم است
                       }}
+                      checked={showOffValue}
                     />
                   </div>
                   <input
                     type="text"
                     name="sale_price"
                     id="sale_price"
+                    placeholder="قیمت با تخفیف"
                     value={salePrice}
                     onChange={(e) => setSalePrice(e.target.value)}
-                    placeholder="قیمت با تخفیف"
                     className={`border border-gray-300 dark:border-graypalleteDark rounded-lg p-2 dark:bg-darkpalleteDark dark:text-white transition-colors duration-300 ${
                       showOffValue
                         ? "opacity-100 scale-100"

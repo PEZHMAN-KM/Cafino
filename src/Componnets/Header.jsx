@@ -174,11 +174,15 @@ function Header({ page, text }) {
         className={`z-10 flex justify-center items-center max-w-screen gap-3 p-5 py-3 bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300 ${
           page !== 1 ? "sticky top-0" : ""
         }`}>
-        <div className="hidden md:flex-1/4 md:flex gap-2 ">
-          <div onClick={toggleMenu}>
+        <div className="hidden md:flex-1/4 md:flex gap-2">
+          <div
+            className="transition-all duration-300 hover:scale-105"
+            onClick={toggleMenu}>
             <TopMenu />
           </div>
-          <button onClick={toggleDarkMode}>
+          <button
+            className="transition-all duration-300 hover:scale-105"
+            onClick={toggleDarkMode}>
             {isDark ? (
               <DarkMode
                 className={"rotate-0 transition-all fill-white duration-150"}
@@ -217,7 +221,7 @@ function Header({ page, text }) {
           </div>
         )}
         {page == 1 ? (
-          <div className="flex-3/4 flex justify-center items-center bg-slowgray dark:bg-graypalleteDark p-1.5 gap-2 rounded-xl md:flex-2/4">
+          <div className="flex-3/4 flex justify-center items-center bg-slowgray dark:bg-graypalleteDark p-1.5 gap-2 rounded-xl md:flex-2/4  transition-colors duration-300">
             <SearchIcon />
             <input
               className="w-full bg-transparent dark:text-white focus:outline-none placeholder-highgrayDark dark:placeholder-highgray transition-colors duration-300"
@@ -233,13 +237,17 @@ function Header({ page, text }) {
           </div>
         )}
         {page == 1 ? (
-          <div className="flex-1/4 md:text-end text-xl font-bold dark:text-white transition-colors duration-300">
+          <a
+            href="/home"
+            className="flex-1/4 md:text-end text-xl font-bold dark:text-white transition-colors duration-300">
             کافـی نـو
-          </div>
+          </a>
         ) : (
-          <div className="hidden md:flex-1/4 md:block md:text-end text-xl font-bold dark:text-white transition-colors duration-300">
+          <a
+            href="/home"
+            className="hidden md:flex-1/4 md:block md:text-end text-xl font-bold dark:text-white transition-colors duration-300">
             کافـی نـو
-          </div>
+          </a>
         )}
       </div>
     </>

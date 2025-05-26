@@ -128,7 +128,7 @@ const InstagramPage = () => (
 function ContactUs() {
   return (
     <>
-      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark h-screen w-screen overflow-y-auto pb-26 md:pb-0">
+      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark h-screen w-screen overflow-y-auto scrollbar scrollbar-none pb-26 md:pb-0">
         <Header page={4} text={"تماس با ما"} />
         <div className="grid grid-cols-1">
           <div className="col-span-1 flex justify-center items-start">

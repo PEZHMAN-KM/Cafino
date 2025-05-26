@@ -190,7 +190,7 @@ const Checkout = () => (
 function Order() {
   return (
     <>
-      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto overflow-x-hidden pb-60 md:pb-0 transition-colors duration-300">
+      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-60 md:pb-0 transition-colors duration-300">
         <Header page={3} text={"سبد خرید"} />
         <div className="grid grid-cols-1">
           <div className="col-span-1">

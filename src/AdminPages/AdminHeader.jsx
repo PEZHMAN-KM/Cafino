@@ -78,6 +78,7 @@ const TopMenu = ({ className, stroke }) => {
 function AdminHeader() {
   const [isDark, setIsDark] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showMenuLeft, setShowMenuLeft] = useState(false);
   const [userData, setUserData] = useState(Object);
   const [profilePic, setProfilePic] = useState(null);
 
@@ -170,6 +171,11 @@ function AdminHeader() {
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+
+  const toggleMenuLeft = () => {
+    setShowMenuLeft(!showMenuLeft);
+  };
+
   const logOut = () => {
     localStorage.removeItem("user_data");
     navigate("/adminlogin");
@@ -196,12 +202,35 @@ function AdminHeader() {
               گزارش گیری
             </a>
           </div>
-          <div className="flex md:hidden">
+          <div
+            onClick={toggleMenuLeft}
+            className="flex md:hidden cursor-pointer relative">
             <TopMenu
               className="w-15 bg-adminBackgroundColor dark:bg-darkpalleteDark rounded-2xl transition-colors duration-300"
               stroke={isDark ? "#fff" : "#809FB8"}
             />
           </div>
+          {showMenuLeft && (
+            <div className="absolute md:hidden right-5 top-20 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300">
+              <div className="py-1">
+                <a
+                  href="/adminhome"
+                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                  خانه
+                </a>
+                <a
+                  href="/itemmanager"
+                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                  آیتم
+                </a>
+                <a
+                  href=""
+                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                  گزارش گیری
+                </a>
+              </div>
+            </div>
+          )}
           <div className="text-xl font-semibold md:hidden text-darkpallete dark:text-white transition-colors duration-300">
             کافـی نـو
           </div>

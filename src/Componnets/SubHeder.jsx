@@ -325,10 +325,10 @@ function SubHeder({ hideIcons, className, onCategorySelect }) {
   return (
     <>
       <div className={className}>
-        <div className="z-10 flex justify-baseline xl:justify-center items-center gap-3 px-3 py-2 w-full overflow-x-auto">
+        <div className="z-10 flex justify-baseline xl:justify-center items-center gap-3 px-3 py-2 w-full scrollbar scrollbar-none overflow-x-auto">
           {/* MENU BUTTON */}
           <div
-            className={`bg-darkpallete p-2 hidden shrink-0 font-bold rounded-2xl cursor-pointer ${
+            className={`bg-darkpallete p-2 hidden shrink-0 font-bold rounded-2xl cursor-pointer transition-all duration-300 hover:scale-102 hover:bg-highgray ${
               !hideIcons ? "hidden" : "md:block"
             }`}
             onClick={toggleMenu}>
@@ -362,7 +362,7 @@ function SubHeder({ hideIcons, className, onCategorySelect }) {
           )}
           {/* SEARCH ICON */}
           <div
-            className={`bg-graypallete p-3 shrink-0 font-bold rounded-2xl ${
+            className={`bg-graypallete p-3 shrink-0 font-bold rounded-2xl cursor-pointer transition-all duration-300 hover:scale-102 hover:bg-highgray ${
               !hideIcons ? "hidden" : "block"
             }`}>
             {hideIcons && <SearchIcon />}
@@ -373,7 +373,7 @@ function SubHeder({ hideIcons, className, onCategorySelect }) {
               onCategory === 1
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 ${
+            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 hover:scale-102 hover:bg-highgray ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex justify-center items-center flex-col gap-3 text-sm md:text-2xl"
                 : "p-3 text-xl h-full text-center"
@@ -395,7 +395,7 @@ function SubHeder({ hideIcons, className, onCategorySelect }) {
               onCategory === -1
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-slowprimary dark:bg-slowprimaryDark text-primary"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 flex justify-center items-center gap-3 ${
+            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 hover:scale-102 hover:bg-slowgrayDark hover:dark:bg-slowgray flex justify-center items-center gap-3 ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex-col text-sm md:text-2xl"
                 : "p-2 text-xl text-center"
@@ -420,7 +420,7 @@ function SubHeder({ hideIcons, className, onCategorySelect }) {
               onCategory === 2
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 ${
+            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 hover:scale-102 hover:bg-highgray ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex justify-center items-center flex-col gap-3 text-sm md:text-2xl"
                 : "p-3 text-xl h-full text-center"
@@ -444,7 +444,7 @@ function SubHeder({ hideIcons, className, onCategorySelect }) {
               onCategory === 3
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 ${
+            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 hover:scale-102 hover:bg-highgray ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex justify-center items-center flex-col gap-3 text-sm md:text-2xl"
                 : "p-3 text-xl h-full text-center"
@@ -466,7 +466,7 @@ function SubHeder({ hideIcons, className, onCategorySelect }) {
               onCategory === 4
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 ${
+            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 hover:scale-102 hover:bg-highgray ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex justify-center items-center flex-col gap-3 text-sm md:text-2xl"
                 : "p-3 text-xl h-full text-center"
@@ -485,7 +485,7 @@ function SubHeder({ hideIcons, className, onCategorySelect }) {
               onCategory === 5
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl transition-colors cursor-pointer duration-300 ${
+            } shrink-0 font-bold rounded-2xl transition-colors duration-300 hover:scale-102 hover:bg-highgray cursor-pointer ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex justify-center items-center flex-col gap-3 text-sm md:text-2xl"
                 : "p-3 text-xl h-full text-center"
