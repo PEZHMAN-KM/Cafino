@@ -291,7 +291,7 @@ function WaiterPage() {
             </div>
 
             <h1 className="md:hidden text-3xl text-black dark:text-white font-extrabold text-center p-2 rounded-3xl">
-              سالندار
+              سالن‌دار
             </h1>
             <div className="cursor-pointer relative" onClick={toggleMenu}>
               <div className="flex justify-center items-center flex-row-reverse gap-2">

@@ -24,48 +24,48 @@ const ArrowIcon = ({ className }) => {
 
 function AddItem() {
   const [showOffValue, setShowOffValue] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const fileInputRef = useRef(null);
+  const [preview, setPreview] = useState(null);
   const [textError, setTextError] = useState(null);
-  const navigate = useNavigate();
-
   const [nameError, setNameError] = useState(false);
   const [priceError, setPriceError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
+  const [foodImage, setFoodImage] = useState(null);
+  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
-  async function addFood(e) {
+  const addFood = async (e) => {
     e.preventDefault();
-
     try {
       const formData = new FormData();
-
       const form = e.target;
+
       if (!form.name.value.trim()) {
         setTextError("نام آیتم نمی‌تواند خالی باشد.");
         setNameError(true);
         return;
       }
-      formData.append("name", form.name.value);
-      formData.append("description", form.description.value);
-      formData.append("category_id", Number(form.category_id.value));
-      formData.append("price", Number(form.price.value));
       if (!form.price.value.trim()) {
         setTextError("قیمت نمی‌تواند خالی باشد.");
         setPriceError(true);
         return;
       }
 
+      formData.append("name", form.name.value);
+      formData.append("description", form.description.value);
+      formData.append("category_id", Number(form.category_id.value));
+      formData.append("price", Number(form.price.value));
+
       if (form.sale.checked) {
         formData.append("in_sale", true);
         formData.append("sale_price", Number(form.sale_price.value));
       } else {
         formData.append("in_sale", false);
-        // formData.append("sale_price", null);
       }
-      if (form.profile_image.files.length > 0) {
-        formData.append("pic_url", form.profile_image.files[0]);
-      }
+      formData.append("pic_url", preview);
+      // if (preview) {
+      //   formData.append("pic_url", preview);
+      // }
+
       const token = JSON.parse(localStorage.getItem("user_data"));
       const response = await axios.post(
         `${BASE_PATH}/admin/food/add_food`,
@@ -77,9 +77,14 @@ function AddItem() {
           },
         }
       );
+
       if (response.status === 201) {
-        console.log("Item added successfully:", response.data);
-        navigate("/ItemManager");
+        console.log("Full response data:", response.data); // <--- Added this line for debugging
+        const uploadedImageUrl = response.data.pic_url; // Adjust if backend uses a different key
+        console.log("Uploaded Image URL:", uploadedImageUrl);
+
+        // Optionally navigate or reset form here
+        // navigate("/ItemManager");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -92,42 +97,54 @@ function AddItem() {
         setTextError("خطا در ارسال اطلاعات");
       }
     }
-  }
-
-  const handleOffChange = (e) => {
-    setShowOffValue(e.target.checked);
   };
 
-  const handleImageSelect = (e) => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
-      setSelectedImage(file);
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewUrl(imageUrl);
+      setFoodImage(file);
+      console.log("ssss", foodImage);
+      setPreview(URL.createObjectURL(file));
     }
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.add("border-adminAction");
+    e.currentTarget.classList.add(
+      "border-adminAction",
+      "dark:border-adminActionDark"
+    );
   };
 
   const handleDragLeave = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.remove("border-adminAction");
+    e.currentTarget.classList.remove(
+      "border-adminAction",
+      "dark:border-adminActionDark"
+    );
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.remove("border-adminAction");
+    e.currentTarget.classList.remove(
+      "border-adminAction",
+      "dark:border-adminActionDark"
+    );
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith("image/")) {
-      setSelectedImage(file);
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewUrl(imageUrl);
+      setFoodImage(file);
+      setPreview(URL.createObjectURL(file));
     }
   };
 
+  const handleOffChange = (e) => {
+    setShowOffValue(e.target.checked);
+  };
+
+  const handleDeleteImage = () => {
+    setFoodImage(null);
+    setPreview(null);
+  };
   return (
     <>
       <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-full transition-colors duration-300">
@@ -152,38 +169,66 @@ function AddItem() {
               <form
                 className="flex flex-col gap-4 px-8 py-4"
                 onSubmit={addFood}>
-                <div
-                  className="border-2 border-dashed border-gray-300 dark:border-graypalleteDark rounded-lg p-4 text-center cursor-pointer hover:border-adminAction dark:hover:border-adminActionDark transition-colors"
-                  onClick={() => fileInputRef.current.click()}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    name="profile_image"
-                    id="profile_image"
-                    className="hidden"
-                    onChange={handleImageSelect}
-                    ref={fileInputRef}
-                  />
-                  {previewUrl ? (
-                    <div className="relative group">
-                      <img
-                        src={previewUrl}
-                        alt="Preview"
-                        className="max-h-48 mx-auto rounded-lg"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
-                        <span className="text-white">تغییر تصویر</span>
+                <div className="flex flex-col items-center space-y-4">
+                  <div
+                    className="border-2 border-dashed border-gray-300 dark:border-graypalleteDark rounded-lg p-4 text-center cursor-pointer hover:border-adminAction dark:hover:border-adminActionDark transition-colors w-full max-w-md"
+                    onClick={() => fileInputRef.current.click()}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                      ref={fileInputRef}
+                    />
+
+                    {preview ? (
+                      <div className="relative group">
+                        <img
+                          src={preview}
+                          name="pic_url"
+                          id="pic_url"
+                          alt="pic_url"
+                          className="max-h-48 mx-auto rounded-lg object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
+                          <span className="text-white">تغییر تصویر</span>
+                        </div>
+                        {preview && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteImage();
+                            }}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white text-xl font-bold rounded-full flex items-center justify-center w-10 h-10 hover:bg-red-600 transition-colors duration-300">
+                            ✕
+                          </button>
+                        )}
                       </div>
-                    </div>
-                  ) : (
-                    <div className="text-gray-500 dark:text-gray-400">
-                      <p>برای آپلود تصویر کلیک کنید</p>
-                      <p className="text-sm">یا تصویر را اینجا رها کنید</p>
-                    </div>
-                  )}
+                    ) : (
+                      <div className="text-gray-500 dark:text-gray-400 py-8">
+                        <svg
+                          className="mx-auto h-12 w-12 mb-4"
+                          stroke="currentColor"
+                          fill="none"
+                          viewBox="0 0 48 48">
+                          <path
+                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <p className="text-sm">برای آپلود تصویر کلیک کنید</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500">
+                          یا تصویر را اینجا رها کنید
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <input
                   type="text"

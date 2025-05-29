@@ -25,7 +25,7 @@ function UseAuth() {
         });
 
         if (response.status === 200) {
-          console.log("توکن اکسپایر نشده");
+          // console.log("توکن اکسپایر نشده");
           setIsAuthenticated(true);
         } else if (response.status === 401) {
           await refreshToken();
@@ -33,7 +33,7 @@ function UseAuth() {
           logout();
         }
       } catch (error) {
-        console.error("خطا در بررسی توکن:", error);
+        // console.error("خطا در بررسی توکن:", error);
         logout();
       }
     }
@@ -53,19 +53,19 @@ function UseAuth() {
         if (response.status === 200) {
           const data = await response.json();
           localStorage.setItem("user_data", JSON.stringify(data));
-          console.log("توکن رفرش شده است");
+          // console.log("توکن رفرش شده است");
           setIsAuthenticated(true);
         } else {
           logout();
         }
       } catch (error) {
-        console.error("خطا در رفرش توکن:", error);
+        // console.error("خطا در رفرش توکن:", error);
         logout();
       }
     }
 
     function logout() {
-      console.log("توکن ها مشکل دارن");
+      // console.log("توکن ها مشکل دارن");
       localStorage.removeItem("user_data");
       // navigate("/adminlogin");
     }

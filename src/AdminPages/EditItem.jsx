@@ -52,6 +52,7 @@ function EditItem() {
           }
         );
         const data = response.data[0];
+        console.log(response);
 
         setName(data.name || "");
         setDescription(data.description || "");
@@ -98,7 +99,7 @@ function EditItem() {
           },
         }
       );
-        exit();
+      exit();
     } catch (error) {
       setTextError(error.response?.data.detail || "خطایی رخ داد");
     }
@@ -244,7 +245,7 @@ function EditItem() {
                 </div>
                 <div className="max-h-fit">
                   <div className="flex items-center gap-2 pb-2">
-                  <label
+                    <label
                       htmlFor="off"
                       className="dark:text-white transition-colors duration-300">
                       تخفیف ویژه
@@ -253,7 +254,7 @@ function EditItem() {
                       type="checkbox"
                       name="sale"
                       id="sale"
-                       onChange={(e) => {
+                      onChange={(e) => {
                         setInSale(e.target.checked);
                         setShowOffValue(e.target.checked); // اگر لازم است
                       }}

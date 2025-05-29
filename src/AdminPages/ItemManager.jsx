@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { BASE_PATH } from "../constants/paths";
 import { Navigate, useNavigate } from "react-router-dom";
 
+import UseAuth from "../UseAuth";
+
 const ADD = ({ className }) => {
   return (
     <svg
@@ -197,7 +199,7 @@ const ItemTable = ({
           onClick={() => deleteFood(id)}
           className="flex justify-center items-center bg-adminError md:px-1 md:py-0.5 text-white rounded-lg">
           <Delete className="w-8 md:w-6" />
-          <h1 className="hidden md:block md:text-sm">پاک کردن</h1>
+          <h1 className="hidden md:block md:w-14 md:text-sm">پاک کردن</h1>
         </button>
         <button
           onClick={() => editFood(id)}
@@ -212,7 +214,18 @@ const ItemTable = ({
 
 const ItemManager = () => {
   const [allFood, setAllFood] = useState([]);
+  const { isAuthenticated } = UseAuth();
   const navigate = useNavigate();
+
+  async function checktoken() {
+    if (isAuthenticated) {
+      const data = JSON.parse(localStorage.getItem("user_data"));
+      if (data.is_admin == false) {
+        navigate("/adminhome");
+        localStorage.removeItem("user_data");
+      }
+    }
+  }
 
   async function allFoods() {
     try {
@@ -226,7 +239,6 @@ const ItemManager = () => {
       if (response.ok) {
         const data = await response.json();
         setAllFood(data);
-        console.log(data);
       }
     } catch (error) {
       console.error("Error fetching foods:", error);
@@ -234,6 +246,7 @@ const ItemManager = () => {
     }
   }
   async function deleteFood(food_id) {
+    checktoken();
     const token = JSON.parse(localStorage.getItem("user_data"));
     try {
       const response = await axios.delete(
@@ -261,6 +274,7 @@ const ItemManager = () => {
   }
 
   function editFood(food_id) {
+    checktoken();
     localStorage.setItem("edit_food", food_id);
     navigate("/EditItem");
   }
@@ -275,7 +289,7 @@ const ItemManager = () => {
         <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden transition-colors duration-300">
           <AdminHeader />
           <div className="grid grid-cols-1 md:flex justify-center w-screen">
-            <div className="bg-white dark:bg-darkpalleteDark m-2 rounded-2xl transition-colors duration-300">
+            <div className="bg-white dark:bg-darkpalleteDark m-2 rounded-2xl md:w-11/12 lg:w-5/6 transition-colors duration-300">
               <div className="flex justify-between items-center pl-4 py-3">
                 <h1 className="text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
                   مدیریت آیتم ها
@@ -306,7 +320,7 @@ const ItemManager = () => {
                   <h1>نام آیتم</h1>
                   <h1>دسته بندی</h1>
                   <h1>
-                    <span>هزینه  </span>
+                    <span>هزینه </span>
                     <span className="text-sm">(تومان)</span>
                   </h1>
                   <h1>آپشن</h1>

@@ -4,7 +4,7 @@ import Header from "../Componnets/Header.jsx";
 import Footer from "../Componnets/Footer.jsx";
 import SubHeder from "../Componnets/SubHeder.jsx";
 
-import itemImage from "../../public/2.jpg";
+import itemImage from "../../public/No_Item.png";
 import bannerImage from "../../public/Banner.jpg";
 
 import { BASE_PATH } from "../constants/paths.js";
@@ -29,12 +29,12 @@ function Home() {
 
     let ticking = false;
 
-     const handleScroll = () => {
+    const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const currentScrollTop = scrollContainer.scrollTop;
 
-          if (currentScrollTop > 40 ) {
+          if (currentScrollTop > 40) {
             setHideIcons(true);
           } else {
             setHideIcons(false);
@@ -98,18 +98,22 @@ function Home() {
   }, [selectedCategory]);
 
   const largeHeight = 176; // معادل h-44 در Tailwind (44 * 4 = 176px)
-  const smallHeight = 68;  // معادل h-17 در Tailwind (17 * 4 = 68px)
+  const smallHeight = 68; // معادل h-17 در Tailwind (17 * 4 = 68px)
 
   return (
     <>
       <div
         ref={scrollContainerRef}
-        className={`bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 md:pb-5 transition-colors duration-300 ${!hideIcons ? "pb-60 md:pb-49" : "pb-26 md:pb-5"}`}>
+        className={`bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 md:pb-5 transition-colors duration-300 ${
+          !hideIcons ? "pb-60 md:pb-49" : "pb-26 md:pb-5"
+        }`}>
         <Header page={1} />
         <SubHeder
           onCategorySelect={setSelectedCategory}
           hideIcons={hideIcons}
-          className={`sticky top-0 z-10 w-screen bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300 ${!hideIcons ? "h-34 md:h-44" : "h-17"}`}
+          className={`sticky top-0 z-10 w-screen bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300 ${
+            !hideIcons ? "h-34 md:h-44" : "h-17"
+          }`}
         />
 
         {/* BANNER IMAGE */}
@@ -135,7 +139,7 @@ function Home() {
                   } rounded-3xl w-ful h-fit p-3 m-auto transition-all duration-300 hover:scale-102 hover:bg-highgray`}>
                   <img
                     className="w-full aspect-square object-cover rounded-2xl dark:opacity-90 transition-opacity duration-300"
-                    src={item.pic_url || "../../public/2.jpg"}
+                    src={item.pic_url ? item.pic_url : itemImage}
                     alt={item.name}
                   />
                   <h1 className="text-2xl font-bold mt-2 dark:text-white transition-colors duration-300">
