@@ -3,6 +3,38 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@layer utilities {
+  @keyframes scale-out {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+  }
+
+  .animate-scale-out {
+    animation: scale-out 0.4s ease-in forwards;
+  }
+
+  @keyframes scale-up {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-scale-up {
+    animation: scale-up 0.4s ease-out forwards;
+  }
+}
+
 @theme {
   --color-primary: #c67c4e;
   --color-subprimary: #edd6c8;
@@ -69,7 +101,7 @@
   font-style: Black;
 }
 
-* { 
+* {
   font-family: "IranYekan";
   direction: rtl;
 }
