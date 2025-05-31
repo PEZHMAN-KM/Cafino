@@ -125,9 +125,8 @@ const TopMenu = () => {
   );
 };
 
-function Header({ page, text }) {
+function Header({ page, text, showMenu, setShowMenu }) {
   const [isDark, setIsDark] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -154,6 +153,18 @@ function Header({ page, text }) {
         document.documentElement.classList.remove("dark");
       }
     }
+  }, []);
+
+  useEffect(() => {
+    const closeMenuHandler = () => {
+      setShowMenu(false);
+    };
+
+    window.addEventListener("closeMenus", closeMenuHandler);
+
+    return () => {
+      window.removeEventListener("closeMenus", closeMenuHandler);
+    };
   }, []);
 
   const toggleDarkMode = () => {

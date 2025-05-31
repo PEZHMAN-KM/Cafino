@@ -1,65 +1,259 @@
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+import { BASE_PATH } from "../constants/paths.js";
 import Header from "../Componnets/Header.jsx";
 import Footer from "../Componnets/Footer.jsx";
 
-import itemImage from "../../public/2.jpg";
+import itemImage from "../../public/No_Item.png";
 
-const FavItem = () => (
-  <div className="bg-white dark:bg-darkpalleteDark rounded-3xl w-fit h-fit p-3 m-auto transition-colors duration-300">
-    <img
-      className="w-43 h-43 rounded-2xl dark:opacity-90 transition-opacity duration-300"
-      src={itemImage}
-      alt=""
+const Plus = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <g strokeWidth={0} />
+    <g strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M5 12h14m-7-7v14"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
-    <h1 className="text-2xl font-bold mt-2 dark:text-white transition-colors duration-300">
-      کافه موکا
-    </h1>
-    <h3 className="text-balance mt-1 dark:text-slowgray transition-colors duration-300">
-      مینی توضیحات
-    </h3>
-    <div className="flex mt-3 justify-between items-center">
-      <button className="flex justify-center items-center text-2xl rounded-2xl bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary text-white w-10 h-10 transition-colors duration-300">
-        +
-      </button>
-      <div className="flex justify-center items-end gap-1">
-        <h1 className="text-3xl font-bold dark:text-white transition-colors duration-300">
-          85
-        </h1>
-        <h3 className="dark:text-slowgray transition-colors duration-300">
-          تومان
-        </h3>
-      </div>
-    </div>
-  </div>
+  </svg>
 );
 
+const Minus = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 20 20"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none">
+    <g strokeWidth={0} />
+    <g strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      fillRule="evenodd"
+      d="M18 10a1 1 0 0 1-1 1H3a1 1 0 1 1 0-2h14a1 1 0 0 1 1 1"
+    />
+  </svg>
+);
+
+const formatPrice = (num) => {
+  if (num == null || isNaN(num)) return "";
+  return Number(num).toLocaleString("en-US");
+};
+
 function FavoritePage() {
+  const navigate = useNavigate();
+
+  const [items, setItems] = useState([]);
+  const [error, setError] = useState(null);
+
+  const [orderCounts, setOrderCounts] = useState({});
+
+  const [newlyAddedId, setNewlyAddedId] = useState(null);
+  const [removingId, setRemovingId] = useState(null);
+  const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
+
+  const updateOrder = (id, newCount) => {
+    const updatedCounts = { ...orderCounts };
+
+    if (newCount > 0) {
+      updatedCounts[id] = newCount;
+    } else {
+      delete updatedCounts[id];
+    }
+
+    const orderArray = Object.entries(updatedCounts).map(([key, value]) => [
+      Number(key),
+      value,
+    ]);
+    localStorage.setItem("order", JSON.stringify(orderArray));
+    setOrderCounts(updatedCounts);
+  };
+
+  useEffect(() => {
+    const storedOrder = JSON.parse(localStorage.getItem("order") || "[]");
+    const counts = {};
+    storedOrder.forEach(([id, count]) => {
+      counts[id] = count;
+    });
+    setOrderCounts(counts);
+  }, []);
+
+  useEffect(() => {
+    const lided_food = localStorage.getItem("liked_items");
+
+    async function fetchItems() {
+      setError(null);
+      try {
+        const response = await axios.post(
+          `${BASE_PATH}/food/get_food_list_by_id`,
+          lided_food,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setItems([...response.data]);
+      } catch (err) {
+        setError("آیتمی یافت نشد!");
+      }
+    }
+
+    fetchItems();
+  }, []);
+
+  const increaseCount = (id) => {
+    const newCount = (orderCounts[id] || 0) + 1;
+    updateOrder(id, newCount);
+  };
+
+  const decreaseCount = (id) => {
+    const current = orderCounts[id] || 1;
+
+    if (current === 1) {
+      setRemovingId(id);
+      setTimeout(() => {
+        updateOrder(id, 0);
+        setRemovingId(null);
+      }, 400);
+    } else {
+      updateOrder(id, current - 1);
+    }
+  };
+
+  const handleAddToOrder = (id) => {
+    updateOrder(id, 1);
+    setNewlyAddedId(id);
+    setTimeout(() => setNewlyAddedId(null), 400);
+  };
+
+  function selectFood(food_id) {
+    localStorage.setItem("show_food", food_id);
+    navigate("/item");
+  }
   return (
     <>
       <div className="bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 md:pb-3 transition-colors duration-300">
-        <Header page={2} text={"علاقه مندی ها"} />
-        <div className="grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 grid-cols-2 gap-y-4 gap-x-2 mt-2 justify-evenly items-center">
-          {[
-            { id: 0 },
-            { id: 1 },
-            { id: 2 },
-            { id: 3 },
-            { id: 4 },
-            { id: 5 },
-            { id: 6 },
-            { id: 7 },
-            { id: 8 },
-            { id: 9 },
-            { id: 10 },
-            { id: 11 },
-            { id: 12 },
-            { id: 13 },
-            { id: 14 },
-          ].map((item) => (
-            <a href="Item" key={item.id}>
-              <FavItem />
-            </a>
-          ))}
-        </div>
+        <Header
+          page={2}
+          text={"علاقه مندی ها"}
+          showMenu={headerMenuOpen}
+          setShowMenu={setHeaderMenuOpen}
+        />
+        {error && <p className="text-center my-4 text-primary">{error}</p>}
+        {!error && (
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 gap-y-4 gap-x-2 mt-2 justify-center items-center">
+            {items.map((item) => (
+              <div
+                onClick={() => selectFood(item.id)}
+                href="/item"
+                key={item.id}>
+                <div
+                  className={`${
+                    item.in_sale
+                      ? "bg-slowprimary dark:bg-slowprimaryDark"
+                      : "bg-white dark:bg-darkpalleteDark"
+                  } rounded-3xl w-ful h-fit p-3 m-auto text-start transition-all duration-300 hover:scale-102 hover:bg-highgray`}>
+                  <img
+                    className="w-full aspect-square object-cover rounded-2xl dark:opacity-90 transition-opacity duration-300"
+                    src={item.pic_url ? item.pic_url : itemImage}
+                    alt={item.name}
+                  />
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h1 className="text-2xl font-bold mt-2 dark:text-white transition-colors duration-300">
+                        {item.name}
+                      </h1>
+                      <h3 className="text-balance mt-1 dark:text-slowgray transition-colors duration-300">
+                        {item.description}
+                      </h3>
+                    </div>
+                    {orderCounts[item.id] ? (
+                      <div>
+                        <h1
+                          className={`bg-primary w-6 h-6 rounded-full flex justify-center items-center font-bold text-white ${
+                            newlyAddedId === item.id
+                              ? "animate-scale-up"
+                              : removingId === item.id
+                              ? "animate-scale-out"
+                              : ""
+                          }`}>
+                          {orderCounts[item.id]}
+                        </h1>
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className="flex mt-3 h-20 justify-between items-center">
+                    {orderCounts[item.id] ? (
+                      <div
+                        className={`flex items-center gap-2 transition-all duration-300 ${
+                          newlyAddedId === item.id
+                            ? "animate-scale-up"
+                            : removingId === item.id
+                            ? "animate-scale-out"
+                            : ""
+                        }`}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            increaseCount(item.id);
+                          }}
+                          className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
+                          <Plus className={"w-7 stroke-white"} />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            decreaseCount(item.id);
+                          }}
+                          className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center hover:bg-primary dark:hover:bg-primaryDark transition-colors duration-300">
+                          <Minus
+                            className={
+                              "w-3 fill-black dark:fill-white hover:fill-white transition-colors duration-300"
+                            }
+                          />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToOrder(item.id);
+                        }}
+                        className="flex justify-center items-center rounded-2xl bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary w-13 h-13 transition-colors duration-300">
+                        <Plus className={"w-10 stroke-white"} />
+                      </button>
+                    )}
+                    <div>
+                      {item.sale_price && (
+                        <div className="flex justify-center items-end gap-1">
+                          <h1 className="text-lg font-medium dark:text-white line-through transition-colors duration-300">
+                            {formatPrice(item.price)} تومان
+                          </h1>
+                        </div>
+                      )}
+                      <div className="flex justify-center items-end gap-1">
+                        <h1 className="text-3xl font-bold dark:text-white transition-colors duration-300">
+                          {item.sale_price
+                            ? formatPrice(item.sale_price)
+                            : formatPrice(item.price)}
+                        </h1>
+                        <h3 className="dark:text-slowgray transition-colors duration-300">
+                          تومان
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         <Footer page={2} />
       </div>
     </>

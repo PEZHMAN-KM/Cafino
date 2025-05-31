@@ -2,6 +2,9 @@ import Header from "../Componnets/Header.jsx";
 import Footer from "../Componnets/Footer.jsx";
 
 import itemImage from "../../public/2.jpg";
+import { BASE_PATH } from "../constants/paths";
+import { useState } from "react";
+import axios from "axios";
 
 const BellIcon = ({ className }) => {
   return (
@@ -79,14 +82,16 @@ const Instagram = () => (
   </svg>
 );
 
-const Waiter = () => (
+const Waiter = ({ addNotification, tableNumber, setTableNumber, error }) => (
   <div className="bg-white dark:bg-darkpalleteDark flex justify-between gap-1 items-center w-screen m-5 my-2 py-3 px-4 rounded-3xl border-2 border-highgray dark:border-graypalleteDark transition-colors duration-300">
     <div>
       <h1 className="text-2xl font-extrabold dark:text-white transition-colors duration-300">
         تماس با سالندار
       </h1>
-      <h3 className="text-sm dark:text-slowgray transition-colors duration-300">
+      <h3 className="text-sm text-slowgrayDark dark:text-slowgray transition-colors duration-300">
         از درست بودن شماره میز اطمینان حاصل کنید
+        <br />
+        {error && <span className="text-Start my-4 text-primary">{error}</span>}
       </h3>
     </div>
     <div className="flex items-center gap-3">
@@ -94,10 +99,13 @@ const Waiter = () => (
         <input
           className="w-15 h-15 text-4xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl transition-colors duration-300"
           type="number"
-          defaultValue={3}
+          defaultValue={tableNumber}
+          onChange={(e) => setTableNumber(Number(e.target.value))}
         />
       </div>
-      <button className="w-15 h-15 bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary rounded-2xl flex items-center justify-center transition-colors duration-300">
+      <button
+        onClick={() => addNotification(tableNumber)}
+        className="w-15 h-15 bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary rounded-2xl flex items-center justify-center transition-colors duration-300">
         <BellIcon className={"w-10 stroke-white"} />
       </button>
     </div>
@@ -126,13 +134,58 @@ const InstagramPage = () => (
 );
 
 function ContactUs() {
+  const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
+  const [tableNumber, setTableNumber] = useState(0);
+  const [error, setError] = useState(null);
+
+  async function addNotification(tableNumber) {
+    if (tableNumber <= 0) {
+      setError("لطفا شماره میز را درست وارد کنید!");
+      setTimeout(() => {
+        setError(null);
+      }, 2000);
+      return;
+    }
+    setError(null);
+    try {
+      const response = await axios.post(
+        `${BASE_PATH}/notification/add_notif`,
+        { table_number: tableNumber },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setError("اطلاع داده شد. تا چند لحظه دیگه سالن‌دار میاد");
+      setTimeout(() => {
+        setError(null);
+      }, 5000);
+    } catch (err) {
+      setError("خطا در تماس با سالن‌دار");
+      setTimeout(() => {
+        setError(null);
+      }, 10000);
+    }
+  }
+
   return (
     <>
-      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark h-screen w-screen overflow-y-auto scrollbar scrollbar-none pb-26 md:pb-0">
-        <Header page={4} text={"تماس با ما"} />
+      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300 h-screen w-screen overflow-y-auto scrollbar scrollbar-none pb-26 md:pb-0">
+        <Header
+          page={4}
+          text={"تماس با ما"}
+          showMenu={headerMenuOpen}
+          setShowMenu={setHeaderMenuOpen}
+        />
         <div className="grid grid-cols-1">
           <div className="col-span-1 flex justify-center items-start">
-            <Waiter />
+            <Waiter
+              tableNumber={tableNumber}
+              setTableNumber={setTableNumber}
+              addNotification={addNotification}
+              error={error}
+            />
           </div>
           <div className="col-span-1 flex justify-center">
             <Location />

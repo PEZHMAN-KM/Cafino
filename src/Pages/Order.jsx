@@ -1,26 +1,12 @@
-import itemImage from "../../public/2.jpg";
+import { useEffect, useState } from "react";
+import itemImage from "../../public/No_Item.png";
+import axios from "axios";
+import { BASE_PATH } from "../constants/paths.js";
+import { useNavigate } from "react-router-dom";
 
 import Footer from "../Componnets/Footer.jsx";
 import Header from "../Componnets/Header.jsx";
 
-const ArrowIcon = ({ className, ...props }) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className={className}
-      {...props}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="m8.25 4.5 7.5 7.5-7.5 7.5"
-      />
-    </svg>
-  );
-};
 const Wallet = ({ ...props }) => (
   <svg
     className="w-10"
@@ -52,27 +38,89 @@ const Wallet = ({ ...props }) => (
     />
   </svg>
 );
+const Plus = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <g strokeWidth={0} />
+    <g strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M5 12h14m-7-7v14"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
-// plus
-{
-  /* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-</svg> */
-}
-
-// minus
-{
-  /* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
-</svg> */
-}
+const Minus = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 20 20"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none">
+    <g strokeWidth={0} />
+    <g strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      fillRule="evenodd"
+      d="M18 10a1 1 0 0 1-1 1H3a1 1 0 1 1 0-2h14a1 1 0 0 1 1 1"
+    />
+  </svg>
+);
 
 // heroicon
 // هیرو ایکون معروف واس ایکون ولی کامل نیست
 // https://lucide.dev/icons/
 // این هم معروف
 
-const OrderItem = ({ title, description }) => (
+const formatPrice = (num) => {
+  if (num == null || isNaN(num)) return "";
+  return Number(num).toLocaleString("en-US");
+};
+
+const OrderBox = ({
+  orderItems,
+  handleIncreaseCount,
+  handleDecreaseCount,
+  removingId,
+  selectFood,
+}) => (
+  <div className="pt-2 mb-4 border-b-4 border-slowprimary dark:border-primaryDark transition-colors duration-300">
+    <h2 className="font-extrabold text-3xl px-8 dark:text-white transition-colors duration-300 pb-5">
+      آیتم های خرید
+    </h2>
+    <div className=" divide-highgray dark:divide-graypalleteDark grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:border-b-1 lg:border-highgray dark:border-graypalleteDark transition-colors duration-300">
+      {orderItems.map((item) => (
+        <div
+          onClick={() => selectFood(item.id)}
+          href="/item"
+          key={item.id}
+          className={` cursor-pointer hover:bg-slowprimary border-b-1 border-t-1 lg:border-r-1 lg:border-l-1 lg:border-t-0 lg:border-b-0 hover:dark:bg-slowgrayDark transition-colors duration-300 rounded-2xl ${
+            removingId === item.id ? "animate-scale-out" : ""
+          }`}>
+          <OrderItem
+            id={item.id}
+            name={item.name}
+            category_name={item.category_name}
+            count={item.count}
+            handleIncreaseCount={handleIncreaseCount}
+            handleDecreaseCount={handleDecreaseCount}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+const OrderItem = ({
+  id,
+  name,
+  category_name,
+  count,
+  handleIncreaseCount,
+  handleDecreaseCount,
+}) => (
   <div className="flex items-center px-5 py-2 gap-3">
     <div className="aspect-square size-[100px] shrink-0">
       <img
@@ -83,63 +131,80 @@ const OrderItem = ({ title, description }) => (
     </div>
     <div className="flex flex-col justify-center flex-1 overflow-hidden">
       <h1 className="text-2xl font-extrabold truncate dark:text-white transition-colors duration-300">
-        {title}
+        {name}
       </h1>
       <h3 className="text-lg font-normal truncate dark:text-slowgray transition-colors duration-300">
-        {description}
+        {category_name}
       </h3>
     </div>
     <div className="shrink-0 pl-3">
-      <div className="flex items-center">
-        <ArrowIcon className="size-6 dark:stroke-white transition-colors duration-300" />
-        <h1 className="text-2xl font-bold dark:text-white transition-colors duration-300">
-          3
-        </h1>
-        <ArrowIcon className="size-6 rotate-180 dark:stroke-white transition-colors duration-300" />
-      </div>
+      <CountController
+        itemId={id}
+        count={count}
+        onIncrease={handleIncreaseCount}
+        onDecrease={handleDecreaseCount}
+      />
     </div>
   </div>
 );
-
-const OrderBox = () => (
-  <div className="pt-2 mb-4 border-b-4 border-slowprimary dark:border-primaryDark transition-colors duration-300">
-    <h2 className="font-extrabold text-3xl px-8 dark:text-white transition-colors duration-300">
-      آیتم های خرید
-    </h2>
-    <div className="divide-y lg:divide-x divide-highgray dark:divide-graypalleteDark grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:border-b-1 lg:border-highgray dark:border-graypalleteDark transition-colors duration-300">
-      {[
-        { id: 0, title: "کافه موکا", description: "توضیحات کوتاه" },
-        { id: 1, title: "لاته", description: "توضیحات کوتاه" },
-        { id: 2, title: "کافه موکا", description: "توضیحات کوتاه" },
-      ].map((item) => (
-        <div key={item.id}>
-          <OrderItem title={item.title} description={item.description} />
-        </div>
-      ))}
+const CountController = ({ itemId, count, onIncrease, onDecrease }) => {
+  return (
+    <div className="flex items-center gap-2 transition-all duration-300">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onIncrease(itemId);
+        }}
+        className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
+        <Plus className={"w-7 stroke-white"} />
+      </button>
+      <span className="w-9 text-center text-4xl font-bold dark:text-white inline-block">
+        {count}
+      </span>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onDecrease(itemId);
+        }}
+        className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center hover:bg-primary dark:hover:bg-primaryDark transition-colors duration-300">
+        <Minus
+          className={
+            "w-3 fill-black dark:fill-white hover:fill-white transition-colors duration-300"
+          }
+        />
+      </button>
     </div>
-  </div>
-);
+  );
+};
 
-const UserNumber = () => (
+const UserNumber = ({ tableNumber, setTableNumber, error }) => (
   <div className="bg-white dark:bg-darkpalleteDark w-screen p-5 mx-5 rounded-2xl border-1 border-highgray dark:border-graypalleteDark flex justify-between items-center text-2xl font-bold transition-colors duration-300">
-    <div className="dark:text-white transition-colors duration-300">
-      سفارش برای میز :
+    <div className="flex flex-col gap-2">
+      <h1 className="text-2xl font-extrabold dark:text-white transition-colors duration-300">
+        سفارش برای میز :
+      </h1>
+      <h3 className="text-xs font-semibold md:text-lg text-slowgrayDark dark:text-slowgray transition-colors duration-300">
+        از درست بودن شماره میز اطمینان حاصل کنید
+        <br />
+        {error && <span className="text-Start text-primary">{error}</span>}
+      </h3>
     </div>
     <div>
       <input
         className="w-13 h-13 text-3xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl transition-colors duration-300"
         type="number"
-        defaultValue={3}
+        defaultValue={tableNumber}
+        onChange={(e) => setTableNumber(Number(e.target.value))}
       />
     </div>
   </div>
 );
 
-const CheckOutItem = ({ title, count, value, off }) => (
+const CheckOutItem = ({ name, count, price, sale_price }) => (
   <div className="flex justify-between px-10">
     <div className="flex gap-3">
       <h1 className="text-2xl font-bold dark:text-white transition-colors duration-300">
-        {title}
+        {name}
       </h1>
       {count != "" ? (
         <h1 className="font-light text-xl dark:text-slowgray transition-colors duration-300">
@@ -148,17 +213,17 @@ const CheckOutItem = ({ title, count, value, off }) => (
       ) : null}
     </div>
     <div>
-      {off == "" ? (
+      {sale_price == null ? (
         <h1 className="font-bold dark:text-white transition-colors duration-300">
-          {value} تومان
+          {formatPrice(price)} تومان
         </h1>
       ) : (
         <div className="flex gap-4">
           <h1 className="decoration-1 line-through text-highgray dark:text-slowgray transition-colors duration-300">
-            {value} تومان
+            {formatPrice(price)} تومان
           </h1>
           <h1 className="font-bold dark:text-white transition-colors duration-300">
-            {off} تومان
+            {formatPrice(sale_price)} تومان
           </h1>
         </div>
       )}
@@ -166,21 +231,18 @@ const CheckOutItem = ({ title, count, value, off }) => (
   </div>
 );
 
-const Checkout = () => (
+const Checkout = ({ orderItems }) => (
   <div>
     <h1 className="font-extrabold text-3xl px-8 py-3 dark:text-white transition-colors duration-300">
       فاکتور سفارشات شما
     </h1>
-    {[
-      { id: 0, title: "کافه موکا", count: "2", value: "130", off: "85" },
-      { id: 1, title: "لاته", count: "", value: "130", off: "" },
-    ].map((item) => (
+    {orderItems.map((item) => (
       <div key={item.id}>
         <CheckOutItem
-          title={item.title}
+          name={item.name}
           count={item.count}
-          value={item.value}
-          off={item.off}
+          price={item.price}
+          sale_price={item.sale_price}
         />
       </div>
     ))}
@@ -188,23 +250,184 @@ const Checkout = () => (
 );
 
 function Order() {
+  const [orderItems, setOrderItems] = useState([]);
+  const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
+  const [tableNumber, setTableNumber] = useState(0);
+
+  const lided_food_raw = localStorage.getItem("order");
+  const navigate = useNavigate();
+
+  const [error, setError] = useState(null);
+  const [removingId, setRemovingId] = useState(null);
+
+  const handleIncreaseCount = (id) => {
+    const updatedItems = orderItems.map((item) => {
+      if (item.id === id) {
+        return { ...item, count: item.count + 1 };
+      }
+      return item;
+    });
+    setOrderItems(updatedItems);
+    updateLocalStorage(updatedItems);
+  };
+
+  const handleDecreaseCount = (id) => {
+    const item = orderItems.find((item) => item.id === id);
+    if (!item) return;
+
+    if (item.count === 1) {
+      setRemovingId(id);
+      setTimeout(() => {
+        setOrderItems((prev) => prev.filter((item) => item.id !== id));
+        updateLocalStorage(orderItems.filter((item) => item.id !== id));
+        setRemovingId(null);
+      }, 400);
+    } else {
+      const updatedItems = orderItems.map((item) => {
+        if (item.id === id) {
+          return { ...item, count: item.count - 1 };
+        }
+        return item;
+      });
+      setOrderItems(updatedItems);
+      updateLocalStorage(updatedItems);
+    }
+  };
+
+  const updateLocalStorage = (items) => {
+    const simplified = items.map((item) => [item.id, item.count]);
+    localStorage.setItem("order", JSON.stringify(simplified));
+  };
+
+  function selectFood(food_id) {
+    localStorage.setItem("show_food", food_id);
+    navigate("/item");
+  }
+
+  useEffect(() => {
+    async function fetchItems() {
+      try {
+        let orderArray = [];
+        if (lided_food_raw) {
+          orderArray = JSON.parse(lided_food_raw);
+        }
+
+        const foodIds = orderArray.map(([id, count]) => id);
+
+        if (foodIds.length === 0) {
+          setOrderItems([]);
+          return;
+        }
+
+        const response = await axios.post(
+          `${BASE_PATH}/food/get_food_list_by_id`,
+          foodIds,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const itemsFromServer = response.data;
+
+        const mergedItems = itemsFromServer.map((item) => {
+          const countItem = orderArray.find(([id]) => id === item.id);
+          return {
+            ...item,
+            count: countItem ? countItem[1] : 0,
+          };
+        });
+
+        setOrderItems(mergedItems);
+        console.log(mergedItems);
+      } catch (err) {
+        console.log(err);
+        setOrderItems([]);
+      }
+    }
+
+    fetchItems();
+  }, []);
+
+  async function addOrder() {
+    if (tableNumber <= 0) {
+      setError("لطفا شماره میز را درست وارد کنید!");
+      setTimeout(() => {
+        setError(null);
+      }, 2000);
+      return;
+    }
+    setError(null);
+    const rawOrder = localStorage.getItem("order");
+    const orderArray = rawOrder ? JSON.parse(rawOrder) : [];
+
+    const foods = orderArray.map(([id, quantity]) => ({
+      food_id: id,
+      quantity,
+      food_price: 0,
+    }));
+
+    const message = null;
+
+    const dataToSend = {
+      foods,
+      table_number: tableNumber,
+      message,
+    };
+    try {
+      const response = await axios.post(
+        `${BASE_PATH}/order/add_order`,
+        dataToSend,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const totalCost = orderItems.reduce((sum, item) => {
+    const price = item.sale_price ?? item.price;
+    return sum + price * item.count;
+  }, 0);
+
   return (
     <>
       <div className="bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-60 md:pb-0 transition-colors duration-300">
-        <Header page={3} text={"سبد خرید"} />
+        <Header
+          page={3}
+          text={"سبد خرید"}
+          showMenu={headerMenuOpen}
+          setShowMenu={setHeaderMenuOpen}
+        />
         <div className="grid grid-cols-1">
           <div className="col-span-1">
-            <OrderBox />
+            <OrderBox
+              orderItems={orderItems}
+              handleIncreaseCount={handleIncreaseCount}
+              handleDecreaseCount={handleDecreaseCount}
+              removingId={removingId}
+              selectFood={selectFood}
+            />
           </div>
           <div className="col-span-1 flex justify-center items-start">
-            <UserNumber />
+            <UserNumber
+              tableNumber={tableNumber}
+              setTableNumber={setTableNumber}
+              error={error}
+            />
           </div>
           <div className="col-span-1 pt-4">
-            <Checkout />
+            <Checkout orderItems={orderItems} />
           </div>
         </div>
         <div className="w-full justify-center bottom-0 mt-10 hidden md:flex px-5">
-          <div className="w-2/3 bg-white p-4 rounded-2xl dark:bg-darkpalleteDark">
+          <div className="w-2/3 bg-white p-4 rounded-2xl dark:bg-darkpalleteDark transition-colors duration-300">
             <div className="flex justify-center bg- flex-col items-center w-full pb-5">
               <div className="flex justify-between w-full items-center pb-3">
                 <div className="flex items-center gap-2">
@@ -213,15 +436,19 @@ function Order() {
                     مبلغ کل سفارشات
                   </h1>
                 </div>
-                <h1 className="text-2xl font-bold text-primary">300 تومان</h1>
+                <h1 className="text-2xl font-bold text-primary ransition-colors duration-300">
+                  {formatPrice(totalCost)} تومان
+                </h1>
               </div>
-              <button className="w-full p-5 rounded-2xl bg-primary text-white text-2xl dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
+              <button
+                onClick={() => addOrder()}
+                className="w-full p-5 rounded-2xl bg-primary text-white text-2xl dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
                 پرداخت
               </button>
             </div>
           </div>
         </div>
-        <Footer page={3} CostMoney={200} />
+        <Footer page={3} CostMoney={totalCost} addOrder={addOrder} />
       </div>
     </>
   );

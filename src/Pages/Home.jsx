@@ -62,6 +62,9 @@ function Home() {
   const [newlyAddedId, setNewlyAddedId] = useState(null);
   const [removingId, setRemovingId] = useState(null);
 
+  const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
+  const [subHeaderMenuOpen, setSubHeaderMenuOpen] = useState(false);
+
   const updateOrder = (id, newCount) => {
     const updatedCounts = { ...orderCounts };
 
@@ -99,10 +102,13 @@ function Home() {
         window.requestAnimationFrame(() => {
           const currentScrollTop = scrollContainer.scrollTop;
 
-          if (currentScrollTop > 40) {
-            setHideIcons(true);
-          } else {
+          if (currentScrollTop <= 40) {
             setHideIcons(false);
+            window.dispatchEvent(new CustomEvent("closeMenus"));
+          } else {
+            setHideIcons(true);
+            // setHeaderMenuOpen(false);
+            // setSubHeaderMenuOpen(false);
           }
 
           ticking = false;
@@ -199,10 +205,16 @@ function Home() {
         className={`bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 md:pb-5 transition-colors duration-300 ${
           !hideIcons ? "pb-60 md:pb-5" : "pb-26 md:pb-49"
         }`}>
-        <Header page={1} />
+        <Header
+          page={1}
+          showMenu={headerMenuOpen}
+          setShowMenu={setHeaderMenuOpen}
+        />
         <SubHeder
           onCategorySelect={setSelectedCategory}
           hideIcons={hideIcons}
+          showMenu={subHeaderMenuOpen}
+          setShowMenu={setSubHeaderMenuOpen}
           className={`sticky top-0 z-10 w-screen bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300 ${
             !hideIcons ? "h-34 md:h-44" : "h-17"
           }`}
@@ -263,35 +275,35 @@ function Home() {
                   </div>
                   <div className="flex mt-3 h-20 justify-between items-center">
                     {orderCounts[item.id] ? (
-                      <div
-                        className={`flex items-center gap-2 transition-all duration-300 ${
-                          newlyAddedId === item.id
-                            ? "animate-scale-up"
-                            : removingId === item.id
-                            ? "animate-scale-out"
-                            : ""
-                        }`}>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            increaseCount(item.id);
-                          }}
-                          className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
-                          <Plus className={"w-7 stroke-white"} />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            decreaseCount(item.id);
-                          }}
-                          className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center hover:bg-primaryDark dark:hover:bg-primary transition-all duration-300">
-                          <Minus
-                            className={
-                              "w-3 fill-black dark:fill-white hover:fill-white transition-colors duration-300"
-                            }
-                          />
-                        </button>
-                      </div>
+                        <div
+                          className={`flex items-center gap-2 transition-all duration-300 ${
+                            newlyAddedId === item.id
+                              ? "animate-scale-up"
+                              : removingId === item.id
+                              ? "animate-scale-out"
+                              : ""
+                          }`}>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              increaseCount(item.id);
+                            }}
+                            className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
+                            <Plus className={"w-7 stroke-white"} />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              decreaseCount(item.id);
+                            }}
+                            className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center hover:bg-primary dark:hover:bg-primaryDark transition-colors duration-300">
+                            <Minus
+                              className={
+                                "w-3 fill-black dark:fill-white hover:fill-white transition-colors duration-300"
+                              }
+                            />
+                          </button>
+                        </div>
                     ) : (
                       <button
                         onClick={(e) => {

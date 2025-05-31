@@ -309,9 +309,14 @@ const Food = ({ className, fill }) => (
   </svg>
 );
 
-function SubHeder({ hideIcons, className, onCategorySelect }) {
+function SubHeder({
+  hideIcons,
+  className,
+  onCategorySelect,
+  showMenu,
+  setShowMenu,
+}) {
   const [onCategory, setOnCategory] = useState(1);
-  const [showMenu, setShowMenu] = useState(false);
 
   function changeCategory(index) {
     onCategorySelect(index);
