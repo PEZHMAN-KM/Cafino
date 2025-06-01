@@ -51,6 +51,7 @@ const formatPrice = (num) => {
 function Home() {
   const [hideIcons, setHideIcons] = useState(false);
   const scrollContainerRef = useRef(null);
+  const headerRef = useRef(null);
   const navigate = useNavigate();
 
   const [selectedCategory, setSelectedCategory] = useState(1);
@@ -207,6 +208,15 @@ function Home() {
     fetchSearchResults();
   }, [searchTerm, searchActive]);
 
+  function scrollToTopAndFocus() {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    if (headerInputRef.current) {
+      headerInputRef.current.focus();
+    }
+  }
+
   const increaseCount = (id) => {
     const newCount = (orderCounts[id] || 0) + 1;
     updateOrder(id, newCount);
@@ -253,6 +263,7 @@ function Home() {
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           fetchItems={fetchItems}
+          ref={headerRef}
         />
         {searchActive && (
           <>
@@ -375,6 +386,7 @@ function Home() {
               onCategorySelect={setSelectedCategory}
               hideIcons={hideIcons}
               showMenu={subHeaderMenuOpen}
+              onSearchClick={scrollToTopAndFocus}
               setShowMenu={setSubHeaderMenuOpen}
               className={`sticky top-0 z-10 w-screen bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300 ${
                 !hideIcons ? "h-34 md:h-44" : "h-17"

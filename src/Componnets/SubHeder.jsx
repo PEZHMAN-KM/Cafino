@@ -315,6 +315,8 @@ function SubHeder({
   onCategorySelect,
   showMenu,
   setShowMenu,
+  onSearchClick,
+  setSearchActive,
 }) {
   const [onCategory, setOnCategory] = useState(1);
 
@@ -367,6 +369,10 @@ function SubHeder({
           )}
           {/* SEARCH ICON */}
           <div
+            onClick={() => {
+              onSearchClick();
+              setSearchActive(true);
+            }}
             className={`bg-graypallete p-3 shrink-0 font-bold rounded-2xl cursor-pointer transition-all duration-300 hover:scale-102 hover:bg-highgray ${
               !hideIcons ? "hidden" : "block"
             }`}>

@@ -83,7 +83,7 @@ const Instagram = () => (
 );
 
 const Waiter = ({ addNotification, tableNumber, setTableNumber, error }) => (
-  <div className="bg-white dark:bg-darkpalleteDark flex justify-between gap-1 items-center w-screen m-5 my-2 py-3 px-4 rounded-3xl border-2 border-highgray dark:border-graypalleteDark transition-colors duration-300">
+  <div className="bg-white dark:bg-darkpalleteDark flex justify-between gap-1 items-center w-screen m-5 my-2 py-3 px-3 rounded-3xl border-2 border-highgray dark:border-graypalleteDark transition-colors duration-300">
     <div>
       <h1 className="text-2xl font-extrabold dark:text-white transition-colors duration-300">
         تماس با سالندار
@@ -94,7 +94,7 @@ const Waiter = ({ addNotification, tableNumber, setTableNumber, error }) => (
         {error && <span className="text-Start my-4 text-primary">{error}</span>}
       </h3>
     </div>
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2">
       <div>
         <input
           className="w-15 h-15 text-4xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl transition-colors duration-300"
