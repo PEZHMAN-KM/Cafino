@@ -125,7 +125,17 @@ const TopMenu = () => {
   );
 };
 
-function Header({ page, text, showMenu, setShowMenu }) {
+function Header({
+  page,
+  text,
+  showMenu,
+  setShowMenu,
+  searchActive,
+  setSearchActive,
+  searchTerm,
+  setSearchTerm,
+  fetchItems,
+}) {
   const [isDark, setIsDark] = useState(false);
 
   const toggleMenu = () => {
@@ -238,7 +248,22 @@ function Header({ page, text, showMenu, setShowMenu }) {
               className="w-full bg-transparent dark:text-white focus:outline-none placeholder-highgrayDark dark:placeholder-highgray transition-colors duration-300"
               type="text"
               placeholder="جستجو در کافی نو"
+              value={searchTerm}
+              onFocus={() => setSearchActive(true)}
+              // onBlur={() => setSearchActive(false)}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
+            {searchActive && (
+              <button
+                onClick={() => {
+                  fetchItems();
+                  setSearchActive(false);
+                  setSearchTerm("");
+                }}
+                className="mr-2 text-sm text-gray-500 dark:text-gray-300">
+                بستن
+              </button>
+            )}
           </div>
         ) : (
           <div className="flex-3/4">
@@ -247,19 +272,16 @@ function Header({ page, text, showMenu, setShowMenu }) {
             </h1>
           </div>
         )}
-        {page == 1 ? (
+        <div
+          className={`md:text-end ${
+            page == 1 ? "flex-1/4" : "hidden md:flex-1/4 md:block"
+          }`}>
           <a
             href="/home"
-            className="flex-1/4 md:text-end text-xl font-bold dark:text-white transition-colors duration-300">
+            className="text-xl font-bold dark:text-white transition-colors duration-300">
             کافـی نـو
           </a>
-        ) : (
-          <a
-            href="/home"
-            className="hidden md:flex-1/4 md:block md:text-end text-xl font-bold dark:text-white transition-colors duration-300">
-            کافـی نـو
-          </a>
-        )}
+        </div>
       </div>
     </>
   );
