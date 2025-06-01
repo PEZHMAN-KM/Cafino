@@ -57,7 +57,7 @@ export default function OrderReceiptOverlay({
   visible,
   items,
   totalPrice,
-  onClose,
+  refreshAllData,
 }) {
   if (!visible) return null;
 
@@ -69,7 +69,7 @@ export default function OrderReceiptOverlay({
             <h2 className="text-black dark:text-white text-2xl font-extrabold">
               رسید سفارش
             </h2>
-            <button onClick={onClose} className="cursor-pointer">
+            <button onClick={() => refreshAllData()} className="cursor-pointer">
               <div className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
                 <ArrowIcon
                   className={
@@ -87,16 +87,16 @@ export default function OrderReceiptOverlay({
                 <img
                   src={itemImage}
                   alt={item.name}
-                  className="w-12 h-12 rounded-xl object-cover"
+                  className="w-12 h-12 lg:w-18 lg:h-18 rounded-xl object-cover"
                 />
                 <div className="flex-1 mx-3">
-                  <div className="font-bold dark:text-white flex gap-2 justify-start items-center">
+                  <div className="font-bold text-black lg:text-2xl dark:text-white flex gap-2 justify-start items-center">
                     <h1>{item.name}</h1>
-                    <h1 className="text-sm font-medium  dark:text-white">
+                    <h1 className="text-sm font-medium lg:text-xl text-black dark:text-white">
                       {item.count}x
                     </h1>
                   </div>
-                  <p className="text-sm text-slowgrayDark dark:text-slowgray">
+                  <p className="text-sm lg:text-xl text-slowgrayDark dark:text-slowgray">
                     {item.category_name}
                   </p>
                 </div>
@@ -126,12 +126,10 @@ export default function OrderReceiptOverlay({
                 <span className="text-sm font-normal lg:text-xl">تومان</span>
               </span>
             </div>
-            <p className="text-center text-sm text-gray-500 mt-2">
+            <p className="text-center text-xs md:text-base lg:text-lg text-slowgrayDark dark:text-slowgray mt-2">
               لطفا سفارش خود را به سالن‌دار یا صندوق‌دار اطلاع دهید
             </p>
-            <button
-              className="mt-4 w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-primaryDark"
-              onClick={onClose}>
+            <button className="mt-4 w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-primaryDark">
               اشتراک‌گذاری
             </button>
           </div>

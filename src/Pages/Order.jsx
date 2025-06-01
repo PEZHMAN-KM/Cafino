@@ -95,7 +95,7 @@ const OrderBox = ({
     </h2>
     <div className=" divide-highgray dark:divide-graypalleteDark grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:border-b-1 lg:border-highgray dark:border-graypalleteDark transition-colors duration-300">
       {orderItems.length === 0 ? (
-        <h1 className="text-center text-3xl font-black text-white py-10">
+        <h1 className="text-center text-3xl font-black text-slowgrayDark dark:text-slowgray py-10 transition-colors duration-300">
           {orderError}
         </h1>
       ) : (
@@ -203,13 +203,34 @@ const UserNumber = ({ tableNumber, setTableNumber, tableError }) => (
       <input
         className="w-13 h-13 text-3xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl transition-colors duration-300"
         type="number"
-        defaultValue={tableNumber}
+        value={tableNumber}
         onChange={(e) => setTableNumber(Number(e.target.value))}
       />
     </div>
   </div>
 );
 
+const Checkout = ({ orderItems }) => {
+  if (orderItems.length === 0) return null;
+
+  return (
+    <div>
+      <h1 className="font-extrabold text-3xl px-8 py-3 dark:text-white transition-colors duration-300">
+        فاکتور سفارشات شما
+      </h1>
+      {orderItems.map((item) => (
+        <div key={item.id}>
+          <CheckOutItem
+            name={item.name}
+            count={item.count}
+            price={item.price}
+            sale_price={item.sale_price}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
 const CheckOutItem = ({ name, count, price, sale_price }) => (
   <div className="flex justify-between px-10">
     <div className="flex gap-3">
@@ -228,9 +249,9 @@ const CheckOutItem = ({ name, count, price, sale_price }) => (
           {formatPrice(price)} تومان
         </h1>
       ) : (
-        <div className="flex gap-4">
+        <div className="flex gap-2 md:gap-4">
           <h1 className="decoration-1 line-through text-highgray dark:text-slowgray transition-colors duration-300">
-            {formatPrice(price)} تومان
+            {formatPrice(price)} <span className="hidden md:inline">تومان</span>
           </h1>
           <h1 className="font-bold dark:text-white transition-colors duration-300">
             {formatPrice(sale_price)} تومان
@@ -241,30 +262,11 @@ const CheckOutItem = ({ name, count, price, sale_price }) => (
   </div>
 );
 
-const Checkout = ({ orderItems }) => (
-  <div>
-    <h1 className="font-extrabold text-3xl px-8 py-3 dark:text-white transition-colors duration-300">
-      فاکتور سفارشات شما
-    </h1>
-    {orderItems.map((item) => (
-      <div key={item.id}>
-        <CheckOutItem
-          name={item.name}
-          count={item.count}
-          price={item.price}
-          sale_price={item.sale_price}
-        />
-      </div>
-    ))}
-  </div>
-);
-
 function Order() {
   const [orderItems, setOrderItems] = useState([]);
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
   const [tableNumber, setTableNumber] = useState(0);
 
-  const loaded_food_raw = localStorage.getItem("order");
   const [showReceipt, setShowReceipt] = useState(false);
   const navigate = useNavigate();
 
@@ -317,61 +319,63 @@ function Order() {
     navigate("/item");
   }
 
-  useEffect(() => {
-    async function fetchItems() {
-      try {
-        let orderArray = [];
-        if (loaded_food_raw) {
-          orderArray = JSON.parse(loaded_food_raw);
-        }
-
-        const foodIds = orderArray.map(([id, count]) => id);
-
-        if (foodIds.length === 0) {
-          setOrderItems([]);
-          return;
-        }
-
-        const response = await axios.post(
-          `${BASE_PATH}/food/get_food_list_by_id`,
-          foodIds,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const itemsFromServer = response.data;
-
-        const mergedItems = itemsFromServer.map((item) => {
-          const countItem = orderArray.find(([id]) => id === item.id);
-          return {
-            ...item,
-            count: countItem ? countItem[1] : 0,
-          };
-        });
-
-        setOrderItems(mergedItems);
-      } catch (err) {
-        console.log(err);
-        setOrderItems([]);
+  async function fetchItems() {
+    const loaded_food_raw = localStorage.getItem("order");
+    try {
+      let orderArray = [];
+      if (loaded_food_raw) {
+        orderArray = JSON.parse(loaded_food_raw);
       }
-    }
 
+      const foodIds = orderArray.map(([id, count]) => id);
+
+      if (foodIds.length === 0) {
+        setOrderItems([]);
+        return;
+      }
+
+      const response = await axios.post(
+        `${BASE_PATH}/food/get_food_list_by_id`,
+        foodIds,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const itemsFromServer = response.data;
+
+      const mergedItems = itemsFromServer.map((item) => {
+        const countItem = orderArray.find(([id]) => id === item.id);
+        return {
+          ...item,
+          count: countItem ? countItem[1] : 0,
+        };
+      });
+
+      setOrderItems(mergedItems);
+    } catch (err) {
+      console.log(err);
+      setOrderItems([]);
+    }
+  }
+
+  useEffect(() => {
     fetchItems();
   }, []);
 
   async function addOrder() {
     const rawOrder = localStorage.getItem("order");
 
-    if (tableNumber <= 0) {
-      setTableError("لطفا شماره میز را درست وارد کنید!");
-      setTimeout(() => {
-        setTableError(null);
-      }, 2000);
-      return;
-    } else if (rawOrder) {
+    if (rawOrder) {
+      if (tableNumber <= 0) {
+        setTableError("لطفا شماره میز را درست وارد کنید!");
+        setTimeout(() => {
+          setTableError(null);
+        }, 2000);
+        return;
+      }
       setTableError(null);
       const orderArray = rawOrder ? JSON.parse(rawOrder) : [];
 
@@ -387,6 +391,9 @@ function Order() {
         table_number: tableNumber,
         // message,
       };
+
+      setShowReceipt(true);
+
       try {
         const response = await axios.post(
           `${BASE_PATH}/order/add_order`,
@@ -403,6 +410,11 @@ function Order() {
       }
     }
   }
+  const refreshAllData = () => {
+    fetchItems();
+    setTableNumber(0);
+    setShowReceipt(false);
+  };
 
   const totalCost = orderItems.reduce((sum, item) => {
     const price = item.sale_price ?? item.price;
@@ -455,30 +467,20 @@ function Order() {
                 </h1>
               </div>
               <button
-                onClick={() => {
-                  setShowReceipt(true);
-                  addOrder();
-                }}
+                onClick={() => addOrder()}
                 className="w-full p-5 rounded-2xl bg-primary text-white text-2xl dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
                 پرداخت
               </button>
             </div>
           </div>
         </div>
-        <Footer
-          page={3}
-          CostMoney={totalCost}
-          addOrder={() => {
-            setShowReceipt(true);
-            addOrder();
-          }}
-        />
+        <Footer page={3} CostMoney={totalCost} addOrder={addOrder} />
       </div>
       <OrderReceiptOverlay
         visible={showReceipt}
         items={orderItems}
         totalPrice={totalCost}
-        onClose={() => setShowReceipt(false)}
+        refreshAllData={refreshAllData}
       />
     </>
   );
