@@ -157,7 +157,7 @@ function AddItem() {
                   اضافه کردن آیتم
                 </h1>
                 <a href="/Itemmanager">
-                  <div className="bg-white dark:bg-darkpalleteDark border-2 p-2 rounded-2xl transition-colors duration-300">
+                  <div className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
                     <ArrowIcon
                       className={
                         "w-8 rotate-180 stroke-3 stroke-black dark:stroke-white"

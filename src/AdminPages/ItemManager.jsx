@@ -24,7 +24,7 @@ const ADD = ({ className }) => {
           <path
             id="Vector"
             d="M6 12H12M12 12H18M12 12V18M12 12V6"
-            stroke="#000000"
+            stroke="current color"
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -303,13 +303,13 @@ const ItemManager = () => {
                   </a>
                 </div> */}
                 <a href="/AddItem">
-                  <div className="bg-white flex items-center justify-center gap-1 border-3 p-1 md:p-2 rounded-2xl font-bold">
+                  <div className="bg-white dark:bg-black flex items-center justify-center gap-1 border-3 border-black dark:border-white p-2 rounded-2xl font-bold transition-all duration-300">
                     <ADD
                       className={
-                        "w-8 rotate-180 dark:stroke-white transition-colors duration-300"
+                        "w-8 rotate-180 stroke-black dark:stroke-white transition-colors duration-300"
                       }
                     />
-                    <h1 className="hidden md:block text-black transition-colors duration-300">
+                    <h1 className="hidden md:block text-black dark:text-white transition-all duration-300">
                       اضافه کردن
                     </h1>
                   </div>

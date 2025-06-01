@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import Footer from "../Componnets/Footer.jsx";
 import Header from "../Componnets/Header.jsx";
+import OrderReceiptOverlay from "../Componnets/OrderReceiptOverlay.jsx";
 
 const Wallet = ({ ...props }) => (
   <svg
@@ -86,30 +87,37 @@ const OrderBox = ({
   handleDecreaseCount,
   removingId,
   selectFood,
+  orderError,
 }) => (
   <div className="pt-2 mb-4 border-b-4 border-slowprimary dark:border-primaryDark transition-colors duration-300">
     <h2 className="font-extrabold text-3xl px-8 dark:text-white transition-colors duration-300 pb-5">
       آیتم های خرید
     </h2>
     <div className=" divide-highgray dark:divide-graypalleteDark grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:border-b-1 lg:border-highgray dark:border-graypalleteDark transition-colors duration-300">
-      {orderItems.map((item) => (
-        <div
-          onClick={() => selectFood(item.id)}
-          href="/item"
-          key={item.id}
-          className={` cursor-pointer hover:bg-slowprimary border-b-1 border-t-1 lg:border-r-1 lg:border-l-1 lg:border-t-0 lg:border-b-0 hover:dark:bg-slowgrayDark transition-colors duration-300 rounded-2xl ${
-            removingId === item.id ? "animate-scale-out" : ""
-          }`}>
-          <OrderItem
-            id={item.id}
-            name={item.name}
-            category_name={item.category_name}
-            count={item.count}
-            handleIncreaseCount={handleIncreaseCount}
-            handleDecreaseCount={handleDecreaseCount}
-          />
-        </div>
-      ))}
+      {orderItems.length === 0 ? (
+        <h1 className="text-center text-3xl font-black text-white py-10">
+          {orderError}
+        </h1>
+      ) : (
+        orderItems.map((item) => (
+          <div
+            onClick={() => selectFood(item.id)}
+            href="/item"
+            key={item.id}
+            className={` cursor-pointer hover:bg-slowprimary border-b-1 border-t-1 lg:border-r-1 lg:border-l-1 lg:border-t-0 lg:border-b-0 hover:dark:bg-slowgrayDark transition-colors duration-300 rounded-2xl ${
+              removingId === item.id ? "animate-scale-out" : ""
+            }`}>
+            <OrderItem
+              id={item.id}
+              name={item.name}
+              category_name={item.category_name}
+              count={item.count}
+              handleIncreaseCount={handleIncreaseCount}
+              handleDecreaseCount={handleDecreaseCount}
+            />
+          </div>
+        ))
+      )}
     </div>
   </div>
 );
@@ -177,7 +185,7 @@ const CountController = ({ itemId, count, onIncrease, onDecrease }) => {
   );
 };
 
-const UserNumber = ({ tableNumber, setTableNumber, error }) => (
+const UserNumber = ({ tableNumber, setTableNumber, tableError }) => (
   <div className="bg-white dark:bg-darkpalleteDark w-screen p-5 mx-5 rounded-2xl border-1 border-highgray dark:border-graypalleteDark flex justify-between items-center text-2xl font-bold transition-colors duration-300">
     <div className="flex flex-col gap-2">
       <h1 className="text-2xl font-extrabold dark:text-white transition-colors duration-300">
@@ -186,7 +194,9 @@ const UserNumber = ({ tableNumber, setTableNumber, error }) => (
       <h3 className="text-xs font-semibold md:text-lg text-slowgrayDark dark:text-slowgray transition-colors duration-300">
         از درست بودن شماره میز اطمینان حاصل کنید
         <br />
-        {error && <span className="text-Start text-primary">{error}</span>}
+        {tableError && (
+          <span className="text-Start text-primary">{tableError}</span>
+        )}
       </h3>
     </div>
     <div>
@@ -254,10 +264,13 @@ function Order() {
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
   const [tableNumber, setTableNumber] = useState(0);
 
-  const lided_food_raw = localStorage.getItem("order");
+  const loaded_food_raw = localStorage.getItem("order");
+  const [showReceipt, setShowReceipt] = useState(false);
   const navigate = useNavigate();
 
-  const [error, setError] = useState(null);
+  const [tableError, setTableError] = useState(null);
+  const [orderError, SetOrderError] = useState("سبد خرید خالی است");
+
   const [removingId, setRemovingId] = useState(null);
 
   const handleIncreaseCount = (id) => {
@@ -308,8 +321,8 @@ function Order() {
     async function fetchItems() {
       try {
         let orderArray = [];
-        if (lided_food_raw) {
-          orderArray = JSON.parse(lided_food_raw);
+        if (loaded_food_raw) {
+          orderArray = JSON.parse(loaded_food_raw);
         }
 
         const foodIds = orderArray.map(([id, count]) => id);
@@ -340,7 +353,6 @@ function Order() {
         });
 
         setOrderItems(mergedItems);
-        console.log(mergedItems);
       } catch (err) {
         console.log(err);
         setOrderItems([]);
@@ -351,43 +363,44 @@ function Order() {
   }, []);
 
   async function addOrder() {
+    const rawOrder = localStorage.getItem("order");
+
     if (tableNumber <= 0) {
-      setError("لطفا شماره میز را درست وارد کنید!");
+      setTableError("لطفا شماره میز را درست وارد کنید!");
       setTimeout(() => {
-        setError(null);
+        setTableError(null);
       }, 2000);
       return;
-    }
-    setError(null);
-    const rawOrder = localStorage.getItem("order");
-    const orderArray = rawOrder ? JSON.parse(rawOrder) : [];
+    } else if (rawOrder) {
+      setTableError(null);
+      const orderArray = rawOrder ? JSON.parse(rawOrder) : [];
 
-    const foods = orderArray.map(([id, quantity]) => ({
-      food_id: id,
-      quantity,
-      food_price: 0,
-    }));
+      const foods = orderArray.map(([id, quantity]) => ({
+        food_id: id,
+        quantity,
+      }));
 
-    const message = null;
+      // const message = null;
 
-    const dataToSend = {
-      foods,
-      table_number: tableNumber,
-      message,
-    };
-    try {
-      const response = await axios.post(
-        `${BASE_PATH}/order/add_order`,
-        dataToSend,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response);
-    } catch (err) {
-      console.log(err);
+      const dataToSend = {
+        foods,
+        table_number: tableNumber,
+        // message,
+      };
+      try {
+        const response = await axios.post(
+          `${BASE_PATH}/order/add_order`,
+          dataToSend,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        localStorage.setItem("order", []);
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 
@@ -413,13 +426,14 @@ function Order() {
               handleDecreaseCount={handleDecreaseCount}
               removingId={removingId}
               selectFood={selectFood}
+              orderError={orderError}
             />
           </div>
           <div className="col-span-1 flex justify-center items-start">
             <UserNumber
               tableNumber={tableNumber}
               setTableNumber={setTableNumber}
-              error={error}
+              tableError={tableError}
             />
           </div>
           <div className="col-span-1 pt-4">
@@ -441,15 +455,31 @@ function Order() {
                 </h1>
               </div>
               <button
-                onClick={() => addOrder()}
+                onClick={() => {
+                  setShowReceipt(true);
+                  addOrder();
+                }}
                 className="w-full p-5 rounded-2xl bg-primary text-white text-2xl dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
                 پرداخت
               </button>
             </div>
           </div>
         </div>
-        <Footer page={3} CostMoney={totalCost} addOrder={addOrder} />
+        <Footer
+          page={3}
+          CostMoney={totalCost}
+          addOrder={() => {
+            setShowReceipt(true);
+            addOrder();
+          }}
+        />
       </div>
+      <OrderReceiptOverlay
+        visible={showReceipt}
+        items={orderItems}
+        totalPrice={totalCost}
+        onClose={() => setShowReceipt(false)}
+      />
     </>
   );
 }

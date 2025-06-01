@@ -155,8 +155,8 @@ function EditItem() {
                 <h1 className="text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
                   اصلاح کردن آیتم
                 </h1>
-                <button onClick={() => exit()}>
-                  <div className="bg-white dark:bg-darkpalleteDark border-2 p-2 rounded-2xl transition-colors duration-300">
+                <button className="cursor-pointer" onClick={() => exit()}>
+                  <div className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
                     <ArrowIcon
                       className={
                         "w-8 rotate-180 stroke-3 stroke-black dark:stroke-white"
