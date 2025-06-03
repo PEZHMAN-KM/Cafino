@@ -158,18 +158,18 @@ function FavoritePage() {
                     item.in_sale
                       ? "bg-slowprimary dark:bg-slowprimaryDark"
                       : "bg-white dark:bg-darkpalleteDark"
-                  } rounded-3xl w-ful h-fit p-3 m-auto text-start transition-all duration-300 hover:scale-102 hover:bg-highgray`}>
+                  } rounded-3xl w-ful h-fit p-3 m-auto text-start transition-all duration-300 hover:scale-102 hover:bg-highgray animate-scale-up`}>
                   <img
                     className="w-full aspect-square object-cover rounded-2xl dark:opacity-90 transition-opacity duration-300"
                     src={item.pic_url ? item.pic_url : itemImage}
                     alt={item.name}
                   />
                   <div className="flex justify-between items-center">
-                    <div>
-                      <h1 className="text-2xl font-bold mt-2 dark:text-white transition-colors duration-300">
+                    <div className="overflow-hidden w-fit">
+                      <h1 className="text-2xl font-bold mt-2 dark:text-white truncate transition-colors duration-300">
                         {item.name}
                       </h1>
-                      <h3 className="text-balance mt-1 dark:text-slowgray transition-colors duration-300">
+                      <h3 className="text-balance mt-1 dark:text-slowgray truncate transition-colors duration-300">
                         {item.description}
                       </h3>
                     </div>

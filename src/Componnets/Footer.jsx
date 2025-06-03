@@ -123,11 +123,11 @@ function Footer({ page, CostMoney, addOrder }) {
             <div className="flex justify-between w-full items-center pb-3">
               <div className="flex items-center gap-2">
                 <Wallet />
-                <h1 className="text-xl font-bold dark:text-white transition-colors duration-300">
+                <h1 className="text-lg md:text-2xl lg:text-3xl font-bold dark:text-white transition-colors duration-300">
                   مبلغ کل سفارشات
                 </h1>
               </div>
-              <h1 className="text-2xl font-bold text-primary">
+              <h1 className="text-lg md:text-2xl lg:text-3xl font-bold text-primary">
                 {formatPrice(CostMoney)} <span className="text-sm">تومان</span>
               </h1>
             </div>

@@ -273,14 +273,14 @@ function Item() {
               <div className="absolute lg:static lg:top-auto lg:left-auto lg:w-1/2 lg:pt-0 top-5 right-5">
                 <button
                   onClick={handleLikeClick}
-                  className={`bg-white dark:bg-darkpalleteDark p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-200 group hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white
+                  className={`bg-white dark:bg-darkpalleteDark p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-300 group hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white
                   ${
                     isLiked
                       ? "bg-slowprimary dark:bg-darkpalleteDark text-red-500"
                       : ""
                   }`}>
                   <Like
-                    className={`w-8 transition-all duration-200 
+                    className={`w-8 transition-all duration-300 
                     ${
                       isLiked
                         ? "stroke-red-500 fill-red-500"
@@ -288,7 +288,7 @@ function Item() {
                     }`}
                   />
                   <h1
-                    className={`hidden lg:block text-2xl font-bold ${
+                    className={`hidden transition-colors duration-300  lg:block text-2xl font-bold ${
                       isLiked
                         ? "dark:text-red-300 text-red-700"
                         : "dark:text-white "
@@ -300,9 +300,9 @@ function Item() {
               <div className="absolute lg:static lg:top-auto lg:right-auto lg:w-1/2 lg:pt-0 top-5 left-5">
                 <button
                   onClick={() => exit()}
-                  className="bg-white dark:bg-darkpalleteDark p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-200 hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white">
+                  className="bg-white dark:bg-darkpalleteDark p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-300 hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white">
                   <ArrowIcon className="w-8 rotate-180 stroke-3 dark:hover:text-white" />
-                  <h1 className="hidden lg:block text-2xl font-bold dark:text-white">
+                  <h1 className="hidden transition-colors duration-300 lg:block text-2xl font-bold dark:text-white">
                     برگشت
                   </h1>
                 </button>
@@ -332,12 +332,12 @@ function Item() {
               {orderCount === 0 ? (
                 <button
                   onClick={handleAddToOrder}
-                  className="bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary text-white text-2xl font-bold px-5 py-3 rounded-2xl transition-colors duration-300 animate-scale-up">
+                  className="bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary text-white text-lg lg:text-2xl font-bold p-2 lg:px-5 lg:py-3 rounded-2xl transition-colors duration-300 animate-scale-up">
                   افزودن به سبد خرید
                 </button>
               ) : (
                 <div
-                  className={`flex items-center gap-6 ${
+                  className={`flex items-center gap-3 ${
                     removing ? "animate-scale-out" : "animate-scale-up"
                   }`}>
                   <button
@@ -362,17 +362,18 @@ function Item() {
                 </div>
               )}
             </div>
-            <div className="w-20 lg:w-auto">
-              <h1 className="text-xl font-bold lg:text-6xl dark:text-white transition-colors duration-300">
+            <div className="w-fit lg:w-auto lg:flex lg:gap-2">
+              <h1 className="text-xl font-bold lg:text-5xl dark:text-white transition-colors duration-300">
                 قیمت
+                <span className="hidden lg:inline">:</span>
               </h1>
               <div className="flex justify-center items-end gap-1">
-                <h1 className="text-3xl font-bold dark:text-white transition-colors duration-300">
+                <h1 className="text-3xl lg:text-5xl font-bold dark:text-white transition-colors duration-300">
                   {item.sale_price
                     ? formatPrice(item.sale_price)
                     : formatPrice(item.price)}
                 </h1>
-                <h3 className="dark:text-slowgray transition-colors duration-300">
+                <h3 className="dark:text-slowgray text-sm lg:text-3xl transition-colors duration-300">
                   تومان
                 </h3>
               </div>

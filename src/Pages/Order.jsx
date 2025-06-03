@@ -188,14 +188,16 @@ const CountController = ({ itemId, count, onIncrease, onDecrease }) => {
 const UserNumber = ({ tableNumber, setTableNumber, tableError }) => (
   <div className="bg-white dark:bg-darkpalleteDark w-screen p-5 mx-5 rounded-2xl border-1 border-highgray dark:border-graypalleteDark flex justify-between items-center text-2xl font-bold transition-colors duration-300">
     <div className="flex flex-col gap-2">
-      <h1 className="text-2xl font-extrabold dark:text-white transition-colors duration-300">
+      <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold dark:text-white transition-colors duration-300">
         سفارش برای میز :
       </h1>
-      <h3 className="text-xs font-semibold md:text-lg text-slowgrayDark dark:text-slowgray transition-colors duration-300">
+      <h3 className="text-xs md:text-lg font-semibold text-slowgrayDark dark:text-slowgray transition-colors duration-300">
         از درست بودن شماره میز اطمینان حاصل کنید
         <br />
         {tableError && (
-          <span className="text-Start text-primary">{tableError}</span>
+          <span className="text-xs md:text-sm text-Start text-primary">
+            {tableError}
+          </span>
         )}
       </h3>
     </div>

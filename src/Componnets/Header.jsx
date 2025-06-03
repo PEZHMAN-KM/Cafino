@@ -235,7 +235,7 @@ const Header = forwardRef(
             </button>
           </div>
           {showMenu && (
-            <div className="absolute right-5 top-12 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50">
+            <div className="absolute right-5 top-12 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50 animate-scale-up">
               <div className="py-1">
                 <a
                   href="/home"
@@ -297,7 +297,7 @@ const Header = forwardRef(
             }`}>
             <a
               href="/home"
-              className="text-xl font-bold dark:text-white transition-colors duration-300">
+              className="text-lg md:text-xl font-bold dark:text-white transition-colors duration-300">
               کافـی نـو
             </a>
           </div>
