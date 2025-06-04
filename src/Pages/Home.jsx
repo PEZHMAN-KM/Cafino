@@ -84,6 +84,7 @@ function Home() {
     ]);
     localStorage.setItem("order", JSON.stringify(orderArray));
     setOrderCounts(updatedCounts);
+    window.dispatchEvent(new Event("orderUpdated"));
   };
 
   async function fetchItems() {
@@ -283,7 +284,7 @@ function Home() {
                           : "bg-white dark:bg-darkpalleteDark"
                       } rounded-3xl w-ful h-fit p-3 m-auto text-start transition-all duration-300 hover:scale-102 hover:bg-highgray animate-scale-up`}>
                       <img
-                        className="w-full aspect-square object-cover rounded-2xl dark:opacity-90 transition-opacity duration-300"
+                        className="w-full aspect-square object-cover rounded-2xl"
                         src={item.pic_url ? item.pic_url : itemImage}
                         alt={item.name}
                       />
@@ -418,7 +419,7 @@ function Home() {
                           : "bg-white dark:bg-darkpalleteDark"
                       } rounded-3xl w-ful h-fit p-3 m-auto text-start transition-all duration-300 hover:scale-102 hover:bg-highgray animate-scale-up`}>
                       <img
-                        className="w-full aspect-square object-cover rounded-2xl dark:opacity-90 transition-opacity duration-300"
+                        className="w-full aspect-square object-cover rounded-2xl"
                         src={item.pic_url ? item.pic_url : itemImage}
                         alt={item.name}
                       />

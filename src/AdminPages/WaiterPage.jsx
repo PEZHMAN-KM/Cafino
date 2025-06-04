@@ -68,6 +68,8 @@ const WaiterRequest = ({
   id,
   message,
   inProgress,
+  waitress_name,
+  full_name,
   progressNotification,
   unProgressNotification,
   doneNotification,
@@ -82,52 +84,62 @@ const WaiterRequest = ({
     } ${clickedButtonId === id ? "animate-scale-out" : ""}`}>
     <div
       className={` transition-all hover:scale-102 duration-300 w-9/10 md:w-4/6 xl:w-3/6 px-7 py-2 rounded-3xl ${
-        message
+        message && (!waitress_name || full_name === waitress_name)
           ? "bg-blue-100 dark:bg-blue-950"
+          : waitress_name && full_name !== waitress_name
+          ? "bg-slowgray dark:bg-slowgrayDark"
           : "bg-white dark:bg-darkpalleteDark"
       }`}>
-      <h1 className="text-lg text-black dark:text-white transition-colors duration-300 pb-2">
+      <h1 className="text-lg text-black dark:text-white transition-colors duration-300">
         {message ? "تحویل سفارش" : "درخواست کمک"}
       </h1>
       <div className="flex flex-col justify-center items-center">
         <TableNumber tableNumber={tableNumber} />
       </div>
-      <div className="flex justify-center items-center gap-2 py-2">
-        {inProgress ? (
-          <div className="flex justify-center items-center gap-3">
-            <button
-              onClick={() => doneNotification(id)}
-              className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
-              انجام شد
-            </button>
+      {!waitress_name || full_name === waitress_name ? (
+        <div className="flex justify-center items-center gap-2 py-2">
+          {inProgress ? (
+            <div className="flex justify-center items-center gap-3">
+              <button
+                onClick={() => doneNotification(id)}
+                className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+                انجام شد
+              </button>
+              <button
+                onClick={() => {
+                  setClickedButtonId(id);
+                  setTimeout(async () => {
+                    await unProgressNotification(id);
+                    await getNOtification();
+                    setClickedButtonId(null);
+                  }, 300);
+                }}
+                className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
+                لغو بررسی
+              </button>
+            </div>
+          ) : (
             <button
               onClick={() => {
                 setClickedButtonId(id);
                 setTimeout(async () => {
-                  await unProgressNotification(id);
+                  await progressNotification(id);
                   await getNOtification();
                   setClickedButtonId(null);
                 }, 300);
               }}
-              className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
-              لغو بررسی
+              className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+              پذیرش بررسی
             </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => {
-              setClickedButtonId(id);
-              setTimeout(async () => {
-                await progressNotification(id);
-                await getNOtification();
-                setClickedButtonId(null);
-              }, 300);
-            }}
-            className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
-            پذیرش بررسی
-          </button>
-        )}
-      </div>
+          )}
+        </div>
+      ) : (
+        <div className="flex justify-center items-center py-2">
+          <h1 className="text-xs md:text-lg text-black dark:text-white transition-colors duration-300">
+            این درخواست به {waitress_name} واگذار شده
+          </h1>
+        </div>
+      )}
     </div>
   </div>
 );
@@ -400,6 +412,8 @@ function WaiterPage() {
                 tableNumber={item.table_number}
                 message={item.message}
                 inProgress={item.is_in_progress}
+                waitress_name={item.waitress_name}
+                full_name={userData.full_name}
                 progressNotification={progressNotification}
                 unProgressNotification={unProgressNotification}
                 doneNotification={doneNotification}

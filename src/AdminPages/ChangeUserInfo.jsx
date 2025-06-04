@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminHeader from "./AdminHeader";
-import axios from "axios";  
+import axios from "axios";
 import { BASE_PATH } from "../constants/paths";
 
 const ArrowIcon = ({ className }) => {
@@ -200,7 +200,7 @@ function ChangeUserInfo() {
               تنظیمات
             </h1>
             <button onClick={goBack}>
-              <div className="bg-white dark:bg-darkpallete border-2 p-2 rounded-2xl">
+              <div className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
                 <ArrowIcon className="w-8 rotate-180 stroke-3 stroke-black dark:stroke-white" />
               </div>
             </button>
@@ -318,13 +318,13 @@ function ChangeUserInfo() {
             <div className="flex flex-col md:flex-row justify-between gap-4">
               <button
                 type="submit"
-                className="bg-white  dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+                className="bg-adminAction dark:bg-adminActionDark px-3 py-2 rounded-xl text-xl text-white hover:bg-adminActionDark dark:hover:bg-adminAction transition-colors duration-300">
                 ذخیره تغییرات
               </button>
               <button
                 type="button"
                 onClick={handleUnEmplymentUser}
-                className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
+                className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all duration-300">
                 حذف حساب کاربری
               </button>
             </div>

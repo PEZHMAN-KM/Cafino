@@ -104,7 +104,9 @@ const OrderBox = ({
             onClick={() => selectFood(item.id)}
             href="/item"
             key={item.id}
-            className={` cursor-pointer hover:bg-slowprimary border-b-1 border-t-1 lg:border-r-1 lg:border-l-1 lg:border-t-0 lg:border-b-0 hover:dark:bg-slowgrayDark transition-colors duration-300 rounded-2xl ${
+            className={` ${
+              item.in_sale ? "bg-slowprimary dark:bg-slowprimaryDark" : ""
+            } cursor-pointer hover:bg-slowgray border-b-1 border-t-1 lg:border-r-1 lg:border-l-1 lg:border-t-0 lg:border-b-0 hover:dark:bg-slowgrayDark transition-colors duration-300 rounded-2xl ${
               removingId === item.id ? "animate-scale-out" : ""
             }`}>
             <OrderItem
@@ -129,13 +131,9 @@ const OrderItem = ({
   handleIncreaseCount,
   handleDecreaseCount,
 }) => (
-  <div className="flex items-center px-5 py-2 gap-3">
-    <div className="aspect-square size-[100px] shrink-0">
-      <img
-        className="p-2 rounded-3xl dark:opacity-90 transition-opacity duration-300"
-        src={itemImage}
-        alt=""
-      />
+  <div className=" flex items-center px-1 py-1 md:px-5 md:py-2 gap-3">
+    <div className="aspect-square size-18 md:size-25 shrink-0">
+      <img className="p-2 rounded-3xl" src={itemImage} alt="" />
     </div>
     <div className="flex flex-col justify-center flex-1 overflow-hidden">
       <h1 className="text-2xl font-extrabold truncate dark:text-white transition-colors duration-300">
@@ -186,24 +184,32 @@ const CountController = ({ itemId, count, onIncrease, onDecrease }) => {
 };
 
 const UserNumber = ({ tableNumber, setTableNumber, tableError }) => (
-  <div className="bg-white dark:bg-darkpalleteDark w-screen p-5 mx-5 rounded-2xl border-1 border-highgray dark:border-graypalleteDark flex justify-between items-center text-2xl font-bold transition-colors duration-300">
+  <div
+    className={`${
+      tableError
+        ? "border-adminError dark:border-adminErrorDark"
+        : " border-highgray dark:border-graypalleteDark"
+    } bg-white dark:bg-darkpalleteDark w-screen p-5 mx-5 rounded-2xl border-1 flex justify-between items-center text-2xl font-bold transition-colors duration-300`}>
     <div className="flex flex-col gap-2">
       <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold dark:text-white transition-colors duration-300">
         سفارش برای میز :
       </h1>
       <h3 className="text-xs md:text-lg font-semibold text-slowgrayDark dark:text-slowgray transition-colors duration-300">
         از درست بودن شماره میز اطمینان حاصل کنید
-        <br />
-        {tableError && (
-          <span className="text-xs md:text-sm text-Start text-primary">
-            {tableError}
-          </span>
-        )}
       </h3>
+      {tableError && (
+        <h3 className="text-xs md:text-sm text-Start text-primary">
+          {tableError}
+        </h3>
+      )}
     </div>
     <div>
       <input
-        className="w-13 h-13 text-3xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl transition-colors duration-300"
+        className={`${
+          tableError
+            ? "border-adminError dark:border-adminErrorDark"
+            : " border-highgray dark:border-graypalleteDark"
+        } w-13 h-13 text-3xl font-bold text-center border-2 bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl transition-colors duration-300`}
         type="number"
         value={tableNumber}
         onChange={(e) => setTableNumber(Number(e.target.value))}
@@ -268,6 +274,7 @@ function Order() {
   const [orderItems, setOrderItems] = useState([]);
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
   const [tableNumber, setTableNumber] = useState(0);
+  const [timeAdded, setTimeAdded] = useState(null);
 
   const [showReceipt, setShowReceipt] = useState(false);
   const navigate = useNavigate();
@@ -295,8 +302,11 @@ function Order() {
     if (item.count === 1) {
       setRemovingId(id);
       setTimeout(() => {
-        setOrderItems((prev) => prev.filter((item) => item.id !== id));
-        updateLocalStorage(orderItems.filter((item) => item.id !== id));
+        setOrderItems((prev) => {
+          const updated = prev.filter((item) => item.id !== id);
+          updateLocalStorage(updated);
+          return updated;
+        });
         setRemovingId(null);
       }, 400);
     } else {
@@ -367,10 +377,14 @@ function Order() {
     fetchItems();
   }, []);
 
+  useEffect(() => {
+    window.dispatchEvent(new Event("orderUpdated"));
+  }, [orderItems]);
+
   async function addOrder() {
     const rawOrder = localStorage.getItem("order");
 
-    if (rawOrder) {
+    if (rawOrder != "[]") {
       if (tableNumber <= 0) {
         setTableError("لطفا شماره میز را درست وارد کنید!");
         setTimeout(() => {
@@ -406,7 +420,8 @@ function Order() {
             },
           }
         );
-        localStorage.setItem("order", []);
+        setTimeAdded(response.data.order.time_added);
+        localStorage.setItem("order", "[]");
       } catch (err) {
         console.log(err);
       }
@@ -482,6 +497,8 @@ function Order() {
         visible={showReceipt}
         items={orderItems}
         totalPrice={totalCost}
+        tableNumber={tableNumber}
+        timeAdded={timeAdded}
         refreshAllData={refreshAllData}
       />
     </>

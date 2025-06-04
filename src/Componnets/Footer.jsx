@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+
 const Wallet = ({ ...props }) => (
   <svg
     className="w-8"
@@ -113,8 +115,27 @@ const formatPrice = (num) => {
   if (num == null || isNaN(num)) return "";
   return Number(num).toLocaleString("en-US");
 };
+const size_icon = 10;
 
 function Footer({ page, CostMoney, addOrder }) {
+  const [totalOrderCount, setTotalOrderCount] = useState(0);
+
+  const calculateTotal = () => {
+    const storedOrder = JSON.parse(localStorage.getItem("order") || "[]");
+    const totalCount = storedOrder.reduce((sum, [, count]) => sum + count, 0);
+    setTotalOrderCount(totalCount);
+  };
+
+  useEffect(() => {
+    calculateTotal();
+
+    window.addEventListener("orderUpdated", calculateTotal);
+
+    return () => {
+      window.removeEventListener("orderUpdated", calculateTotal);
+    };
+  }, []);
+
   return (
     <>
       <div className="bg-white dark:bg-darkpalleteDark p-6 rounded-t-3xl fixed w-screen bottom-0 md:hidden transition-colors duration-300">
@@ -142,41 +163,51 @@ function Footer({ page, CostMoney, addOrder }) {
           <a
             className="hover:scale-125 transition-all duration-300"
             href="ContactUs">
-            {page == 4 ? (
-              <Call className="stroke-primary fill-primary w-12" />
-            ) : (
-              <Call className="stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark w-12 transition-colors duration-300" />
-            )}
+            <Call
+              className={` w-${size_icon} transition-colors duration-300 ${
+                page == 4
+                  ? "stroke-primary fill-primary"
+                  : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
+              }`}
+            />
           </a>
           <a
             href="Order"
             className="relative hover:scale-125 transition-all duration-300">
-            <div className="absolute -right-1 -top-1 bg-primary w-6 h-6 rounded-full flex justify-center items-center font-bold text-white">
-              2
-            </div>
-            {page == 3 ? (
-              <Bag className="stroke-primary w-12" />
-            ) : (
-              <Bag className="stroke-highgray dark:stroke-highgrayDark w-12 transition-colors duration-300" />
+            {totalOrderCount > 0 && (
+              <div className="absolute -right-1 -top-1 bg-primary w-6 h-6 rounded-full flex justify-center items-center font-bold text-white text-sm">
+                {totalOrderCount}
+              </div>
             )}
+            <Bag
+              className={` w-${size_icon} transition-colors duration-300 ${
+                page == 3
+                  ? "stroke-primary "
+                  : "stroke-highgray dark:stroke-highgrayDark"
+              }`}
+            />
           </a>
           <a
             className="hover:scale-125 transition-all duration-300"
             href="FavoritePage">
-            {page == 2 ? (
-              <Favorite className="stroke-primary fill-primary w-12" />
-            ) : (
-              <Favorite className="stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark w-12 transition-colors duration-300" />
-            )}
+            <Favorite
+              className={` w-${size_icon} transition-colors duration-300 ${
+                page == 2
+                  ? "stroke-primary fill-primary"
+                  : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
+              }`}
+            />
           </a>
           <a
             className="hover:scale-125 transition-all duration-300"
             href="Home">
-            {page == 1 ? (
-              <Home className="stroke-primary fill-primary w-12" />
-            ) : (
-              <Home className="stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark w-12 transition-colors duration-300" />
-            )}
+            <Home
+              className={` w-${size_icon} transition-colors duration-300 ${
+                page == 1
+                  ? "stroke-primary fill-primary"
+                  : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
+              }`}
+            />
           </a>
         </div>
       </div>

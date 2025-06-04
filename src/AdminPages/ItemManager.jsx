@@ -3,6 +3,7 @@ import AdminHeader from "./AdminHeader";
 import { useEffect, useState } from "react";
 import { BASE_PATH } from "../constants/paths";
 import { Navigate, useNavigate } from "react-router-dom";
+import itemImage from "../../public/No_Item.png";
 
 import UseAuth from "../UseAuth";
 
@@ -165,6 +166,7 @@ const formatPrice = (num) => {
 
 const ItemTable = ({
   id,
+  pic_url,
   name,
   category,
   price,
@@ -175,11 +177,19 @@ const ItemTable = ({
 }) => {
   return (
     <div
-      className={`grid grid-cols-4 items-center text-center text-sm md:text-xl font-bold gap-2 rounded-xl px-2 md:gap-5 transition-colors duration-300 ${
+      className={`grid grid-cols-4 lg:grid-cols-5 items-center text-center text-sm md:text-xl font-bold gap-2 rounded-xl px-2 md:gap-5 transition-colors duration-300 ${
         in_sale
           ? "bg-adminAction text-adminBackgroundColor dark:bg-adminActionDark"
           : "bg-white dark:bg-darkpalleteDark dark:text-white"
       }`}>
+      <div className="hidden lg:flex justify-center items-center">
+        <img
+          className="hidden lg:inline w-20 h-20 p-2 aspect-square object-cover rounded-2xl"
+          src={pic_url ? pic_url : itemImage}
+          alt={name}
+        />
+        {in_sale ? <h1 className="text-sm w-0">تخفیف</h1> : null}
+      </div>
       <div>
         <h1>{name}</h1>
       </div>
@@ -197,7 +207,7 @@ const ItemTable = ({
       <div className="flex justify-center items-center gap-2 my-1 md:my-2">
         <button
           onClick={() => deleteFood(id)}
-          className="flex justify-center items-center bg-adminError md:px-1 md:py-0.5 text-white rounded-lg">
+          className="flex justify-center items-center bg-adminError md:px-1 md:py-0.5 text-white rounded-lg md:hover:scale-105 md:hover:bg-adminErrorDark transition-all duration-300">
           <Delete className="w-8 md:w-6" />
           <h1 className="hidden md:block md:w-14 md:text-sm">پاک کردن</h1>
         </button>
@@ -289,9 +299,9 @@ const ItemManager = () => {
         <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden transition-colors duration-300">
           <AdminHeader />
           <div className="grid grid-cols-1 md:flex justify-center w-screen">
-            <div className="bg-white dark:bg-darkpalleteDark m-2 rounded-2xl md:w-11/12 lg:w-5/6 transition-colors duration-300">
+            <div className="bg-white dark:bg-darkpalleteDark mx-2 md:mx-0 rounded-3xl md:w-11/12 lg:w-5/6 transition-colors duration-300">
               <div className="flex justify-between items-center pl-4 py-3">
-                <h1 className="text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
+                <h1 className="text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
                   مدیریت آیتم ها
                 </h1>
                 {/* <div className="flex gap-1 md:gap-2">
@@ -316,14 +326,19 @@ const ItemManager = () => {
                 </a>
               </div>
               <div className="px-2">
-                <div className="grid grid-cols-4 text-center text-balance md:text-xl font-bold gap-2 md:gap-5 pb-2 border-b-2 dark:text-white transition-colors duration-300">
-                  <h1>نام آیتم</h1>
-                  <h1>دسته بندی</h1>
-                  <h1>
-                    <span>هزینه </span>
-                    <span className="text-sm">(تومان)</span>
+                <div className="grid grid-cols-4 lg:grid-cols-5 text-center text-balance md:text-xl font-bold gap-2 md:gap-5 pb-2 border-b-2 dark:text-white transition-colors duration-300">
+                  <h1 className="hidden lg:block md:text-lg lg:text-2xl">
+                    عکس
                   </h1>
-                  <h1>آپشن</h1>
+                  <h1 className="text-lg mt-auto lg:text-2xl">نام آیتم</h1>
+                  <h1 className="text-lg mt-auto lg:text-2xl">دسته بندی</h1>
+                  <h1 className="text-lg mt-auto lg:text-2xl">
+                    <span>هزینه </span>
+                    <span className="text-xs md:text-sm lg:text-base">
+                      (هزار تومان)
+                    </span>
+                  </h1>
+                  <h1 className="text-lg mt-auto lg:text-2xl">آپشن</h1>
                 </div>
                 {allFood.length === 0 ? (
                   <div className="text-center py-4 text-gray-500 dark:text-gray-400 font-semibold transition-colors duration-300">
@@ -331,9 +346,12 @@ const ItemManager = () => {
                   </div>
                 ) : (
                   allFood.map((item) => (
-                    <div className="my-1" key={item.id}>
+                    <div
+                      className="border-b-1 my-0 md:my-1 md:border-b-0"
+                      key={item.id}>
                       <ItemTable
                         id={item.id}
+                        pic_url={item.pic_url}
                         name={item.name}
                         category={item.category_name}
                         price={item.price}

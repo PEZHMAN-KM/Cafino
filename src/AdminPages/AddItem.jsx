@@ -36,6 +36,10 @@ function AddItem() {
   const addFood = async (e) => {
     e.preventDefault();
     try {
+      setNameError(false);
+      setPriceError(false);
+      setCategoryError(false);
+
       const formData = new FormData();
       const form = e.target;
 
@@ -254,7 +258,7 @@ function AddItem() {
                     name="category_id"
                     id="category_id"
                     className={`border w-full md:w-1/2 rounded-lg p-2 text-gray-600 dark:text-gray-300 dark:bg-darkpalleteDark transition-all duration-300 ${
-                      nameError
+                      categoryError
                         ? "border-adminError dark:border-adminErrorDark"
                         : "border-gray-300 dark:border-graypalleteDark"
                     }`}
@@ -307,10 +311,10 @@ function AddItem() {
                     }`}
                   />
                 </div>
-                <button className="bg-adminAction text-white py-2 rounded-lg hover:bg-adminActionHover transition-all">
+                <button className="w-full bg-adminAction dark:bg-adminActionDark px-3 py-2 rounded-xl text-xl text-white hover:bg-adminActionDark dark:hover:bg-adminAction transition-colors duration-300">
                   اضافه کردن
                 </button>
-                <p className="dark:text-white transition-colors duration-300">
+                <p className="text-adminError transition-colors duration-300">
                   {textError}
                 </p>
               </form>

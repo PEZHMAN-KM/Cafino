@@ -235,7 +235,7 @@ const Header = forwardRef(
             </button>
           </div>
           {showMenu && (
-            <div className="absolute right-5 top-12 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50 animate-scale-up">
+            <div className="absolute right-5 top-12 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50">
               <div className="py-1">
                 <a
                   href="/home"
@@ -279,7 +279,7 @@ const Header = forwardRef(
                     setSearchActive(false);
                     setSearchTerm("");
                   }}
-                  className="mr-2 cursor-pointer text-sm text-gray-500 dark:text-gray-300">
+                  className="mr-2 cursor-pointer text-sm text-gray-500 dark:text-gray-300 transition-all duration-300">
                   بستن
                 </button>
               )}

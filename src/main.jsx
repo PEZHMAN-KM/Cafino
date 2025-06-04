@@ -16,6 +16,7 @@ import ItemManager from "./AdminPages/ItemManager.jsx";
 import WaiterPage from "./AdminPages/WaiterPage.jsx";
 import AdminLogin from "./AdminPages/AdminLogin.jsx";
 import ChangeUserInfo from "./AdminPages/ChangeUserInfo.jsx";
+import AddWaiter from "./AdminPages/AddWaiter.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -35,6 +36,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/WaiterPage" element={<WaiterPage />}></Route>
         <Route path="/AdminLogin" element={<AdminLogin />}></Route>
         <Route path="/ChangeUserInfo" element={<ChangeUserInfo />}></Route>
+        <Route path="/AddWaiter" element={<AddWaiter />}></Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>

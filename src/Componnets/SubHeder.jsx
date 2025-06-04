@@ -335,14 +335,14 @@ function SubHeder({
         <div className="z-10 flex justify-baseline xl:justify-center items-center gap-3 px-3 py-2 w-full scrollbar scrollbar-none overflow-x-auto">
           {/* MENU BUTTON */}
           <div
-            className={`bg-darkpallete p-2 hidden shrink-0 font-bold rounded-2xl cursor-pointer transition-all duration-300 hover:scale-102 hover:bg-highgray ${
+            className={`bg-darkpallete p-2 hidden shrink-0 font-bold rounded-2xl cursor-pointer transition-all duration-300 md:hover:scale-102 md:hover:bg-highgray touch-manipulation ${
               !hideIcons ? "hidden" : "md:block"
             }`}
             onClick={toggleMenu}>
             {hideIcons && <TopMenu />}
           </div>
           {showMenu && hideIcons && (
-            <div className="absolute right-5 top-14 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50 animate-scale-up">
+            <div className="absolute right-5 top-14 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50">
               <div className="py-1">
                 <a
                   href="/home"
@@ -373,7 +373,7 @@ function SubHeder({
               onSearchClick();
               setSearchActive(true);
             }}
-            className={`bg-graypallete p-3 shrink-0 font-bold rounded-2xl cursor-pointer transition-all duration-300 hover:scale-102 hover:bg-highgray ${
+            className={`bg-graypallete p-3 shrink-0 font-bold rounded-2xl cursor-pointer transition-all duration-300 md:hover:scale-102 md:hover:bg-highgray touch-manipulation ${
               !hideIcons ? "hidden" : "block"
             }`}>
             {hideIcons && <SearchIcon />}
@@ -384,7 +384,7 @@ function SubHeder({
               onCategory === 1
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 hover:scale-102 hover:bg-highgray animate-scale-up ${
+            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 md:hover:scale-102 md:hover:bg-highgray animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex justify-center items-center flex-col gap-3 text-sm md:text-2xl"
                 : "p-3 text-xl h-full text-center"
@@ -406,7 +406,7 @@ function SubHeder({
               onCategory === -1
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-slowprimary dark:bg-slowprimaryDark text-primary"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 hover:scale-102 hover:bg-slowgrayDark hover:dark:bg-slowgray flex justify-center items-center gap-3 animate-scale-up ${
+            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 md:hover:scale-102 md:hover:bg-slowgrayDark md:hover:dark:bg-slowgray flex justify-center items-center gap-3 animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex-col text-sm md:text-2xl"
                 : "p-2 text-xl text-center"
@@ -431,7 +431,7 @@ function SubHeder({
               onCategory === 2
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 hover:scale-102 hover:bg-highgray animate-scale-up ${
+            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 md:hover:scale-102 md:hover:bg-highgray animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex justify-center items-center flex-col gap-3 text-sm md:text-2xl"
                 : "p-3 text-xl h-full text-center"
@@ -455,7 +455,7 @@ function SubHeder({
               onCategory === 3
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 hover:scale-102 hover:bg-highgray animate-scale-up ${
+            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 md:hover:scale-102 md:hover:bg-highgray animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex justify-center items-center flex-col gap-3 text-sm md:text-2xl"
                 : "p-3 text-xl h-full text-center"
@@ -477,7 +477,7 @@ function SubHeder({
               onCategory === 4
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 hover:scale-102 hover:bg-highgray animate-scale-up ${
+            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 md:hover:scale-102 md:hover:bg-highgray animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex justify-center items-center flex-col gap-3 text-sm md:text-2xl"
                 : "p-3 text-xl h-full text-center"
@@ -496,7 +496,7 @@ function SubHeder({
               onCategory === 5
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl transition-colors duration-300 hover:scale-102 hover:bg-highgray cursor-pointer animate-scale-up ${
+            } shrink-0 font-bold rounded-2xl transition-colors duration-300 md:hover:scale-102 md:hover:bg-highgray cursor-pointer animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "md:w-40 w-24 h-30 md:h-40 flex justify-center items-center flex-col gap-3 text-sm md:text-2xl"
                 : "p-3 text-xl h-full text-center"
