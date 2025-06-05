@@ -14,7 +14,6 @@
       opacity: 0;
     }
   }
-
   .animate-scale-out {
     animation: scale-out 0.4s ease-in forwards;
   }
@@ -29,11 +28,56 @@
       opacity: 1;
     }
   }
-
   .animate-scale-up {
     animation: scale-up 0.4s ease-out forwards;
   }
+
+  @keyframes width-up {
+    0% {
+      transform: scaleX(0.1);
+      opacity: 0;
+    }
+    100% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+  }
+  .animate-width-up {
+    animation: width-up 0.4s ease-out forwards;
+  }
+
+  @keyframes move-up {
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+      visibility: visible;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  .animate-move-up {
+    animation: move-up 0.4s ease-out forwards;
+    visibility: hidden;
+  }
+  .delay-0 {
+    animation-delay: 0s;
+  }
+  .delay-1 {
+    animation-delay: 0.1s;
+  }
+  .delay-2 {
+    animation-delay: 0.2s;
+  }
 }
+
+/* FOR TURN OFF ALL ANIMATION
+ .no-anim * { 
+  animation: none !important;
+  transition: none !important;
+} */
 
 @theme {
   --color-primary: #c67c4e;
@@ -104,4 +148,16 @@
 * {
   font-family: "IranYekan";
   direction: rtl;
+}
+
+/* حذف دستگیره‌ها در Chrome و Safari */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none; /* حذف دستگیره‌ها */
+  margin: 0;
+}
+
+/* حذف دستگیره‌ها در Firefox */
+input[type="number"] {
+  -moz-appearance: textfield; /* حذف دستگیره‌ها */
 }

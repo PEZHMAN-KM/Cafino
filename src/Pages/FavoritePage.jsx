@@ -47,6 +47,7 @@ const formatPrice = (num) => {
 
 function FavoritePage() {
   const navigate = useNavigate();
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   const [items, setItems] = useState([]);
   const [error, setError] = useState(null);
@@ -82,6 +83,11 @@ function FavoritePage() {
       counts[id] = count;
     });
     setOrderCounts(counts);
+  }, []);
+
+  useEffect(() => {
+    // For flashing on LOADING PAGE
+    setIsPageLoaded(true);
   }, []);
 
   useEffect(() => {
@@ -139,7 +145,12 @@ function FavoritePage() {
   }
   return (
     <>
-      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 md:pb-3 transition-colors duration-300">
+      <div
+        className={`${
+          isPageLoaded
+            ? "transition-colors duration-300"
+            : "transition-none duration-0"
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 md:pb-3`}>
         <Header
           page={2}
           text={"علاقه مندی ها"}

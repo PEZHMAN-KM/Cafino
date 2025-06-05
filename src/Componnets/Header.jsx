@@ -143,9 +143,11 @@ const Header = forwardRef(
       searchTerm,
       setSearchTerm,
       fetchItems,
+      headerInputRef,
     },
     ref
   ) => {
+    const [isPageLoaded, setIsPageLoaded] = useState(false);
     const [isDark, setIsDark] = useState(false);
     const inputRef = useRef(null);
 
@@ -160,6 +162,9 @@ const Header = forwardRef(
     };
 
     useEffect(() => {
+      // For flashing on LOADING PAGE
+      setIsPageLoaded(true);
+
       const savedTheme = localStorage.getItem("theme");
 
       if (savedTheme) {
@@ -209,7 +214,11 @@ const Header = forwardRef(
     return (
       <>
         <div
-          className={`z-10 flex justify-center items-center max-w-screen gap-3 p-5 py-3 bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300 ${
+          className={`${
+            isPageLoaded
+              ? "transition-colors duration-300"
+              : "transition-none duration-0"
+          } z-10 flex justify-center items-center max-w-screen gap-3 p-5 py-3 bg-backgroundcolor dark:bg-backgroundcolorDark ${
             page !== 1 ? "sticky top-0" : ""
           }`}>
           <div className="hidden md:flex-1/4 md:flex gap-2">
@@ -261,14 +270,23 @@ const Header = forwardRef(
             </div>
           )}
           {page == 1 ? (
-            <div className="flex-3/4 flex justify-center items-center bg-slowgray dark:bg-graypalleteDark p-1.5 gap-2 rounded-xl md:flex-2/4  transition-colors duration-300">
+            <div
+              className={`${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              } flex-3/4 flex justify-center items-center bg-slowgray dark:bg-graypalleteDark p-1.5 gap-2 rounded-xl md:flex-2/4 animate-width-up`}>
               <SearchIcon />
               <input
                 className="w-full bg-transparent dark:text-white focus:outline-none placeholder-highgrayDark dark:placeholder-highgray transition-colors duration-300"
                 type="text"
                 placeholder="جستجو در کافی نو"
                 value={searchTerm}
-                onFocus={() => setSearchActive(true)}
+                ref={headerInputRef}
+                onFocus={() => {
+                  setSearchActive(true);
+                  setShowMenu(false);
+                }}
                 // onBlur={() => setSearchActive(false)}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -278,6 +296,7 @@ const Header = forwardRef(
                     fetchItems();
                     setSearchActive(false);
                     setSearchTerm("");
+                    setShowMenu(false);
                   }}
                   className="mr-2 cursor-pointer text-sm text-gray-500 dark:text-gray-300 transition-all duration-300">
                   بستن

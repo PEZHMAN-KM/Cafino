@@ -394,7 +394,7 @@ function SubHeder({
               fill={`transition-colors duration-300 ${
                 onCategory === 1 ? "fill-white" : "fill-black dark:fill-white"
               }`}
-              className={`w-15 h-15 md:w-20 md:h-20 transition-all ${
+              className={`w-15 h-15 md:w-20 md:h-20 transition-all duration-300 ${
                 !hideIcons ? "scale-100" : "scale-0 !max-h-0"
               }`}
             />
@@ -419,7 +419,7 @@ function SubHeder({
               stroke={`transition-colors duration-300 ${
                 onCategory === -1 ? "stroke-white" : "stroke-primary"
               }`}
-              className={`transition-all ${
+              className={`transition-all duration-300 ${
                 !hideIcons ? "w-15 h-15 md:w-20 md:h-20 " : "w-9 h-9"
               }`}
             />
@@ -443,7 +443,7 @@ function SubHeder({
                   ? "stroke-white"
                   : "stroke-black dark:stroke-white"
               }`}
-              className={`w-15 h-15 md:w-20 md:h-20 transition-all ${
+              className={`w-15 h-15 md:w-20 md:h-20 transition-all duration-300 ${
                 !hideIcons ? "scale-100" : "scale-0 !max-h-0"
               }`}
             />
@@ -465,7 +465,7 @@ function SubHeder({
               fill={`transition-colors duration-300 ${
                 onCategory === 3 ? "fill-white" : "fill-black dark:fill-white"
               }`}
-              className={`w-15 h-15 md:w-20 md:h-20 transition-all ${
+              className={`w-15 h-15 md:w-20 md:h-20 transition-all duration-300 ${
                 !hideIcons ? "scale-100" : "scale-0 !max-h-0"
               }`}
             />
@@ -506,7 +506,7 @@ function SubHeder({
               fill={`transition-colors duration-300 ${
                 onCategory === 5 ? "fill-white" : "fill-black dark:fill-white"
               }`}
-              className={`w-15 h-15 md:w-20 md:h-20 transition-all ${
+              className={`w-15 h-15 md:w-20 md:h-20 transition-all duration-300 ${
                 !hideIcons ? "scale-100" : "scale-0 !max-h-0"
               }`}
             />

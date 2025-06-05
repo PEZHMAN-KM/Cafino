@@ -136,6 +136,8 @@ function Item() {
   const id = Number(localStorage.getItem("show_food"));
   const navigate = useNavigate();
 
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+
   const [item, setItem] = useState(null);
   const [orderCount, setOrderCount] = useState(0);
   const [removing, setRemoving] = useState(false);
@@ -181,6 +183,9 @@ function Item() {
   }, [id]);
 
   useEffect(() => {
+    // For flashing on LOADING PAGE
+    setIsPageLoaded(true);
+
     if (localStorage.getItem("theme") == "dark") {
       document.documentElement.classList.add("dark");
     } else {
@@ -262,7 +267,12 @@ function Item() {
   return (
     <>
       <div className="lg:flex">
-        <div className="overflow-auto scrollbar scrollbar-none lg:flex-1/2 xl:flex-1/3 lg:flex lg:justify-center lg:items-center bg-backgroundcolor dark:bg-backgroundcolorDark pb-25 lg:pb-0 h-screen overflow-x-hidden transition-colors duration-300">
+        <div
+          className={`${
+            isPageLoaded
+              ? "transition-colors duration-300"
+              : "transition-none duration-0"
+          } overflow-auto scrollbar scrollbar-none lg:flex-1/2 xl:flex-1/3 lg:flex lg:justify-center lg:items-center bg-backgroundcolor dark:bg-backgroundcolorDark pb-25 lg:pb-0 h-screen overflow-x-hidden`}>
           <div className="relative lg:absolute">
             <img
               className="w-screen aspect-square object-cover p-2 rounded-3xl"
@@ -326,7 +336,12 @@ function Item() {
             </div>
           </div>
         </div>
-        <div className="lg:flex-1/2 xl:flex-2/3 flex md:flex-col-reverse md:justify-center fixed bottom-0 w-screen p-5 lg:p-2 bg-white rounded-t-2xl lg:rounded-none lg:bg-backgroundcolor dark:bg-darkpalleteDark lg:dark:bg-backgroundcolorDark lg:static lg:bottom-auto lg:w-auto transition-colors duration-300">
+        <div
+          className={`${
+            isPageLoaded
+              ? "transition-colors duration-300"
+              : "transition-none duration-0"
+          } lg:flex-1/2 xl:flex-2/3 flex md:flex-col-reverse md:justify-center fixed bottom-0 w-screen p-5 lg:p-2 bg-white rounded-t-2xl lg:rounded-none lg:bg-backgroundcolor dark:bg-darkpalleteDark lg:dark:bg-backgroundcolorDark lg:static lg:bottom-auto lg:w-auto`}>
           <div className="flex justify-between w-full items-center lg:flex-col-reverse lg:justify-center lg:gap-4 bg-white dark:bg-darkpalleteDark lg:bg-white dark:lg:bg-darkpalleteDark lg:px-3 lg:py-6 lg:rounded-3xl transition-colors duration-300">
             <div>
               {orderCount === 0 ? (

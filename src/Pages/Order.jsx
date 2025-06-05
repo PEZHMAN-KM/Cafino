@@ -93,7 +93,12 @@ const OrderBox = ({
     <h2 className="font-extrabold text-3xl px-8 dark:text-white transition-colors duration-300 pb-5">
       آیتم های خرید
     </h2>
-    <div className=" divide-highgray dark:divide-graypalleteDark grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:border-b-1 lg:border-highgray dark:border-graypalleteDark transition-colors duration-300">
+    <div
+      className={`${
+        orderItems.length === 0
+          ? "grid-cols-1"
+          : "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+      } divide-highgray dark:divide-graypalleteDark grid lg:border-b-1 lg:border-highgray dark:border-graypalleteDark transition-colors duration-300`}>
       {orderItems.length === 0 ? (
         <h1 className="text-center text-3xl font-black text-slowgrayDark dark:text-slowgray py-10 transition-colors duration-300">
           {orderError}
@@ -183,13 +188,22 @@ const CountController = ({ itemId, count, onIncrease, onDecrease }) => {
   );
 };
 
-const UserNumber = ({ tableNumber, setTableNumber, tableError }) => (
+const UserNumber = ({
+  tableNumber,
+  setTableNumber,
+  tableError,
+  isPageLoaded,
+}) => (
   <div
     className={`${
       tableError
         ? "border-adminError dark:border-adminErrorDark"
         : " border-highgray dark:border-graypalleteDark"
-    } bg-white dark:bg-darkpalleteDark w-screen p-5 mx-5 rounded-2xl border-1 flex justify-between items-center text-2xl font-bold transition-colors duration-300`}>
+    } ${
+      isPageLoaded
+        ? "transition-colors duration-300"
+        : "transition-none duration-0"
+    } bg-white dark:bg-darkpalleteDark w-screen p-5 mx-5 rounded-2xl border-1 flex justify-between items-center text-2xl font-bold`}>
     <div className="flex flex-col gap-2">
       <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold dark:text-white transition-colors duration-300">
         سفارش برای میز :
@@ -284,6 +298,8 @@ function Order() {
 
   const [removingId, setRemovingId] = useState(null);
 
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+
   const handleIncreaseCount = (id) => {
     const updatedItems = orderItems.map((item) => {
       if (item.id === id) {
@@ -374,6 +390,9 @@ function Order() {
   }
 
   useEffect(() => {
+    // For flashing on LOADING PAGE
+    setIsPageLoaded(true);
+
     fetchItems();
   }, []);
 
@@ -431,6 +450,7 @@ function Order() {
     fetchItems();
     setTableNumber(0);
     setShowReceipt(false);
+    window.dispatchEvent(new Event("orderUpdated"));
   };
 
   const totalCost = orderItems.reduce((sum, item) => {
@@ -440,7 +460,12 @@ function Order() {
 
   return (
     <>
-      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-60 md:pb-0 transition-colors duration-300">
+      <div
+        className={`${
+          isPageLoaded
+            ? "transition-colors duration-300"
+            : "transition-none duration-0"
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-60 md:pb-50`}>
         <Header
           page={3}
           text={"سبد خرید"}
@@ -463,23 +488,29 @@ function Order() {
               tableNumber={tableNumber}
               setTableNumber={setTableNumber}
               tableError={tableError}
+              isPageLoaded={isPageLoaded}
             />
           </div>
           <div className="col-span-1 pt-4">
             <Checkout orderItems={orderItems} />
           </div>
         </div>
-        <div className="w-full justify-center bottom-0 mt-10 hidden md:flex px-5">
-          <div className="w-2/3 bg-white p-4 rounded-2xl dark:bg-darkpalleteDark transition-colors duration-300">
-            <div className="flex justify-center bg- flex-col items-center w-full pb-5">
+        <div className="w-full justify-center fixed bottom-11 md:bottom-5 mt-10 flex md:px-5 transition-all duration-300">
+          <div
+            className={`${
+              isPageLoaded
+                ? "transition-colors duration-300"
+                : "transition-none duration-0"
+            } w-full bg-white p-4 rounded-2xl dark:bg-darkpalleteDark`}>
+            <div className="flex justify-center flex-col items-center w-full pb-5">
               <div className="flex justify-between w-full items-center pb-3">
                 <div className="flex items-center gap-2">
                   <Wallet />
-                  <h1 className="text-2xl font-bold dark:text-white transition-colors duration-300">
+                  <h1 className="text-lg md:text-2xl lg:text-3xl font-bold dark:text-white transition-colors duration-300">
                     مبلغ کل سفارشات
                   </h1>
                 </div>
-                <h1 className="text-2xl font-bold text-primary ransition-colors duration-300">
+                <h1 className="text-lg md:text-2xl lg:text-3xl font-bold text-primary ransition-colors duration-300">
                   {formatPrice(totalCost)} تومان
                 </h1>
               </div>
@@ -491,7 +522,7 @@ function Order() {
             </div>
           </div>
         </div>
-        <Footer page={3} CostMoney={totalCost} addOrder={addOrder} />
+        <Footer page={3} />
       </div>
       <OrderReceiptOverlay
         visible={showReceipt}

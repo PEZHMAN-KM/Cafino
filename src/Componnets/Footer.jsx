@@ -1,36 +1,36 @@
 import React, { useState, useEffect } from "react";
 
-const Wallet = ({ ...props }) => (
-  <svg
-    className="w-8"
-    viewBox="0 0 19 17"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}>
-    <path
-      d="M17.533 10.497h-3.374a2.244 2.244 0 0 1 0-4.485h3.374m-2.993 2.19h-.259"
-      stroke="#C67C4E"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      clipRule="evenodd"
-      d="M5.957 1h7.202a4.373 4.373 0 0 1 4.373 4.373v5.98a4.373 4.373 0 0 1-4.373 4.374H5.957a4.373 4.373 0 0 1-4.373-4.373v-5.98A4.373 4.373 0 0 1 5.957 1"
-      stroke="#C67C4E"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M5.363 4.782h4.5"
-      stroke="#C67C4E"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
+// const Wallet = ({ ...props }) => (
+//   <svg
+//     className="w-8"
+//     viewBox="0 0 19 17"
+//     fill="none"
+//     xmlns="http://www.w3.org/2000/svg"
+//     {...props}>
+//     <path
+//       d="M17.533 10.497h-3.374a2.244 2.244 0 0 1 0-4.485h3.374m-2.993 2.19h-.259"
+//       stroke="#C67C4E"
+//       strokeWidth={1.5}
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     />
+//     <path
+//       clipRule="evenodd"
+//       d="M5.957 1h7.202a4.373 4.373 0 0 1 4.373 4.373v5.98a4.373 4.373 0 0 1-4.373 4.374H5.957a4.373 4.373 0 0 1-4.373-4.373v-5.98A4.373 4.373 0 0 1 5.957 1"
+//       stroke="#C67C4E"
+//       strokeWidth={1.5}
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     />
+//     <path
+//       d="M5.363 4.782h4.5"
+//       stroke="#C67C4E"
+//       strokeWidth={1.5}
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     />
+//   </svg>
+// );
 
 const Call = ({ className }) => (
   <svg
@@ -111,15 +111,18 @@ const Home = ({ className }) => (
   </svg>
 );
 
-const formatPrice = (num) => {
-  if (num == null || isNaN(num)) return "";
-  return Number(num).toLocaleString("en-US");
-};
+// const formatPrice = (num) => {
+//   if (num == null || isNaN(num)) return "";
+//   return Number(num).toLocaleString("en-US");
+// };
+
 const size_icon = 10;
 
-function Footer({ page, CostMoney, addOrder }) {
-  const [totalOrderCount, setTotalOrderCount] = useState(0);
+function Footer({ page }) {
+  // CostMoney, addOrder
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
 
+  const [totalOrderCount, setTotalOrderCount] = useState(0);
   const calculateTotal = () => {
     const storedOrder = JSON.parse(localStorage.getItem("order") || "[]");
     const totalCount = storedOrder.reduce((sum, [, count]) => sum + count, 0);
@@ -127,19 +130,33 @@ function Footer({ page, CostMoney, addOrder }) {
   };
 
   useEffect(() => {
+    // For flashing on LOADING PAGE
+    setIsPageLoaded(true);
+
     calculateTotal();
 
-    window.addEventListener("orderUpdated", calculateTotal);
+    const handleOrderUpdated = () => {
+      calculateTotal();
+    };
+
+    window.addEventListener("orderUpdated", handleOrderUpdated);
 
     return () => {
-      window.removeEventListener("orderUpdated", calculateTotal);
+      window.removeEventListener("orderUpdated", handleOrderUpdated);
     };
   }, []);
 
   return (
     <>
-      <div className="bg-white dark:bg-darkpalleteDark p-6 rounded-t-3xl fixed w-screen bottom-0 md:hidden transition-colors duration-300">
-        {page == 3 ? (
+      <div
+        className={`${
+          isPageLoaded
+            ? "transition-colors duration-300"
+            : "transition-none duration-0"
+        } bg-white dark:bg-darkpalleteDark  fixed w-screen bottom-0 md:hidden ${
+          page == 3 ? " px-6 pb-6 pt-3" : "p-6 rounded-t-3xl"
+        }`}>
+        {/* {page == 3 ? (
           <div className="flex justify-center flex-col items-center w-full pb-5">
             <div className="flex justify-between w-full items-center pb-3">
               <div className="flex items-center gap-2">
@@ -158,8 +175,9 @@ function Footer({ page, CostMoney, addOrder }) {
               پرداخت
             </button>
           </div>
-        ) : null}
+        ) : null} */}
         <div className="flex items-center justify-between px-5">
+          {/* Contact Us Button */}
           <a
             className="hover:scale-125 transition-all duration-300"
             href="ContactUs">
@@ -171,6 +189,7 @@ function Footer({ page, CostMoney, addOrder }) {
               }`}
             />
           </a>
+          {/* Order Button */}
           <a
             href="Order"
             className="relative hover:scale-125 transition-all duration-300">
@@ -182,11 +201,12 @@ function Footer({ page, CostMoney, addOrder }) {
             <Bag
               className={` w-${size_icon} transition-colors duration-300 ${
                 page == 3
-                  ? "stroke-primary "
+                  ? "stroke-primary"
                   : "stroke-highgray dark:stroke-highgrayDark"
               }`}
             />
           </a>
+          {/* Favorite Button */}
           <a
             className="hover:scale-125 transition-all duration-300"
             href="FavoritePage">
@@ -198,6 +218,7 @@ function Footer({ page, CostMoney, addOrder }) {
               }`}
             />
           </a>
+          {/* Home Button */}
           <a
             className="hover:scale-125 transition-all duration-300"
             href="Home">

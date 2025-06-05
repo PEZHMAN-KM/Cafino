@@ -49,9 +49,12 @@ const formatPrice = (num) => {
 };
 
 function Home() {
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+
   const [hideIcons, setHideIcons] = useState(false);
   const scrollContainerRef = useRef(null);
   const headerRef = useRef(null);
+  const headerInputRef = useRef(null);
   const navigate = useNavigate();
 
   const [selectedCategory, setSelectedCategory] = useState(1);
@@ -135,6 +138,9 @@ function Home() {
   }, []);
 
   useEffect(() => {
+    // For flashing on LOADING PAGE
+    setIsPageLoaded(true);
+
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) return;
 
@@ -252,7 +258,11 @@ function Home() {
     <>
       <div
         ref={scrollContainerRef}
-        className={`bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 md:pb-5 transition-colors duration-300 ${
+        className={`${
+          isPageLoaded
+            ? "transition-colors duration-300"
+            : "transition-none duration-0"
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 md:pb-5 ${
           !hideIcons ? "pb-60 md:pb-5" : "pb-26 md:pb-49"
         }`}>
         <Header
@@ -265,9 +275,10 @@ function Home() {
           setSearchTerm={setSearchTerm}
           fetchItems={fetchItems}
           ref={headerRef}
+          headerInputRef={headerInputRef}
         />
         {searchActive && (
-          <>
+          <div className="animate-scale-up">
             {error && <p className="text-center my-4 text-primary">{error}</p>}
 
             {!error && (
@@ -378,18 +389,23 @@ function Home() {
                 ))}
               </div>
             )}
-          </>
+          </div>
         )}
 
         {!searchActive && (
-          <>
+          <div className="animate-scale-up">
             <SubHeder
               onCategorySelect={setSelectedCategory}
               hideIcons={hideIcons}
               showMenu={subHeaderMenuOpen}
               onSearchClick={scrollToTopAndFocus}
               setShowMenu={setSubHeaderMenuOpen}
-              className={`sticky top-0 z-10 w-screen bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300 ${
+              setSearchActive={setSearchActive}
+              className={`${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              } sticky top-0 z-10 w-screen bg-backgroundcolor dark:bg-backgroundcolorDark ${
                 !hideIcons ? "h-34 md:h-44" : "h-17"
               }`}
             />
@@ -491,18 +507,18 @@ function Home() {
                         <div>
                           {item.sale_price && (
                             <div className="flex justify-center items-end gap-1">
-                              <h1 className="text-lg font-medium dark:text-white line-through transition-colors duration-300">
+                              <h1 className="text-sm md:text-lg font-medium dark:text-white line-through transition-colors duration-300">
                                 {formatPrice(item.price)} تومان
                               </h1>
                             </div>
                           )}
                           <div className="flex justify-center items-end gap-1">
-                            <h1 className="text-3xl font-bold dark:text-white transition-colors duration-300">
+                            <h1 className="text-2xl md:text-3xl font-bold dark:text-white transition-colors duration-300">
                               {item.sale_price
                                 ? formatPrice(item.sale_price)
                                 : formatPrice(item.price)}
                             </h1>
-                            <h3 className="dark:text-slowgray transition-colors duration-300">
+                            <h3 className="text-xs md:text-base dark:text-slowgray transition-colors duration-300">
                               تومان
                             </h3>
                           </div>
@@ -513,7 +529,7 @@ function Home() {
                 ))}
               </div>
             )}
-          </>
+          </div>
         )}
         <Footer page={1} />
       </div>
