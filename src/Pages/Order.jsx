@@ -223,9 +223,13 @@ const UserNumber = ({
           tableError
             ? "border-adminError dark:border-adminErrorDark"
             : " border-highgray dark:border-graypalleteDark"
-        } w-13 h-13 text-3xl font-bold text-center border-2 bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl transition-colors duration-300`}
+        } ${
+          isPageLoaded
+            ? "transition-colors duration-300"
+            : "transition-none duration-0"
+        } w-13 h-13 text-3xl font-bold text-center border-2 bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl`}
         type="number"
-        value={tableNumber}
+        // value={tableNumber}
         onChange={(e) => setTableNumber(Number(e.target.value))}
       />
     </div>

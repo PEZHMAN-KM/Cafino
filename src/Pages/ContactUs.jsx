@@ -108,9 +108,13 @@ const Waiter = ({
     <div className="flex items-center gap-2">
       <div>
         <input
-          className="w-15 h-15 text-4xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl transition-colors duration-300"
+          className={`${
+            isPageLoaded
+              ? "transition-colors duration-300"
+              : "transition-none duration-0"
+          } w-15 h-15 text-4xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl`}
           type="number"
-          defaultValue={tableNumber}
+          // defaultValue={tableNumber}
           onChange={(e) => setTableNumber(Number(e.target.value))}
         />
       </div>

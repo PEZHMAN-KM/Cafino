@@ -293,7 +293,7 @@ function Home() {
                         item.in_sale
                           ? "bg-slowprimary dark:bg-slowprimaryDark"
                           : "bg-white dark:bg-darkpalleteDark"
-                      } rounded-3xl w-ful h-fit p-3 m-auto text-start transition-all duration-300 hover:scale-102 hover:bg-highgray animate-scale-up`}>
+                      } rounded-3xl w-ful h-fit p-3 m-auto text-start transition-all duration-300 md:hover:scale-102 md:hover:bg-highgray animate-scale-up touch-manipulation`}>
                       <img
                         className="w-full aspect-square object-cover rounded-2xl"
                         src={item.pic_url ? item.pic_url : itemImage}
@@ -338,7 +338,7 @@ function Home() {
                                 e.stopPropagation();
                                 increaseCount(item.id);
                               }}
-                              className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
+                              className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full md:hover:bg-primaryDark md:dark:hover:bg-primary transition-colors duration-300 touch-manipulation">
                               <Plus className={"w-7 stroke-white"} />
                             </button>
                             <button
@@ -346,7 +346,7 @@ function Home() {
                                 e.stopPropagation();
                                 decreaseCount(item.id);
                               }}
-                              className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center hover:bg-primary dark:hover:bg-primaryDark transition-colors duration-300">
+                              className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center md:hover:bg-primary md:dark:hover:bg-primaryDark transition-colors duration-300 touch-manipulation">
                               <Minus
                                 className={
                                   "w-3 fill-black dark:fill-white hover:fill-white transition-colors duration-300"
@@ -360,7 +360,7 @@ function Home() {
                               e.stopPropagation();
                               handleAddToOrder(item.id);
                             }}
-                            className="flex justify-center items-center rounded-2xl bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary w-13 h-13 transition-colors duration-300">
+                            className="flex justify-center items-center rounded-2xl bg-primary dark:bg-primaryDark md:hover:bg-primaryDark md:dark:hover:bg-primary w-13 h-13 transition-colors duration-300 touch-manipulation">
                             <Plus className={"w-10 stroke-white"} />
                           </button>
                         )}
@@ -433,7 +433,7 @@ function Home() {
                         item.in_sale
                           ? "bg-slowprimary dark:bg-slowprimaryDark"
                           : "bg-white dark:bg-darkpalleteDark"
-                      } rounded-3xl w-ful h-fit p-3 m-auto text-start transition-all duration-300 hover:scale-102 hover:bg-highgray animate-scale-up`}>
+                      } rounded-3xl w-ful h-fit p-3 m-auto text-start transition-all duration-300 md:hover:scale-102 md:hover:bg-highgray animate-scale-up touch-manipulation`}>
                       <img
                         className="w-full aspect-square object-cover rounded-2xl"
                         src={item.pic_url ? item.pic_url : itemImage}
@@ -478,7 +478,7 @@ function Home() {
                                 e.stopPropagation();
                                 increaseCount(item.id);
                               }}
-                              className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
+                              className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full md:hover:bg-primaryDark md:dark:hover:bg-primary transition-colors duration-300 touch-manipulation">
                               <Plus className={"w-7 stroke-white"} />
                             </button>
                             <button
@@ -486,10 +486,10 @@ function Home() {
                                 e.stopPropagation();
                                 decreaseCount(item.id);
                               }}
-                              className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center hover:bg-primary dark:hover:bg-primaryDark transition-colors duration-300">
+                              className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center md:hover:bg-primary md:dark:hover:bg-primaryDark transition-colors duration-300 touch-manipulation">
                               <Minus
                                 className={
-                                  "w-3 fill-black dark:fill-white hover:fill-white transition-colors duration-300"
+                                  "w-3 fill-black dark:fill-white md:hover:fill-white transition-colors duration-300 touch-manipulation"
                                 }
                               />
                             </button>
