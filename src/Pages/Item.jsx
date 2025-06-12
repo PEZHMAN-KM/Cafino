@@ -137,6 +137,7 @@ function Item() {
   const navigate = useNavigate();
 
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   const [item, setItem] = useState(null);
   const [orderCount, setOrderCount] = useState(0);
@@ -186,10 +187,25 @@ function Item() {
     // For flashing on LOADING PAGE
     setIsPageLoaded(true);
 
-    if (localStorage.getItem("theme") == "dark") {
-      document.documentElement.classList.add("dark");
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme) {
+      setIsDark(savedTheme === "dark");
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     } else {
-      document.documentElement.classList.remove("dark");
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      setIsDark(prefersDark);
+      if (prefersDark) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     }
   });
 
