@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { BASE_PATH } from "../constants/paths.js";
@@ -8,7 +7,6 @@ import Footer from "../Componnets/Footer.jsx";
 import Card from "../Componnets/Card.jsx";
 
 function FavoritePage() {
-  const navigate = useNavigate();
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   const [items, setItems] = useState([]);

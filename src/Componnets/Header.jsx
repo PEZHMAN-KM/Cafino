@@ -5,61 +5,8 @@ import React, {
   useState,
   useEffect,
 } from "react";
+import { Icons } from "./Icons";
 
-const DarkMode = ({ className }) => {
-  return (
-    <svg
-      viewBox="0 0 48 48"
-      xmlns="http://www.w3.org/2000/svg"
-      className={`w-8 ${className}`}>
-      <g id="SVGRepo_bgCarrier" strokeWidth={0} />
-      <g
-        id="SVGRepo_tracerCarrier"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <g id="SVGRepo_iconCarrier">
-        <title>{"dark-mode"}</title>
-        <g id="Layer_2" data-name="Layer 2">
-          <g id="Icons">
-            <g>
-              <rect width={48} height={48} fill="none" />
-              <g>
-                <path d="M14,24A10,10,0,0,0,24,34V14A10,10,0,0,0,14,24Z" />
-                <path d="M24,2A22,22,0,1,0,46,24,21.9,21.9,0,0,0,24,2ZM6,24A18.1,18.1,0,0,1,24,6v8a10,10,0,0,1,0,20v8A18.1,18.1,0,0,1,6,24Z" />
-              </g>
-            </g>
-          </g>
-        </g>
-      </g>
-    </svg>
-  );
-};
-
-const SearchIcon = () => {
-  return (
-    <svg
-      className="w-7"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
-      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-      <g
-        id="SVGRepo_tracerCarrier"
-        strokeLinecap="round"
-        strokeLinejoin="round"></g>
-      <g id="SVGRepo_iconCarrier">
-        <path
-          d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
-          stroke="#000000"
-          className="dark:stroke-white transition-colors duration-300"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"></path>
-      </g>
-    </svg>
-  );
-};
 const TopMenu = () => {
   return (
     <svg
@@ -230,17 +177,11 @@ const Header = forwardRef(
             <button
               className="transition-all duration-300 hover:scale-105"
               onClick={toggleDarkMode}>
-              {isDark ? (
-                <DarkMode
-                  className={"rotate-0 transition-all fill-white duration-150"}
-                />
-              ) : (
-                <DarkMode
-                  className={
-                    "rotate-180 transition-all fill-black duration-150"
-                  }
-                />
-              )}
+              <Icons.darkMode
+                className={`${
+                  isDark ? "rotate-0 fill-white" : "rotate-180 fill-black"
+                } w-8 transition-all duration-300 ease-out`}
+              />
             </button>
           </div>
           {showMenu && (
@@ -276,7 +217,11 @@ const Header = forwardRef(
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
               } flex-3/4 flex justify-center items-center bg-slowgray dark:bg-graypalleteDark p-1.5 gap-2 rounded-xl md:flex-2/4 animate-width-up`}>
-              <SearchIcon />
+              <Icons.search
+                className={
+                  "w-7 stroke-black dark:stroke-white transition-colors duration-300"
+                }
+              />
               <input
                 className="w-full bg-transparent dark:text-white focus:outline-none placeholder-highgrayDark dark:placeholder-highgray transition-colors duration-300"
                 type="text"

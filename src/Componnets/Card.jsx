@@ -1,38 +1,7 @@
 import { useEffect, useState } from "react";
 import itemImage from "../../public/No_Item.png";
 import { useNavigate } from "react-router-dom";
-
-const Plus = ({ className }) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg">
-    <g strokeWidth={0} />
-    <g strokeLinecap="round" strokeLinejoin="round" />
-    <path
-      d="M5 12h14m-7-7v14"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const Minus = ({ className }) => (
-  <svg
-    className={className}
-    viewBox="0 0 20 20"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none">
-    <g strokeWidth={0} />
-    <g strokeLinecap="round" strokeLinejoin="round" />
-    <path
-      fillRule="evenodd"
-      d="M18 10a1 1 0 0 1-1 1H3a1 1 0 1 1 0-2h14a1 1 0 0 1 1 1"
-    />
-  </svg>
-);
+import { Icons } from "./Icons";
 
 const formatPrice = (num) => {
   if (num == null || isNaN(num)) return "";
@@ -137,7 +106,7 @@ function Card({
                     increaseCount(id);
                   }}
                   className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full md:hover:bg-primaryDark md:dark:hover:bg-primary transition-colors duration-300 touch-manipulation">
-                  <Plus className={"w-7 stroke-white"} />
+                  <Icons.plus className={"w-7 stroke-white"} />
                 </button>
                 <button
                   onClick={(e) => {
@@ -145,7 +114,7 @@ function Card({
                     decreaseCount(id);
                   }}
                   className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center md:hover:bg-primary md:dark:hover:bg-primaryDark transition-colors duration-300 touch-manipulation">
-                  <Minus
+                  <Icons.mines
                     className={
                       "w-3 fill-black dark:fill-white hover:fill-white transition-colors duration-300"
                     }
@@ -159,7 +128,7 @@ function Card({
                   handleAddToOrder(id);
                 }}
                 className="flex justify-center items-center rounded-2xl bg-primary dark:bg-primaryDark md:hover:bg-primaryDark md:dark:hover:bg-primary w-13 h-13 transition-colors duration-300 touch-manipulation">
-                <Plus className={"w-10 stroke-white"} />
+                <Icons.plus className={"w-10 stroke-white"} />
               </button>
             )}
             <div>

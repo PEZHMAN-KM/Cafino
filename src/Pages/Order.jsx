@@ -7,69 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Footer from "../Componnets/Footer.jsx";
 import Header from "../Componnets/Header.jsx";
 import OrderReceiptOverlay from "../Componnets/OrderReceiptOverlay.jsx";
-
-const Wallet = ({ ...props }) => (
-  <svg
-    className="w-10"
-    viewBox="0 0 19 17"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}>
-    <path
-      d="M17.533 10.497h-3.374a2.244 2.244 0 0 1 0-4.485h3.374m-2.993 2.19h-.259"
-      stroke="#C67C4E"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      clipRule="evenodd"
-      d="M5.957 1h7.202a4.373 4.373 0 0 1 4.373 4.373v5.98a4.373 4.373 0 0 1-4.373 4.374H5.957a4.373 4.373 0 0 1-4.373-4.373v-5.98A4.373 4.373 0 0 1 5.957 1"
-      stroke="#C67C4E"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M5.363 4.782h4.5"
-      stroke="#C67C4E"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-const Plus = ({ className }) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg">
-    <g strokeWidth={0} />
-    <g strokeLinecap="round" strokeLinejoin="round" />
-    <path
-      d="M5 12h14m-7-7v14"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const Minus = ({ className }) => (
-  <svg
-    className={className}
-    viewBox="0 0 20 20"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none">
-    <g strokeWidth={0} />
-    <g strokeLinecap="round" strokeLinejoin="round" />
-    <path
-      fillRule="evenodd"
-      d="M18 10a1 1 0 0 1-1 1H3a1 1 0 1 1 0-2h14a1 1 0 0 1 1 1"
-    />
-  </svg>
-);
+import { Icons } from "../Componnets/Icons.jsx";
 
 // heroicon
 // هیرو ایکون معروف واس ایکون ولی کامل نیست
@@ -167,7 +105,7 @@ const CountController = ({ itemId, count, onIncrease, onDecrease }) => {
           onIncrease(itemId);
         }}
         className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
-        <Plus className={"w-7 stroke-white"} />
+        <Icons.plus className={"w-7 stroke-white"} />
       </button>
       <span className="w-9 text-center text-4xl font-bold dark:text-white inline-block">
         {count}
@@ -178,7 +116,7 @@ const CountController = ({ itemId, count, onIncrease, onDecrease }) => {
           onDecrease(itemId);
         }}
         className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center hover:bg-primary dark:hover:bg-primaryDark transition-colors duration-300">
-        <Minus
+        <Icons.mines
           className={
             "w-3 fill-black dark:fill-white hover:fill-white transition-colors duration-300"
           }
@@ -422,6 +360,7 @@ function Order() {
         food_id: id,
         quantity,
       }));
+      console.log(foods);
 
       // const message = null;
 
@@ -509,7 +448,7 @@ function Order() {
             <div className="flex justify-center flex-col items-center w-full pb-5">
               <div className="flex justify-between w-full items-center pb-3">
                 <div className="flex items-center gap-2">
-                  <Wallet />
+                  <Icons.wallet className={"w-10 stroke-primary"} />
                   <h1 className="text-lg md:text-2xl lg:text-3xl font-bold dark:text-white transition-colors duration-300">
                     مبلغ کل سفارشات
                   </h1>

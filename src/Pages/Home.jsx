@@ -200,8 +200,8 @@ function Home() {
           headerInputRef={headerInputRef}
         />
 
-        {!searchActive && (
-          <div className="animate-scale-up">
+        <div className="animate-scale-up">
+          {!searchActive && (
             <SubHeder
               onCategorySelect={setSelectedCategory}
               hideIcons={hideIcons}
@@ -217,11 +217,9 @@ function Home() {
                 !hideIcons ? "h-34 md:h-44" : "h-17"
               }`}
             />
-          </div>
-        )}
-
-        {/* BANNER IMAGE */}
-        {/* <div className="flex justify-center items-center w-screen">
+          )}
+          {/* BANNER IMAGE */}
+          {/* <div className="flex justify-center items-center w-screen">
             <img
               className="object-center object-cover p-4 rounded-4xl"
               src={bannerImage}
@@ -229,8 +227,8 @@ function Home() {
             />
           </div> */}
 
-        {error && <p className="text-center my-4 text-primary">{error}</p>}
-        <div className="animate-scale-up">
+          {error && <p className="text-center my-4 text-primary">{error}</p>}
+
           {!error && (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 gap-y-4 gap-x-2 mt-2 justify-center items-center">
               {items.map((item) => (
