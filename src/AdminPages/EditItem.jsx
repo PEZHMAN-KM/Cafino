@@ -27,6 +27,9 @@ function EditItem() {
   const [showOffValue, setShowOffValue] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+
+  const [preview, setPreview] = useState(null);
+
   const fileInputRef = useRef(null);
   const [textError, setTextError] = useState(null);
 
@@ -63,6 +66,7 @@ function EditItem() {
         setSalePrice(data.sale_price?.toString() || "");
         if (data.pic_url) {
           setPreviewUrl(data.pic_url);
+          setPreview(`${BASE_PATH}/files/${data.pic_url.split("/").pop()}`);
         }
       } catch (error) {
         console.error("Error loading item:", error);
@@ -84,7 +88,7 @@ function EditItem() {
         price: Number(price),
         in_sale: inSale,
         sale_price: inSale ? Number(salePrice) : 0,
-        // pic_url نمی‌توان به صورت JSON فایل ارسال کرد؛ باید جداگانه مدیریت شود
+        pic_url: selectedImage,
       };
 
       const token = JSON.parse(localStorage.getItem("user_data"));
@@ -110,37 +114,41 @@ function EditItem() {
     navigate("/itemmanager");
   }
 
-  const handleOffChange = (e) => {
-    setShowOffValue(e.target.checked);
-  };
-
-  const handleImageSelect = (e) => {
+  // Update handleImageChange function
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
+      // Store the actual file object
       setSelectedImage(file);
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewUrl(imageUrl);
+      // Create preview URL
+      setPreview(URL.createObjectURL(file));
     }
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.add("border-adminAction");
+    e.currentTarget.classList.add(
+      "border-adminAction",
+      "dark:border-adminActionDark"
+    );
   };
-
   const handleDragLeave = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.remove("border-adminAction");
+    e.currentTarget.classList.remove(
+      "border-adminAction",
+      "dark:border-adminActionDark"
+    );
   };
-
   const handleDrop = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.remove("border-adminAction");
+    e.currentTarget.classList.remove(
+      "border-adminAction",
+      "dark:border-adminActionDark"
+    );
+
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith("image/")) {
-      setSelectedImage(file);
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewUrl(imageUrl);
+      handleImageChange({ target: { files: [file] } });
     }
   };
 
@@ -169,7 +177,7 @@ function EditItem() {
                 className="flex flex-col gap-4 px-8 py-4"
                 onSubmit={updateFood}>
                 <div
-                  className="border-2 border-dashed border-gray-300 dark:border-graypalleteDark rounded-lg p-4 text-center cursor-pointer hover:border-adminAction dark:hover:border-adminActionDark transition-colors"
+                  className="border-2 border-dashed border-gray-300 dark:border-graypalleteDark rounded-lg p-4 text-center cursor-pointer hover:border-adminAction dark:hover:border-adminActionDark transition-colors w-full max-w-md"
                   onClick={() => fileInputRef.current.click()}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
@@ -177,27 +185,51 @@ function EditItem() {
                   <input
                     type="file"
                     accept="image/*"
-                    name="profile_image"
-                    id="profile_image"
+                    onChange={handleImageChange}
                     className="hidden"
-                    onChange={handleImageSelect}
                     ref={fileInputRef}
                   />
-                  {previewUrl ? (
+
+                  {preview ? (
                     <div className="relative group">
                       <img
-                        src={previewUrl}
-                        alt="Preview"
-                        className="max-h-48 mx-auto rounded-lg"
+                        src={preview}
+                        alt="Profile"
+                        className="max-h-48 mx-auto rounded-lg object-cover"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
                         <span className="text-white">تغییر تصویر</span>
                       </div>
+                      {preview && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteImage();
+                          }}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white text-xl font-bold rounded-full flex items-center justify-center w-10 h-10 hover:bg-red-600 transition-colors duration-300">
+                          ✕
+                        </button>
+                      )}
                     </div>
                   ) : (
-                    <div className="text-gray-500 dark:text-gray-400">
-                      <p>برای آپلود تصویر کلیک کنید</p>
-                      <p className="text-sm">یا تصویر را اینجا رها کنید</p>
+                    <div className="text-gray-500 dark:text-gray-400 py-8">
+                      <svg
+                        className="mx-auto h-12 w-12 mb-4"
+                        stroke="currentColor"
+                        fill="none"
+                        viewBox="0 0 48 48">
+                        <path
+                          d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <p className="text-sm">برای آپلود تصویر کلیک کنید</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500">
+                        یا تصویر را اینجا رها کنید
+                      </p>
                     </div>
                   )}
                 </div>

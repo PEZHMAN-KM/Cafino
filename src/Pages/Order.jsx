@@ -59,6 +59,7 @@ const OrderBox = ({
               count={item.count}
               handleIncreaseCount={handleIncreaseCount}
               handleDecreaseCount={handleDecreaseCount}
+              pic_url={item.pic_url}
             />
           </div>
         ))
@@ -73,10 +74,17 @@ const OrderItem = ({
   count,
   handleIncreaseCount,
   handleDecreaseCount,
+  pic_url,
 }) => (
   <div className=" flex items-center px-1 py-1 md:px-5 md:py-2 gap-3">
     <div className="aspect-square size-18 md:size-25 shrink-0">
-      <img className="p-2 rounded-3xl" src={itemImage} alt="" />
+      <img
+        className="p-2 rounded-3xl"
+        src={
+          pic_url ? `${BASE_PATH}/files/${pic_url.split("/").pop()}` : itemImage
+        }
+        alt=""
+      />
     </div>
     <div className="flex flex-col justify-center flex-1 overflow-hidden">
       <h1 className="text-2xl font-extrabold truncate dark:text-white transition-colors duration-300">

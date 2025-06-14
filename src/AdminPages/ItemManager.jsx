@@ -6,129 +6,9 @@ import { Navigate, useNavigate } from "react-router-dom";
 import itemImage from "../../public/No_Item.png";
 
 import UseAuth from "../UseAuth";
+import { Icons } from "../Componnets/Icons";
 
-const ADD = ({ className }) => {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
-      <g id="SVGRepo_bgCarrier" strokeWidth={0} />
-      <g
-        id="SVGRepo_tracerCarrier"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <g id="SVGRepo_iconCarrier">
-        <g id="Edit / Add_Plus">
-          <path
-            id="Vector"
-            d="M6 12H12M12 12H18M12 12V18M12 12V6"
-            stroke="current color"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </g>
-      </g>
-    </svg>
-  );
-};
-const Edit = ({ className }) => {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
-      <g id="SVGRepo_bgCarrier" strokeWidth={0} />
-      <g
-        id="SVGRepo_tracerCarrier"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <g id="SVGRepo_iconCarrier">
-        <path
-          d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13"
-          stroke="#292D32"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M16.04 3.02001L8.16 10.9C7.86 11.2 7.56 11.79 7.5 12.22L7.07 15.23C6.91 16.32 7.68 17.08 8.77 16.93L11.78 16.5C12.2 16.44 12.79 16.14 13.1 15.84L20.98 7.96001C22.34 6.60001 22.98 5.02001 20.98 3.02001C18.98 1.02001 17.4 1.66001 16.04 3.02001Z"
-          stroke="#292D32"
-          strokeWidth={1.5}
-          strokeMiterlimit={10}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M14.91 4.1499C15.58 6.5399 17.45 8.4099 19.85 9.0899"
-          stroke="#292D32"
-          strokeWidth={1.5}
-          strokeMiterlimit={10}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </g>
-    </svg>
-  );
-};
-const Delete = ({ className }) => {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
-      <g id="SVGRepo_bgCarrier" strokeWidth={0} />
-      <g
-        id="SVGRepo_tracerCarrier"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <g id="SVGRepo_iconCarrier">
-        <path
-          d="M10 12V17"
-          stroke="white"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M14 12V17"
-          stroke="white"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M4 7H20"
-          stroke="white"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10"
-          stroke="white"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z"
-          stroke="white"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </g>
-    </svg>
-  );
-};
+// ITEM CONTROL ---------------------------------------------------
 // const Setting = ({ className }) => {
 //   return (
 //     <svg
@@ -158,12 +38,10 @@ const Delete = ({ className }) => {
 //     </svg>
 //   );
 // };
-
 const formatPrice = (num) => {
   if (num == null || isNaN(num)) return "";
   return Number(num).toLocaleString("en-US");
 };
-
 const ItemTable = ({
   id,
   pic_url,
@@ -177,7 +55,7 @@ const ItemTable = ({
 }) => {
   return (
     <div
-      className={`grid grid-cols-4 lg:grid-cols-5 items-center text-center text-sm md:text-xl font-bold gap-2 rounded-xl px-2 md:gap-5 transition-colors duration-300 ${
+      className={`grid grid-cols-4 lg:grid-cols-5 items-center text-center text-sm md:text-xl font-bold gap-2 rounded-xl px-2 transition-colors duration-300 ${
         in_sale
           ? "bg-adminAction text-adminBackgroundColor dark:bg-adminActionDark"
           : "bg-white dark:bg-darkpalleteDark dark:text-white"
@@ -185,7 +63,11 @@ const ItemTable = ({
       <div className="hidden lg:flex justify-center items-center">
         <img
           className="hidden lg:inline w-20 h-20 p-2 aspect-square object-cover rounded-2xl"
-          src={pic_url ? pic_url : itemImage}
+          src={
+            pic_url
+              ? `${BASE_PATH}/files/${pic_url.split("/").pop()}`
+              : itemImage
+          }
           alt={name}
         />
         {in_sale ? <h1 className="text-sm w-0">تخفیف</h1> : null}
@@ -208,13 +90,13 @@ const ItemTable = ({
         <button
           onClick={() => deleteFood(id)}
           className="flex justify-center items-center bg-adminError md:px-1 md:py-0.5 text-white rounded-lg md:hover:scale-105 md:hover:bg-adminErrorDark transition-all duration-300">
-          <Delete className="w-8 md:w-6" />
+          <Icons.delete className="w-8 md:w-6 stroke-white" />
           <h1 className="hidden md:block md:w-14 md:text-sm">پاک کردن</h1>
         </button>
         <button
           onClick={() => editFood(id)}
-          className="flex justify-center items-center bg-white md:px-1 md:py-0.5 text-black rounded-lg">
-          <Edit className="w-8 md:w-6" />
+          className="flex justify-center items-center bg-white md:px-1 md:py-0.5 text-black rounded-lg md:hover:scale-105 transition-all duration-300">
+          <Icons.edit className="w-8 md:w-6 stroke-black" />
           <h1 className="hidden md:block md:text-sm">اصلاح</h1>
         </button>
       </div>
@@ -222,8 +104,36 @@ const ItemTable = ({
   );
 };
 
+// WAITER CONTROL -------------------------------------------------
+const WaiterItem = ({ id, pic_url, full_name, username, UnEmployUser }) => {
+  return (
+    <div className="flex justify-between items-center text-start text-xl font-bold rounded-3xl px-2 bg-white dark:bg-darkpalleteDark dark:text-white transition-colors duration-300">
+      <div className="flex justify-center items-center">
+        <img
+          className="hidden md:inline w-20 h-20 p-2 aspect-square object-cover rounded-2xl"
+          src={
+            pic_url
+              ? `${BASE_PATH}/files/${pic_url.split("/").pop()}`
+              : itemImage
+          }
+          alt={username}
+        />
+        <div>
+          <h1>{full_name}</h1>
+          <h1 className="text-lg font-light">{username}</h1>
+        </div>
+      </div>
+      <button
+        onClick={() => UnEmployUser(id)}
+        className="flex justify-center items-center bg-adminError md:px-1 md:py-0.5 text-white rounded-lg md:hover:scale-105 md:hover:bg-adminErrorDark transition-all duration-300">
+        <Icons.delete className="w-8 md:w-6 stroke-white" />
+        <h1 className="hidden md:block md:w-14 md:text-sm">اخراج</h1>
+      </button>
+    </div>
+  );
+};
+
 const ItemManager = () => {
-  const [allFood, setAllFood] = useState([]);
   const { isAuthenticated } = UseAuth();
   const navigate = useNavigate();
 
@@ -236,6 +146,14 @@ const ItemManager = () => {
       }
     }
   }
+
+  useEffect(() => {
+    allFoods();
+    allWaiteres();
+  }, []);
+
+  // ITEM CONTROL ---------------------------------------------------
+  const [allFood, setAllFood] = useState([]);
 
   async function allFoods() {
     try {
@@ -275,31 +193,80 @@ const ItemManager = () => {
         setAllFood((prevFoods) =>
           prevFoods.filter((item) => item.id !== food_id)
         );
-      } else {
-        console.error("Delete failed with status:", response.status);
       }
     } catch (error) {
       console.error("Error Deleting food:", error);
     }
   }
-
   function editFood(food_id) {
     checktoken();
     localStorage.setItem("edit_food", food_id);
     navigate("/EditItem");
   }
 
-  useEffect(() => {
-    allFoods();
-  }, []);
+  // WAITER CONTROL -------------------------------------------------
+  const [allWaiter, SetAllWaiter] = useState([]);
+
+  async function allWaiteres() {
+    const token = JSON.parse(localStorage.getItem("user_data"));
+
+    try {
+      const response = await fetch(
+        `${BASE_PATH}/admin/waitress/get_all_waitresses`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token.access_token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        SetAllWaiter(data);
+        console.log(data);
+      }
+    } catch (error) {
+      console.error("Error fetching foods:", error);
+      setAllFood([]);
+    }
+  }
+  async function UnEmployUser(user_id) {
+    checktoken();
+
+    const token = JSON.parse(localStorage.getItem("user_data"));
+    try {
+      const response = await axios.put(
+        `${BASE_PATH}/admin/waitress/admin_unemploy_user`,
+        { user_id: user_id },
+        {
+          headers: {
+            Authorization: `Bearer ${token.access_token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("بیکاری با موفقیت انجام شد", response.data);
+        SetAllWaiter((prevFoods) =>
+          prevFoods.filter((item) => item.id !== user_id)
+        );
+      }
+    } catch (error) {
+      console.error("کاربر بیکار نشد", error);
+    }
+  }
 
   return (
     <>
       <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-full transition-colors duration-300">
         <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden transition-colors duration-300">
           <AdminHeader />
-          <div className="grid grid-cols-1 md:flex justify-center w-screen">
-            <div className="bg-white dark:bg-darkpalleteDark mx-2 md:mx-0 rounded-3xl md:w-11/12 lg:w-5/6 transition-colors duration-300">
+          <div className="grid grid-cols-1 xl:grid-cols-5 gap-2 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300">
+            {/* ITEM CONTROL */}
+            <div className="col-span-1 xl:col-span-3 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:mr-2 rounded-3xl transition-colors duration-300 h-fit max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none">
               <div className="flex justify-between items-center pl-4 py-3">
                 <h1 className="text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
                   مدیریت آیتم ها
@@ -314,7 +281,7 @@ const ItemManager = () => {
                 </div> */}
                 <a href="/AddItem">
                   <div className="bg-white dark:bg-black flex items-center justify-center gap-1 border-3 border-black dark:border-white p-2 rounded-2xl font-bold transition-all duration-300">
-                    <ADD
+                    <Icons.add
                       className={
                         "w-8 rotate-180 stroke-black dark:stroke-white transition-colors duration-300"
                       }
@@ -326,8 +293,8 @@ const ItemManager = () => {
                 </a>
               </div>
               <div className="px-2">
-                <div className="grid grid-cols-4 lg:grid-cols-5 text-center text-balance md:text-xl font-bold gap-2 md:gap-5 pb-2 border-b-2 dark:text-white transition-colors duration-300">
-                  <h1 className="hidden lg:block md:text-lg lg:text-2xl">
+                <div className="grid grid-cols-4 lg:grid-cols-5 text-center text-balance md:text-xl font-bold gap-2 pb-2 border-b-2 dark:text-white transition-colors duration-300">
+                  <h1 className="hidden lg:block md:text-lg lg:text-2xl mt-auto">
                     عکس
                   </h1>
                   <h1 className="text-lg mt-auto lg:text-2xl">نام آیتم</h1>
@@ -364,6 +331,45 @@ const ItemManager = () => {
                   ))
                 )}
               </div>
+            </div>
+            {/* WAITER CONTROL */}
+            <div className="col-span-1 xl:col-span-2 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:ml-2 rounded-3xl transition-colors duration-300 h-fit pb-2 max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none">
+              <div className="flex justify-between items-center pl-4 py-3">
+                <h1 className="text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
+                  لیست سالن‌دار ها
+                </h1>
+                <a href="/AddWaiter">
+                  <div className="bg-white dark:bg-black flex items-center justify-center gap-1 border-3 border-black dark:border-white p-2 rounded-2xl font-bold transition-all duration-300">
+                    <Icons.add
+                      className={
+                        "w-8 rotate-180 stroke-black dark:stroke-white transition-colors duration-300"
+                      }
+                    />
+                    <h1 className="hidden md:block text-black dark:text-white transition-all duration-300">
+                      استخدام سالن‌دار
+                    </h1>
+                  </div>
+                </a>
+              </div>
+              {allWaiter.length === 0 ? (
+                <p className="text-xl text-center pb-4 text-slowgrayDark dark:text-slowgray">
+                  هیچ سالن‌داری وجود ندارد
+                </p>
+              ) : (
+                allWaiter.map((item) => (
+                  <div
+                    className="border-b-1 my-0 md:my-1 md:border-b-0"
+                    key={item.id}>
+                    <WaiterItem
+                      id={item.id}
+                      pic_url={item.pic_url}
+                      full_name={item.full_name}
+                      username={item.username}
+                      UnEmployUser={UnEmployUser}
+                    />
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

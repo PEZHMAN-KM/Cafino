@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import itemImage from "../../public/No_Item.png";
 import { useNavigate } from "react-router-dom";
 import { Icons } from "./Icons";
+import { BASE_PATH } from "../constants/paths";
 
 const formatPrice = (num) => {
   if (num == null || isNaN(num)) return "";
@@ -63,7 +64,11 @@ function Card({
           } rounded-3xl w-ful h-fit p-3 m-auto text-start transition-all duration-300 md:hover:scale-102 md:hover:bg-highgray animate-scale-up touch-manipulation`}>
           <img
             className="w-full aspect-square object-cover rounded-2xl"
-            src={pic_url ? pic_url : itemImage}
+            src={
+              pic_url
+                ? `${BASE_PATH}/files/${pic_url.split("/").pop()}`
+                : itemImage
+            }
             alt={name}
           />
           <div className="flex justify-between items-center">

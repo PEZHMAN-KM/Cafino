@@ -77,13 +77,35 @@ function ChangeUserInfo() {
       });
       if (response.ok) {
         const data = await response.json();
+        console.log();
+
         setUserInfo(data);
-        if (data.pic_url) setPreview(data.pic_url);
+        if (data.pic_url) getProfilePic();
       }
     } catch (error) {
       console.error("مشکل در خواندن اطلاعات:", error);
     }
   };
+
+  async function getProfilePic() {
+    try {
+      const token = JSON.parse(localStorage.getItem("user_data"));
+      const response = await axios.post(
+        `${BASE_PATH}/userget_user_picture`,
+        { user_id: token.userID },
+        {
+          headers: { "Content-Type": "application/json" },
+          responseType: "blob",
+        }
+      );
+
+      const imageBlob = response.data;
+      const imageUrl = URL.createObjectURL(imageBlob);
+      setPreview(imageUrl);
+    } catch (error) {
+      console.error("Error fetching profile picture:", error);
+    }
+  }
 
   const handleDeleteImage = () => {
     setUserInfo({ ...userInfo, pic_url: null });
@@ -122,7 +144,7 @@ function ChangeUserInfo() {
 
     // Handle image upload
     if (userInfo.pic_url instanceof File) {
-      formData.append("pic_url", userInfo.pic_url);
+      formData.append("pic", userInfo.pic_url);
     }
 
     const token = JSON.parse(localStorage.getItem("user_data"));
@@ -146,21 +168,50 @@ function ChangeUserInfo() {
     //   console.error("مشکل در بروز رسانی اطلاعات کاربری:", error);
     // }
 
-    try {
-      const response = await axios.put(`${BASE_PATH}/user/update_user_pic`, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token.access_token}`,
-        },
-        body: userInfo.pic_url,
-      });
-
-      if (response.ok) {
-        alert("اطلاعات با موفقیت بروزرسانی شد");
-        getUserInfo();
+    if (formData.pic !== null) {
+      try {
+        const response = await axios.put(
+          `${BASE_PATH}/user/update_user_pic`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token.access_token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          // alert("اطلاعات با موفقیت بروزرسانی شد");
+          navigate("/adminLogin");
+        }
+      } catch (error) {
+        console.error(
+          "مشکل در بروز رسانی اطلاعات کاربری:",
+          error.response?.data || error.message
+        );
       }
-    } catch (error) {
-      console.error("مشکل در بروز رسانی اطلاعات کاربری:", error);
+    } else {
+      try {
+        const response = await axios.put(
+          `${BASE_PATH}/user/delete_user_pic`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token.access_token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          // alert("اطلاعات با موفقیت بروزرسانی شد");
+          navigate("/adminLogin");
+        }
+      } catch (error) {
+        console.error(
+          "مشکل در بروز رسانی اطلاعات کاربری:",
+          error.response?.data || error.message
+        );
+      }
     }
   };
 

@@ -55,6 +55,7 @@ const OrderTable = ({
             price={item.price}
             in_sale={item.in_sale}
             category_name={item.category_name}
+            pic_url={item.pic_url}
           />
         </div>
       ))}
@@ -106,14 +107,16 @@ const OrderTable = ({
     </div>
   </div>
 );
-
-const OrderItem = ({ name, description, count, price, in_sale }) => (
+  
+const OrderItem = ({ name, description, count, price, in_sale, pic_url }) => (
   <div
     className={`transition-colors duration-300 ${
       in_sale ? "bg-adminBackgroundColor dark:bg-adminBackgroundColorDark" : ""
     } flex items-center justify-between px-1 py-2 rounded-3xl`}>
     <img
-      src={itemImage}
+      src={
+        pic_url ? `${BASE_PATH}/files/${pic_url.split("/").pop()}` : itemImage
+      }
       alt={name}
       className="w-12 h-12 lg:w-18 lg:h-18 rounded-xl object-cover"
     />

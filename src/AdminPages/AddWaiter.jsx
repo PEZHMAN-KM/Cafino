@@ -89,7 +89,7 @@ export default function AddWaiter() {
             <h1 className="text-xl md:text-3xl font-extrabold dark:text-white transition-colors duration-300">
               افزودن گارسون جدید
             </h1>
-            <a href="/adminhome">
+            <a href="/itemmanager">
               <div className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
                 <ArrowIcon
                   className={

@@ -48,6 +48,11 @@ function AddItem() {
         setNameError(true);
         return;
       }
+      if (!form.category_id.value || form.category_id.value === "") {
+        setTextError("دسته بندی نباید خالی باشد");
+        setCategoryError(true);
+        return;
+      }
       if (!form.price.value.trim()) {
         setTextError("قیمت نمی‌تواند خالی باشد.");
         setPriceError(true);
@@ -61,14 +66,21 @@ function AddItem() {
 
       if (form.sale.checked) {
         formData.append("in_sale", true);
+
+        if (!form.sale_price.value.trim()) {
+          setTextError("قیمت نمی‌تواند خالی باشد.");
+          setPriceError(true);
+          return;
+        }
+
         formData.append("sale_price", Number(form.sale_price.value));
       } else {
         formData.append("in_sale", false);
       }
-      formData.append("pic_url", preview);
-      // if (preview) {
-      //   formData.append("pic_url", preview);
-      // }
+
+      if (preview) {
+        formData.append("pic", foodImage);
+      }
 
       const token = JSON.parse(localStorage.getItem("user_data"));
       const response = await axios.post(
@@ -88,7 +100,7 @@ function AddItem() {
         console.log("Uploaded Image URL:", uploadedImageUrl);
 
         // Optionally navigate or reset form here
-        // navigate("/ItemManager");
+        navigate("/ItemManager");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -107,7 +119,6 @@ function AddItem() {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
       setFoodImage(file);
-      console.log("ssss", foodImage);
       setPreview(URL.createObjectURL(file));
     }
   };
@@ -127,7 +138,6 @@ function AddItem() {
       "dark:border-adminActionDark"
     );
   };
-
   const handleDrop = (e) => {
     e.preventDefault();
     e.currentTarget.classList.remove(
@@ -140,11 +150,9 @@ function AddItem() {
       setPreview(URL.createObjectURL(file));
     }
   };
-
   const handleOffChange = (e) => {
     setShowOffValue(e.target.checked);
   };
-
   const handleDeleteImage = () => {
     setFoodImage(null);
     setPreview(null);
@@ -192,9 +200,7 @@ function AddItem() {
                       <div className="relative group">
                         <img
                           src={preview}
-                          name="pic_url"
-                          id="pic_url"
-                          alt="pic_url"
+                          alt="Profile"
                           className="max-h-48 mx-auto rounded-lg object-cover"
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">

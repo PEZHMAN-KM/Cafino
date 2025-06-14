@@ -1,6 +1,7 @@
 import React from "react";
 import itemImage from "../../public/No_Item.png";
 import { Icons } from "./Icons";
+import { BASE_PATH } from "../constants/paths";
 
 const formatPrice = (num) =>
   num == null || isNaN(num) ? "" : Number(num).toLocaleString("en-US");
@@ -52,7 +53,11 @@ export default function OrderReceiptOverlay({
                   item.in_sale ? "bg-slowprimary dark:bg-slowprimaryDark" : ""
                 } flex items-center justify-between px-1 py-2 rounded-2xl`}>
                 <img
-                  src={itemImage}
+                  src={
+                    item.pic_url
+                      ? `${BASE_PATH}/files/${item.pic_url.split("/").pop()}`
+                      : itemImage
+                  }
                   alt={item.name}
                   className="w-12 h-12 lg:w-18 lg:h-18 rounded-xl object-cover"
                 />

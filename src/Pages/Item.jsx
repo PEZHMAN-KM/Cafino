@@ -225,7 +225,11 @@ function Item() {
           <div className="relative lg:absolute">
             <img
               className="w-screen aspect-square object-cover p-2 rounded-3xl"
-              src={item.pic_url || itemImage}
+              src={
+                item.pic_url
+                  ? `${BASE_PATH}/files/${item.pic_url.split("/").pop()}`
+                  : itemImage
+              }
               alt=""
             />
             <div className="flex lg:justify-between md:p-2 lg:items-center lg:gap-2">
