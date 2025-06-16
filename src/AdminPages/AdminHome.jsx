@@ -36,16 +36,18 @@ const OrderTable = ({
   setClickedButtonId,
   clickedButtonId,
   fetchItems,
+  addNotification,
+  getNOtification,
 }) => (
   <div
-    className={`${
+    className={`group ${
       !is_accepted
         ? "border-2 border-adminPrimary dark:border-adminPrimaryDark"
         : "border-3 border-adminAction dark:border-adminActionDark"
     } my-2 mx-3 rounded-3xl hover:scale-101 transition-all duration-300 ${
       removingId === id ? "animate-scale-out" : ""
     } ${clickedButtonId === id ? "animate-scale-out" : ""}`}>
-    <div className="border-b-4 border-adminBackgroundColor dark:border-graypalleteDark transition-colors duration-300">
+    <div className="hidden group-hover:block border-b-4 border-adminBackgroundColor dark:border-graypalleteDark transition-all duration-300">
       {foods.map((item, index) => (
         <div key={index}>
           <OrderItem
@@ -72,23 +74,25 @@ const OrderTable = ({
     <div className="flex justify-center items-center gap-2 py-2">
       {is_accepted ? (
         <button
-          onClick={() => doneOrder(id, table_number)}
-          className="w-full mx-2 bg-adminAction dark:bg-adminActionDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-white hover:bg-adminActionDark dark:hover:bg-adminAction hover:border-adminActionDark dark:hover:border-adminAction transition-all">
-          ارسال سفارش
+          onClick={() => doneOrder(id)}
+          className="w-full mx-2 bg-adminAction dark:bg-adminActionDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-sm md:text-xl text-white hover:bg-adminActionDark dark:hover:bg-adminAction hover:border-adminActionDark dark:hover:border-adminAction transition-all">
+          دریافت هزینه و تکمیل سفارش
         </button>
       ) : (
-        <div className="flex justify-center items-center gap-3">
+        <div className="flex justify-center items-center gap-1 md:gap-4">
           <button
             onClick={() => {
               setClickedButtonId(id);
               setTimeout(async () => {
                 await acceptOrder(id);
+                await addNotification(table_number);
                 await fetchItems();
+                await getNOtification();
                 setClickedButtonId(null);
               }, 300);
             }}
-            className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
-            پذیرش سفارش
+            className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-sm md:text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+            آماده سازی و ارسال سفارش
           </button>
           <button
             onClick={() => {
@@ -99,7 +103,7 @@ const OrderTable = ({
                 setClickedButtonId(null);
               }, 300);
             }}
-            className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
+            className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-sm md:text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
             لغو سفارش
           </button>
         </div>
@@ -360,7 +364,7 @@ function AdminHome() {
       console.error("خطا در لغو سفارش:", error);
     }
   }
-  async function doneOrder(order_id, tableNumber) {
+  async function doneOrder(order_id) {
     const token = JSON.parse(localStorage.getItem("user_data"));
     setRemovingId(order_id);
     setTimeout(async () => {
@@ -378,9 +382,7 @@ function AdminHome() {
             },
           }
         );
-        addNotification(tableNumber);
         await fetchItems();
-        await getNOtification();
       } catch (error) {
         console.error("خطا در اتمام وظیفه :", error);
       } finally {
@@ -564,6 +566,8 @@ function AdminHome() {
                     setClickedButtonId={setClickedButtonId}
                     clickedButtonId={clickedButtonId}
                     fetchItems={fetchItems}
+                    addNotification={addNotification}
+                    getNOtification={getNOtification}
                   />
                 </div>
               ))
