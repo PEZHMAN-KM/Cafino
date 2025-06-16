@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import AdminHeader from "./AdminHeader";
 import itemImage from "../../public/No_Item.png";
 import axios from "axios";
 import { BASE_PATH } from "../constants/paths";
 import { Icons } from "../Componnets/Icons";
+
+import { motion, AnimatePresence } from "framer-motion";
 
 const formatPrice = (num) => {
   if (num == null || isNaN(num)) return "";
@@ -38,79 +40,134 @@ const OrderTable = ({
   fetchItems,
   addNotification,
   getNOtification,
-}) => (
-  <div
-    className={`group ${
-      !is_accepted
-        ? "border-2 border-adminPrimary dark:border-adminPrimaryDark"
-        : "border-3 border-adminAction dark:border-adminActionDark"
-    } my-2 mx-3 rounded-3xl hover:scale-101 transition-all duration-300 ${
-      removingId === id ? "animate-scale-out" : ""
-    } ${clickedButtonId === id ? "animate-scale-out" : ""}`}>
-    <div className="hidden group-hover:block border-b-4 border-adminBackgroundColor dark:border-graypalleteDark transition-all duration-300">
-      {foods.map((item, index) => (
-        <div key={index}>
-          <OrderItem
-            name={item.name}
-            description={item.description}
-            count={item.quantity}
-            price={item.price}
-            in_sale={item.in_sale}
-            sale_price={item.sale_price}
-            pic_url={item.pic_url}
-          />
-        </div>
-      ))}
-    </div>
-    <div className="p-1 md:p-2">
-      <TotalCost total_price={total_price} />
-      <div className="flex justify-center w-full items-center mt-2">
-        <div className="flex justify-center w-full items-center gap-1">
-          <TableNumber table_number={table_number} />
-          <OrderTime time_added={time_added} />
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  const hoverTimeoutRef = useRef(null);
+
+  const showItems = isClicked || (!isClicked && isHovered);
+
+  const handleMouseEnter = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsHovered(true);
+    }, 500);
+  };
+
+  const handleMouseLeave = () => {
+    clearTimeout(hoverTimeoutRef.current);
+    if (!isClicked) setIsHovered(false);
+  };
+
+  const handleClick = () => {
+    clearTimeout(hoverTimeoutRef.current);
+    setIsClicked((prev) => {
+      const next = !prev;
+      if (!next) setIsHovered(false);
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    return () => clearTimeout(hoverTimeoutRef.current);
+  }, []);
+
+  return (
+    <motion.div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
+      animate={{
+        scale: !isClicked && isHovered ? 1.015 : 1,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 500,
+        damping: 20,
+        mass: 0.5,
+      }}
+      className={`relative overflow-hidden cursor-pointer select-none ${
+        !is_accepted
+          ? "border-2 border-adminPrimary dark:border-adminPrimaryDark"
+          : "border-3 border-adminAction dark:border-adminActionDark"
+      } my-2 mx-3 rounded-3xl transition-all duration-300 ${
+        removingId === id ? "animate-scale-out" : ""
+      } ${clickedButtonId === id ? "animate-scale-out" : ""}`}>
+      <AnimatePresence>
+        {showItems && (
+          <motion.div
+            key="foods"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden border-b-4 border-adminBackgroundColor dark:border-graypalleteDark">
+            {foods.map((item, index) => (
+              <div key={index}>
+                <OrderItem
+                  name={item.name}
+                  description={item.description}
+                  count={item.quantity}
+                  price={item.price}
+                  in_sale={item.in_sale}
+                  sale_price={item.sale_price}
+                  pic_url={item.pic_url}
+                />
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="p-1 md:p-2">
+        <TotalCost total_price={total_price} />
+        <div className="flex justify-center w-full items-center mt-2">
+          <div className="flex justify-center w-full items-center gap-1">
+            <TableNumber table_number={table_number} />
+            <OrderTime time_added={time_added} />
+          </div>
         </div>
       </div>
-    </div>
-    <div className="flex justify-center items-center gap-2 py-2">
-      {is_accepted ? (
-        <button
-          onClick={() => doneOrder(id)}
-          className="w-full mx-2 bg-adminAction dark:bg-adminActionDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-sm md:text-xl text-white hover:bg-adminActionDark dark:hover:bg-adminAction hover:border-adminActionDark dark:hover:border-adminAction transition-all">
-          دریافت هزینه و تکمیل سفارش
-        </button>
-      ) : (
-        <div className="flex justify-center items-center gap-1 md:gap-4">
+      <div className="flex justify-center items-center gap-2 py-2">
+        {is_accepted ? (
           <button
-            onClick={() => {
-              setClickedButtonId(id);
-              setTimeout(async () => {
-                await acceptOrder(id);
-                await addNotification(table_number);
-                await fetchItems();
-                await getNOtification();
-                setClickedButtonId(null);
-              }, 300);
-            }}
-            className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-sm md:text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
-            آماده سازی و ارسال سفارش
+            onClick={() => doneOrder(id)}
+            className="w-full mx-2 bg-adminAction dark:bg-adminActionDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-sm md:text-xl text-white hover:bg-adminActionDark dark:hover:bg-adminAction hover:border-adminActionDark dark:hover:border-adminAction transition-all">
+            دریافت هزینه و تکمیل سفارش
           </button>
-          <button
-            onClick={() => {
-              setClickedButtonId(id);
-              setTimeout(async () => {
-                await denyOrder(id);
-                await fetchItems();
-                setClickedButtonId(null);
-              }, 300);
-            }}
-            className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-sm md:text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
-            لغو سفارش
-          </button>
-        </div>
-      )}
-    </div>
-  </div>
-);
+        ) : (
+          <div className="flex justify-center items-center gap-1 md:gap-4">
+            <button
+              onClick={() => {
+                setClickedButtonId(id);
+                setTimeout(async () => {
+                  await acceptOrder(id);
+                  await addNotification(table_number);
+                  await fetchItems();
+                  await getNOtification();
+                  setClickedButtonId(null);
+                }, 300);
+              }}
+              className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-sm md:text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+              آماده سازی و ارسال سفارش
+            </button>
+            <button
+              onClick={() => {
+                setClickedButtonId(id);
+                setTimeout(async () => {
+                  await denyOrder(id);
+                  await fetchItems();
+                  setClickedButtonId(null);
+                }, 300);
+              }}
+              className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-sm md:text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
+              لغو سفارش
+            </button>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+};
 
 const OrderItem = ({
   name,
