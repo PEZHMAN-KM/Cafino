@@ -54,7 +54,7 @@ const OrderTable = ({
             count={item.quantity}
             price={item.price}
             in_sale={item.in_sale}
-            category_name={item.category_name}
+            sale_price={item.sale_price}
             pic_url={item.pic_url}
           />
         </div>
@@ -107,8 +107,16 @@ const OrderTable = ({
     </div>
   </div>
 );
-  
-const OrderItem = ({ name, description, count, price, in_sale, pic_url }) => (
+
+const OrderItem = ({
+  name,
+  description,
+  count,
+  price,
+  in_sale,
+  sale_price,
+  pic_url,
+}) => (
   <div
     className={`transition-colors duration-300 ${
       in_sale ? "bg-adminBackgroundColor dark:bg-adminBackgroundColorDark" : ""
@@ -120,12 +128,11 @@ const OrderItem = ({ name, description, count, price, in_sale, pic_url }) => (
       alt={name}
       className="w-12 h-12 lg:w-18 lg:h-18 rounded-xl object-cover"
     />
-    <div className="flex-1 mx-3">
-      <div className="font-bold text-black lg:text-2xl dark:text-white flex gap-2 justify-start items-center">
-        <h1>{name}</h1>
-        <h1 className="text-sm font-medium lg:text-xl text-black dark:text-white"></h1>
-      </div>
-      <p className="text-sm lg:text-xl text-slowgrayDark dark:text-slowgray">
+    <div className="flex-1 max-xs:mx-0 max-xs:mr-3 mx-3">
+      <h1 className="font-bold text-black lg:text-2xl dark:text-white text-start">
+        {name}
+      </h1>
+      <p className="text-sm lg:text-xl text-slowgrayDark dark:text-slowgray max-xs:truncate max-xs:max-w-20 max-xs:w-fit">
         {description}
       </p>
     </div>
@@ -135,14 +142,20 @@ const OrderItem = ({ name, description, count, price, in_sale, pic_url }) => (
           {count}x
         </span>
       </div>
-      <div className="flex justify-center items-center gap-1">
-        <span className="text-sm font-normal lg:text-xl lg:font-semibold text-slowgrayDark dark:text-slowgray">
-          {formatPrice(price)}
-        </span>
-        <span className="text-xs font-light lg:text-sm lg:font-normal text-slowgrayDark dark:text-slowgray">
-          تومان
-        </span>
-      </div>
+      {sale_price == null ? (
+        <h1 className="ftext-sm font-normal lg:text-xl lg:font-semibold text-slowgrayDark dark:text-slowgray transition-colors duration-300">
+          {formatPrice(price)} تومان
+        </h1>
+      ) : (
+        <div className="flex items-center justify-end gap-2 md:gap-4">
+          <h1 className="text-sm decoration-1 line-through text-highgray dark:text-slowgray transition-colors duration-300 max-xs:truncate max-xs:max-w-12 max-xs:w-fit">
+            {formatPrice(price)} <span className="hidden md:inline">تومان</span>
+          </h1>
+          <h1 className="ftext-sm font-normal lg:text-xl lg:font-semibold text-slowgrayDark dark:text-slowgray transition-colors duration-300 whitespace-nowrap">
+            {formatPrice(sale_price)} تومان
+          </h1>
+        </div>
+      )}
     </div>
   </div>
 );
@@ -270,6 +283,8 @@ const WaiterTableNumber = ({ table_number }) => (
 );
 
 function AdminHome() {
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+
   const [items, setItems] = useState([]);
 
   const [removingId, setRemovingId] = useState(null);
@@ -482,6 +497,9 @@ function AdminHome() {
   }
 
   useEffect(() => {
+    // For flashing on LOADING PAGE
+    setIsPageLoaded(true);
+
     fetchItems();
     getNOtification();
   }, []);
@@ -497,12 +515,32 @@ function AdminHome() {
 
   return (
     <>
-      <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto overflow-x-hidden scrollbar scrollbar-none transition-colors duration-300">
+      <div
+        className={`${
+          isPageLoaded
+            ? "transition-colors duration-300"
+            : "transition-none duration-0"
+        }bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
         <AdminHeader />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300">
+        <div
+          className={`${
+            isPageLoaded
+              ? "transition-colors duration-300"
+              : "transition-none duration-0"
+          } grid grid-cols-1 md:grid-cols-3 gap-2 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark`}>
           {/* ORDER CONTROL */}
-          <div className="col-span-2 bg-white dark:bg-darkpalleteDark rounded-3xl transition-colors duration-300 h-fit max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none">
-            <h1 className="text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
+          <div
+            className={`${
+              isPageLoaded
+                ? "transition-colors duration-300"
+                : "transition-none duration-0"
+            } col-span-2 bg-white dark:bg-darkpalleteDark rounded-3xl h-fit max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
+            <h1
+              className={`${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              } text-3xl font-extrabold pr-8 py-4 dark:text-white`}>
               لیست سفارشات
             </h1>
             {items.length === 0 ? (
@@ -532,8 +570,18 @@ function AdminHome() {
             )}
           </div>
           {/* NOTIFICATION CONTROL */}
-          <div className="col-span-1 bg-white dark:bg-darkpalleteDark rounded-3xl transition-colors duration-300 h-fit pb-2 max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none">
-            <h1 className="text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
+          <div
+            className={`${
+              isPageLoaded
+                ? "transition-colors duration-300"
+                : "transition-none duration-0"
+            } col-span-1 bg-white dark:bg-darkpalleteDark rounded-3xl h-fit pb-2 max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
+            <h1
+              className={`${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              } text-3xl font-extrabold pr-8 py-4 dark:text-white`}>
               لیست نوتیف ها
             </h1>
             {allNotifications.length === 0 ? (

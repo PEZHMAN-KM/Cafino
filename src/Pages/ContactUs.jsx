@@ -52,10 +52,10 @@ const Waiter = ({
   </div>
 );
 const Location = () => (
-  <button className="bg-darkpallete dark:bg-darkpalleteDark p-5 pb-3 rounded-3xl transition-colors duration-300">
+  <button className="bg-darkpallete dark:bg-darkpalleteDark hover:bg-darkpalleteDark dark:hover:bg-darkpallete p-5 pb-3 rounded-3xl transition-colors duration-300 cursor-pointer">
     <img className="rounded-2xl w-50" src={itemImage} alt="" />
     <div className="flex justify-between items-center px-4 text-white pt-2">
-      <Icons.location className={"w-8"} />
+      <Icons.location className={"w-8 stroke-white"} />
       <h1 className="text-xl font-bold">آدرس کـــــــــافه</h1>
     </div>
   </button>
@@ -124,7 +124,7 @@ function ContactUs() {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark h-screen w-screen overflow-y-auto scrollbar scrollbar-none`}>
+        } bg-backgroundcolor dark:bg-backgroundcolorDark h-screen pb-22 w-screen overflow-y-auto scrollbar scrollbar-none`}>
         <Header
           page={4}
           text={"تماس با ما"}
@@ -132,7 +132,7 @@ function ContactUs() {
           setShowMenu={setHeaderMenuOpen}
         />
         <div className="grid grid-cols-1">
-          <div className="col-span-1 flex justify-center items-start">
+          <div className="col-span-1 flex justify-center items-start w-screen lg:w-2/3 mx-auto animate-scale-up">
             <Waiter
               tableNumber={tableNumber}
               setTableNumber={setTableNumber}
@@ -141,13 +141,13 @@ function ContactUs() {
               isPageLoaded={isPageLoaded}
             />
           </div>
-          <div className="col-span-1 flex justify-center animate-move-up">
+          <div className="col-span-1 flex justify-center mt-0 md:mt-2 animate-move-up">
             <Location />
           </div>
-          <div className="col-span-1 flex justify-center items-center mt-2 animate-move-up delay-1">
+          <div className="col-span-1 flex justify-center items-center mt-2 md:mt-4 animate-move-up delay-1">
             <PhoneNumber />
           </div>
-          <div className="col-span-1 flex justify-center items-center mt-2 animate-move-up delay-2">
+          <div className="col-span-1 flex justify-center items-center my-2 md:my-4 animate-move-up delay-2">
             <InstagramPage />
           </div>
         </div>

@@ -71,6 +71,18 @@
   .delay-2 {
     animation-delay: 0.2s;
   }
+
+  @keyframes opacity-up {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  .animate-opacity-up {
+    animation: opacity-up 0.4s ease-in forwards;
+  }
 }
 
 /* FOR TURN OFF ALL ANIMATION
@@ -108,6 +120,11 @@
   --color-adminPrimaryDark: #4a6b82;
   --color-adminActionDark: #1659b7;
   --color-adminErrorDark: #a82729;
+
+  /* Extra Small Screen */
+  --breakpoint-xs: 22rem;
+  --breakpoint-3xl: 120rem;
+  --breakpoint-4xl: 160rem;
 }
 
 @font-face {

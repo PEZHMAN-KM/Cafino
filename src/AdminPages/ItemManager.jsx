@@ -134,6 +134,8 @@ const WaiterItem = ({ id, pic_url, full_name, username, UnEmployUser }) => {
 };
 
 const ItemManager = () => {
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+
   const { isAuthenticated } = UseAuth();
   const navigate = useNavigate();
 
@@ -148,6 +150,9 @@ const ItemManager = () => {
   }
 
   useEffect(() => {
+    // For flashing on LOADING PAGE
+    setIsPageLoaded(true);
+
     allFoods();
     allWaiteres();
   }, []);
@@ -261,14 +266,39 @@ const ItemManager = () => {
 
   return (
     <>
-      <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-full transition-colors duration-300">
-        <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden transition-colors duration-300">
+      <div
+        className={`${
+          isPageLoaded
+            ? "transition-colors duration-300"
+            : "transition-none duration-0"
+        } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-full`}>
+        <div
+          className={`${
+            isPageLoaded
+              ? "transition-colors duration-300"
+              : "transition-none duration-0"
+          } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden`}>
           <AdminHeader />
-          <div className="grid grid-cols-1 xl:grid-cols-5 gap-2 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300">
+          <div
+            className={`${
+              isPageLoaded
+                ? "transition-colors duration-300"
+                : "transition-none duration-0"
+            } grid grid-cols-1 xl:grid-cols-5 gap-2 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark`}>
             {/* ITEM CONTROL */}
-            <div className="col-span-1 xl:col-span-3 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:mr-2 rounded-3xl transition-colors duration-300 h-fit max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none">
+            <div
+              className={`${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              } col-span-1 xl:col-span-3 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:mr-2 rounded-3xl h-fit max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
               <div className="flex justify-between items-center pl-4 py-3">
-                <h1 className="text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
+                <h1
+                  className={`${
+                    isPageLoaded
+                      ? "transition-colors duration-300"
+                      : "transition-none duration-0"
+                  } text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white`}>
                   مدیریت آیتم ها
                 </h1>
                 {/* <div className="flex gap-1 md:gap-2">
@@ -293,7 +323,12 @@ const ItemManager = () => {
                 </a>
               </div>
               <div className="px-2">
-                <div className="grid grid-cols-4 lg:grid-cols-5 text-center text-balance md:text-xl font-bold gap-2 pb-2 border-b-2 dark:text-white transition-colors duration-300">
+                <div
+                  className={`${
+                    isPageLoaded
+                      ? "transition-colors duration-300"
+                      : "transition-none duration-0"
+                  } grid grid-cols-4 lg:grid-cols-5 text-center text-balance md:text-xl font-bold gap-2 pb-2 border-b-2 dark:text-white`}>
                   <h1 className="hidden lg:block md:text-lg lg:text-2xl mt-auto">
                     عکس
                   </h1>
@@ -308,7 +343,12 @@ const ItemManager = () => {
                   <h1 className="text-lg mt-auto lg:text-2xl">آپشن</h1>
                 </div>
                 {allFood.length === 0 ? (
-                  <div className="text-center py-4 text-gray-500 dark:text-gray-400 font-semibold transition-colors duration-300">
+                  <div
+                    className={`${
+                      isPageLoaded
+                        ? "transition-colors duration-300"
+                        : "transition-none duration-0"
+                    } text-center py-4 text-gray-500 dark:text-gray-400 font-semibold`}>
                     هیچ آیتمی وجود ندارد.
                   </div>
                 ) : (
@@ -333,9 +373,19 @@ const ItemManager = () => {
               </div>
             </div>
             {/* WAITER CONTROL */}
-            <div className="col-span-1 xl:col-span-2 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:ml-2 rounded-3xl transition-colors duration-300 h-fit pb-2 max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none">
+            <div
+              className={`${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              } col-span-1 xl:col-span-2 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:ml-2 rounded-3xl h-fit pb-2 max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
               <div className="flex justify-between items-center pl-4 py-3">
-                <h1 className="text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
+                <h1
+                  className={`${
+                    isPageLoaded
+                      ? "transition-colors duration-300"
+                      : "transition-none duration-0"
+                  } text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white`}>
                   لیست سالن‌دار ها
                 </h1>
                 <a href="/AddWaiter">

@@ -75,7 +75,9 @@ export default function OrderReceiptOverlay({
                 <div className="text-right">
                   <div className="flex justify-center items-center gap-1">
                     <span className="text-lg font-normal lg:text-3xl lg:font-extrabold text-slowgrayDark dark:text-slowgray">
-                      {formatPrice(item.price)}
+                      {item.in_sale
+                        ? formatPrice(item.sale_price)
+                        : formatPrice(item.price)}
                     </span>
                     <span className="text-xs font-light lg:text-xl lg:font-normal text-slowgrayDark dark:text-slowgray">
                       تومان

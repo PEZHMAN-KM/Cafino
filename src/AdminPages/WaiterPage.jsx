@@ -99,6 +99,8 @@ const WaiterRequest = ({
 );
 
 function WaiterPage() {
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+
   const [isDark, setIsDark] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [userData, setUserData] = useState(Object);
@@ -242,11 +244,14 @@ function WaiterPage() {
   }
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
+    // For flashing on LOADING PAGE
+    setIsPageLoaded(true);
 
     getUserInfo();
     getProfilePic();
     getNOtification();
+
+    const savedTheme = localStorage.getItem("theme");
 
     if (savedTheme) {
       setIsDark(savedTheme === "dark");
@@ -297,11 +302,31 @@ function WaiterPage() {
 
   return (
     <>
-      <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden transition-colors duration-300">
+      <div
+        className={`${
+          isPageLoaded
+            ? "transition-colors duration-300"
+            : "transition-none duration-0"
+        } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden`}>
         {/* HEADER */}
-        <div className="p-2 sticky top-0 z-10 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300 rounded-b-3xl">
-          <div className="bg-white dark:bg-darkpalleteDark transition-colors duration-300 w-full rounded-3xl py-3 px-4 flex justify-between items-center">
-            <div className="text-xl flex gap-5 font-semibold text-darkpallete  dark:text-white transition-colors duration-300">
+        <div
+          className={`${
+            isPageLoaded
+              ? "transition-colors duration-300"
+              : "transition-none duration-0"
+          } p-2 sticky top-0 z-10 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark rounded-b-3xl`}>
+          <div
+            className={`${
+              isPageLoaded
+                ? "transition-colors duration-300"
+                : "transition-none duration-0"
+            } bg-white dark:bg-darkpalleteDark w-full rounded-3xl py-3 px-4 flex justify-between items-center`}>
+            <div
+              className={`${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              } text-xl flex gap-5 font-semibold text-darkpallete  dark:text-white`}>
               <h1>کافـی نـو</h1>
               {/* DARK MODE BUTTON */}
               <button className="hidden md:block" onClick={toggleDarkMode}>
@@ -327,7 +352,12 @@ function WaiterPage() {
                   src={userData.pic_url ? profilePic : ProfileImage}
                   alt="Profile"
                 />
-                <p className="text-black dark:text-white transition-colors duration-300 font-bold md:block hidden">
+                <p
+                  className={`${
+                    isPageLoaded
+                      ? "transition-colors duration-300"
+                      : "transition-none duration-0"
+                  } text-black dark:text-white font-bold md:block hidden`}>
                   {userData.full_name}
                 </p>
               </div>
@@ -350,7 +380,13 @@ function WaiterPage() {
             </div>
           </div>
         </div>
-        <div className="bg-adminBackgroundColor flex flex-col gap-3 dark:bg-adminBackgroundColorDark h-fit transition-colors duration-300">
+        {/* BODY - REQUEST PANEL */}
+        <div
+          className={`${
+            isPageLoaded
+              ? "transition-colors duration-300"
+              : "transition-none duration-0"
+          } bg-adminBackgroundColor flex flex-col pb-2 gap-3 dark:bg-adminBackgroundColorDark h-fit`}>
           {allNotifications.map((item) => (
             <div key={item.id} className="animate-scale-up">
               <WaiterRequest

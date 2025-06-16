@@ -37,7 +37,7 @@ function Footer({ page }) {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-white dark:bg-darkpalleteDark  fixed w-screen bottom-0 md:hidden ${
+        } bg-white dark:bg-darkpalleteDark fixed w-screen bottom-0 md:hidden ${
           page == 3 ? " px-6 pb-6 pt-3" : "p-6 rounded-t-3xl"
         }`}>
         <div className="flex items-center justify-between px-5">

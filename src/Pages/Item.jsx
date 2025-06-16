@@ -72,7 +72,6 @@ function Item() {
   const navigate = useNavigate();
 
   const [isPageLoaded, setIsPageLoaded] = useState(false);
-  const [isDark, setIsDark] = useState(false);
 
   const [item, setItem] = useState(null);
   const [orderCount, setOrderCount] = useState(0);
@@ -205,7 +204,12 @@ function Item() {
       <div className="flex flex-col gap-2 justify-center items-center w-screen h-screen">
         <h1 className="text-2xl font-bold dark:text-white">آیتم یافت نشد!</h1>
         <button onClick={() => exit()}>
-          <div className="bg-white dark:bg-darkpalleteDark p-5 rounded-2xl w-full flex items-center text-highgray dark:text-highgrayDark gap-3 hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white transition-all duration-200">
+          <div
+            className={`${
+              isPageLoaded
+                ? "transition-colors duration-300"
+                : "transition-none duration-0"
+            } bg-white dark:bg-darkpalleteDark p-5 rounded-2xl w-full flex items-center text-highgray dark:text-highgrayDark gap-3 hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white`}>
             <Icons.arrow className="w-8 rotate-180 stroke-3 dark:hover:text-white" />
             <h1 className="text-2xl font-bold dark:text-white">برگشت</h1>
           </div>
@@ -215,14 +219,14 @@ function Item() {
 
   return (
     <>
-      <div className="lg:flex">
+      <div className="flex flex-col lg:flex-row">
         <div
           className={`${
             isPageLoaded
               ? "transition-colors duration-300"
               : "transition-none duration-0"
           } overflow-auto scrollbar scrollbar-none lg:flex-1/2 xl:flex-1/3 lg:flex lg:justify-center lg:items-center bg-backgroundcolor dark:bg-backgroundcolorDark pb-25 lg:pb-0 h-screen overflow-x-hidden`}>
-          <div className="relative lg:absolute">
+          <div className="lg:w-1/2 xl:w-1/3 w-full relative lg:absolute">
             <img
               className="w-screen aspect-square object-cover p-2 rounded-3xl"
               src={
@@ -251,7 +255,7 @@ function Item() {
                     }`}
                   />
                   <h1
-                    className={`hidden transition-colors duration-300  lg:block text-2xl font-bold ${
+                    className={`hidden transition-colors duration-300 lg:block text-2xl font-bold ${
                       isLiked
                         ? "dark:text-red-300 text-red-700"
                         : "dark:text-white "

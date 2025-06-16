@@ -76,6 +76,8 @@ const TopMenu = ({ className, stroke }) => {
 };
 
 function AdminHeader() {
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+
   const [isDark, setIsDark] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showMenuLeft, setShowMenuLeft] = useState(false);
@@ -132,10 +134,13 @@ function AdminHeader() {
     }
   }
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
+    // For flashing on LOADING PAGE
+    setIsPageLoaded(true);
 
     getUserInfo();
     getProfilePic();
+
+    const savedTheme = localStorage.getItem("theme");
 
     if (savedTheme) {
       setIsDark(savedTheme === "dark");
@@ -183,22 +188,44 @@ function AdminHeader() {
 
   return (
     <>
-      <div className="p-2 sticky top-0 z-10 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300 rounded-b-3xl">
-        <div className="bg-white dark:bg-darkpalleteDark transition-colors duration-300 w-full rounded-3xl py-3 px-4 flex justify-between items-center">
+      <div
+        className={`${
+          isPageLoaded
+            ? "transition-colors duration-300"
+            : "transition-none duration-0"
+        } p-2 sticky top-0 z-10 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark rounded-b-3xl`}>
+        <div
+          className={`${
+            isPageLoaded
+              ? "transition-colors duration-300"
+              : "transition-none duration-0"
+          } bg-white dark:bg-darkpalleteDark w-full rounded-3xl py-3 px-4 flex justify-between items-center`}>
           <div className="hidden md:flex gap-4 text-xl font-bold">
             <a
               href="/adminhome"
-              className="text-darkpallete dark:text-white hover:text-adminPrimary dark:hover:text-adminPrimaryDark transition-colors duration-300">
+              className={`text-darkpallete dark:text-white hover:text-adminPrimary dark:hover:text-adminPrimaryDark ${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              }`}>
               خانه
             </a>
             <a
               href="/itemmanager"
-              className="text-darkpallete dark:text-white hover:text-adminPrimary dark:hover:text-adminPrimaryDark transition-colors duration-300">
+              className={`text-darkpallete dark:text-white hover:text-adminPrimary dark:hover:text-adminPrimaryDark ${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              }`}>
               آیتم ها
             </a>
             <a
               href=""
-              className="text-darkpallete dark:text-white hover:text-adminPrimary dark:hover:text-adminPrimaryDark transition-colors duration-300">
+              className={`text-darkpallete dark:text-white hover:text-adminPrimary dark:hover:text-adminPrimaryDark ${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              }`}>
               گزارش گیری
             </a>
           </div>
@@ -206,7 +233,11 @@ function AdminHeader() {
             onClick={toggleMenuLeft}
             className="flex md:hidden cursor-pointer relative">
             <TopMenu
-              className="w-15 bg-adminBackgroundColor dark:bg-darkpalleteDark rounded-2xl transition-colors duration-300"
+              className={`w-15 bg-adminBackgroundColor dark:bg-darkpalleteDark rounded-2xl ${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              }`}
               stroke={isDark ? "#fff" : "#809FB8"}
             />
           </div>
@@ -231,7 +262,12 @@ function AdminHeader() {
               </div>
             </div>
           )}
-          <div className="text-xl font-semibold md:hidden text-darkpallete dark:text-white transition-colors duration-300">
+          <div
+            className={`text-xl font-semibold md:hidden text-darkpallete dark:text-white ${
+              isPageLoaded
+                ? "transition-colors duration-300"
+                : "transition-none duration-0"
+            }`}>
             کافـی نـو
           </div>
           <div className="cursor-pointer relative" onClick={toggleMenu}>
@@ -245,7 +281,12 @@ function AdminHeader() {
                 src={userData.pic_url ? profilePic : ProfileImage}
                 alt="Profile"
               />
-              <p className="text-black dark:text-white transition-colors duration-300 font-bold md:block hidden">
+              <p
+                className={`${
+                  isPageLoaded
+                    ? "transition-colors duration-300"
+                    : "transition-none duration-0"
+                } text-black dark:text-white font-bold md:block hidden`}>
                 {userData.full_name}
               </p>
             </div>

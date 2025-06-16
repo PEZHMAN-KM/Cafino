@@ -63,7 +63,7 @@ function Card({
               : "bg-white dark:bg-darkpalleteDark"
           } rounded-3xl w-ful h-fit p-3 m-auto text-start transition-all duration-300 md:hover:scale-102 md:hover:bg-highgray animate-scale-up touch-manipulation`}>
           <img
-            className="w-full aspect-square object-cover rounded-2xl"
+            className="w-full h-full aspect-square object-cover rounded-2xl"
             src={
               pic_url
                 ? `${BASE_PATH}/files/${pic_url.split("/").pop()}`
@@ -76,7 +76,7 @@ function Card({
               <h1 className="text-2xl font-bold mt-2 dark:text-white truncate transition-colors duration-300">
                 {name}
               </h1>
-              <h3 className="text-balance mt-1 dark:text-slowgray truncate transition-colors duration-300">
+              <h3 className="text-balance mt-1 dark:text-slowgray truncate transition-colors duration-300 whitespace-nowrap overflow-hidden text-ellipsis min-h-[1.5rem]">
                 {description}
               </h3>
             </div>
@@ -136,19 +136,17 @@ function Card({
                 <Icons.plus className={"w-10 stroke-white"} />
               </button>
             )}
-            <div>
+            <div className="text-end">
               {sale_price && (
-                <div className="flex justify-center items-end gap-1">
-                  <h1 className="text-lg font-medium dark:text-white line-through transition-colors duration-300">
-                    {formatPrice(price)} تومان
-                  </h1>
-                </div>
+                <h1 className="text-md font-medium dark:text-white transition-colors duration-300 line-through">
+                  {formatPrice(price)} تومان
+                </h1>
               )}
-              <div className="flex justify-center items-end gap-1">
-                <h1 className="text-3xl font-bold dark:text-white transition-colors duration-300">
+              <div className="flex justify-end items-center gap-1">
+                <h1 className="text-2xl font-bold dark:text-white transition-colors duration-300">
                   {sale_price ? formatPrice(sale_price) : formatPrice(price)}
                 </h1>
-                <h3 className="dark:text-slowgray transition-colors duration-300">
+                <h3 className="text-sm dark:text-slowgray transition-colors duration-300">
                   تومان
                 </h3>
               </div>

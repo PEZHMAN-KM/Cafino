@@ -27,7 +27,7 @@ const OrderBox = ({
   selectFood,
   orderError,
 }) => (
-  <div className="pt-2 mb-4 border-b-4 border-slowprimary dark:border-primaryDark transition-colors duration-300">
+  <div className="pt-2 mb-4 border-b-4 border-primary dark:border-primaryDark transition-colors duration-300">
     <h2 className="font-extrabold text-3xl px-8 dark:text-white transition-colors duration-300 pb-5">
       آیتم های خرید
     </h2>
@@ -38,31 +38,34 @@ const OrderBox = ({
           : "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       } divide-highgray dark:divide-graypalleteDark grid lg:border-b-1 lg:border-highgray dark:border-graypalleteDark transition-colors duration-300`}>
       {orderItems.length === 0 ? (
-        <h1 className="text-center text-3xl font-black text-slowgrayDark dark:text-slowgray py-10 transition-colors duration-300">
+        <h1 className="text-center text-xl md:text-3xl font-black text-slowgrayDark dark:text-slowgray py-5 transition-colors duration-300 animate-opacity-up">
           {orderError}
         </h1>
       ) : (
-        orderItems.map((item) => (
-          <div
-            onClick={() => selectFood(item.id)}
-            href="/item"
-            key={item.id}
-            className={` ${
-              item.in_sale ? "bg-slowprimary dark:bg-slowprimaryDark" : ""
-            } cursor-pointer hover:bg-slowgray border-b-1 border-t-1 lg:border-r-1 lg:border-l-1 lg:border-t-0 lg:border-b-0 hover:dark:bg-slowgrayDark transition-colors duration-300 rounded-2xl ${
-              removingId === item.id ? "animate-scale-out" : ""
-            }`}>
-            <OrderItem
-              id={item.id}
-              name={item.name}
-              category_name={item.category_name}
-              count={item.count}
-              handleIncreaseCount={handleIncreaseCount}
-              handleDecreaseCount={handleDecreaseCount}
-              pic_url={item.pic_url}
-            />
-          </div>
-        ))
+        <div className="animate-scale-up">
+          {orderItems.map((item) => (
+            <div
+              onClick={() => selectFood(item.id)}
+              href="/item"
+              key={item.id}
+              className={` ${
+                item.in_sale ? "bg-slowprimary dark:bg-slowprimaryDark" : ""
+              } cursor-pointer hover:bg-slowgray border-b-1 border-t-1 lg:border-r-1 lg:border-l-1 lg:border-t-0 lg:border-b-0 hover:dark:bg-slowgrayDark transition-colors duration-300 rounded-2xl ${
+                removingId === item.id ? "animate-scale-out" : ""
+              }`}>
+              <OrderItem
+                id={item.id}
+                in_sale={item.in_sale}
+                name={item.name}
+                category_name={item.category_name}
+                count={item.count}
+                handleIncreaseCount={handleIncreaseCount}
+                handleDecreaseCount={handleDecreaseCount}
+                pic_url={item.pic_url}
+              />
+            </div>
+          ))}
+        </div>
       )}
     </div>
   </div>
@@ -76,10 +79,10 @@ const OrderItem = ({
   handleDecreaseCount,
   pic_url,
 }) => (
-  <div className=" flex items-center px-1 py-1 md:px-5 md:py-2 gap-3">
+  <div className=" flex items-center px-1 py-1 md:px-5 md:py-2 gap-3  animate-scale-up">
     <div className="aspect-square size-18 md:size-25 shrink-0">
       <img
-        className="p-2 rounded-3xl"
+        className="p-2 rounded-3xl w-full h-full object-cover"
         src={
           pic_url ? `${BASE_PATH}/files/${pic_url.split("/").pop()}` : itemImage
         }
@@ -149,7 +152,7 @@ const UserNumber = ({
       isPageLoaded
         ? "transition-colors duration-300"
         : "transition-none duration-0"
-    } bg-white dark:bg-darkpalleteDark w-screen p-5 mx-5 rounded-2xl border-1 flex justify-between items-center text-2xl font-bold`}>
+    } bg-white dark:bg-darkpalleteDark w-screen p-5 mx-5 rounded-2xl border-1 flex justify-between items-center text-2xl font-bold animate-scale-up`}>
     <div className="flex flex-col gap-2">
       <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold dark:text-white transition-colors duration-300">
         سفارش برای میز :
@@ -187,7 +190,7 @@ const Checkout = ({ orderItems }) => {
 
   return (
     <div>
-      <h1 className="font-extrabold text-3xl px-8 py-3 dark:text-white transition-colors duration-300">
+      <h1 className="font-extrabold text-2xl sm:text-3xl px-8 py-3 dark:text-white transition-colors duration-300">
         فاکتور سفارشات شما
       </h1>
       {orderItems.map((item) => (
@@ -204,9 +207,9 @@ const Checkout = ({ orderItems }) => {
   );
 };
 const CheckOutItem = ({ name, count, price, sale_price }) => (
-  <div className="flex justify-between px-10">
+  <div className="flex justify-between px-5 sm:px-10 animate-opacity-up">
     <div className="flex gap-3">
-      <h1 className="text-2xl font-bold dark:text-white transition-colors duration-300">
+      <h1 className="text-xl sm:text-2xl font-bold dark:text-white transition-colors duration-300">
         {name}
       </h1>
       {count != "" ? (
@@ -221,8 +224,8 @@ const CheckOutItem = ({ name, count, price, sale_price }) => (
           {formatPrice(price)} تومان
         </h1>
       ) : (
-        <div className="flex gap-2 md:gap-4">
-          <h1 className="decoration-1 line-through text-highgray dark:text-slowgray transition-colors duration-300">
+        <div className="flex items-center justify-center gap-2 md:gap-4">
+          <h1 className="text-sm decoration-1 line-through text-highgray dark:text-slowgray transition-colors duration-300">
             {formatPrice(price)} <span className="hidden md:inline">تومان</span>
           </h1>
           <h1 className="font-bold dark:text-white transition-colors duration-300">
@@ -434,16 +437,18 @@ function Order() {
               orderError={orderError}
             />
           </div>
-          <div className="col-span-1 flex justify-center items-start">
-            <UserNumber
-              tableNumber={tableNumber}
-              setTableNumber={setTableNumber}
-              tableError={tableError}
-              isPageLoaded={isPageLoaded}
-            />
-          </div>
-          <div className="col-span-1 pt-4">
-            <Checkout orderItems={orderItems} />
+          <div className="w-screen lg:w-2/3 mx-auto">
+            <div className="col-span-1 flex justify-center items-start">
+              <UserNumber
+                tableNumber={tableNumber}
+                setTableNumber={setTableNumber}
+                tableError={tableError}
+                isPageLoaded={isPageLoaded}
+              />
+            </div>
+            <div className="col-span-1 pt-4">
+              <Checkout orderItems={orderItems} />
+            </div>
           </div>
         </div>
         <div className="w-full justify-center fixed bottom-11 md:bottom-5 mt-10 flex md:px-5 transition-all duration-300">

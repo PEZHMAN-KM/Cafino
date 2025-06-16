@@ -3,24 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_PATH } from "../constants/paths";
-
-const ArrowIcon = ({ className }) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className={className}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="m8.25 4.5 7.5 7.5-7.5 7.5"
-      />
-    </svg>
-  );
-};
+import { Icons } from "../Componnets/Icons";
 
 function AddItem() {
   const [showOffValue, setShowOffValue] = useState(false);
@@ -170,7 +153,7 @@ function AddItem() {
                 </h1>
                 <a href="/Itemmanager">
                   <div className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
-                    <ArrowIcon
+                    <Icons.arrow
                       className={
                         "w-8 rotate-180 stroke-3 stroke-black dark:stroke-white"
                       }
