@@ -213,7 +213,7 @@ function Home() {
                 isPageLoaded
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
-              } sticky top-0 z-10 w-screen bg-backgroundcolor dark:bg-backgroundcolorDark ${
+              } sticky top-0 z-10 w-screen bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-md border-b border-white/20 dark:border-white/10 ${
                 !hideIcons ? "h-34 md:h-44" : "h-17"
               }`}
             />

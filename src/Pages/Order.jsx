@@ -254,6 +254,9 @@ function Order() {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   const handleIncreaseCount = (id) => {
+    if ("vibrate" in navigator && typeof window !== "undefined") {
+      navigator.vibrate(20);
+    }
     const updatedItems = orderItems.map((item) => {
       if (item.id === id) {
         return { ...item, count: item.count + 1 };
@@ -265,6 +268,10 @@ function Order() {
   };
 
   const handleDecreaseCount = (id) => {
+    if ("vibrate" in navigator && typeof window !== "undefined") {
+      navigator.vibrate(20);
+    }
+
     const item = orderItems.find((item) => item.id === id);
     if (!item) return;
 
@@ -296,6 +303,9 @@ function Order() {
   };
 
   function selectFood(food_id) {
+    if ("vibrate" in navigator && typeof window !== "undefined") {
+      navigator.vibrate(20);
+    }
     localStorage.setItem("show_food", food_id);
     navigate("/item");
   }
@@ -359,6 +369,9 @@ function Order() {
     if (rawOrder != "[]") {
       if (tableNumber <= 0) {
         setTableError("لطفا شماره میز را درست وارد کنید!");
+        if ("vibrate" in navigator && typeof window !== "undefined") {
+          navigator.vibrate([50, 30, 50, 30, 70]);
+        }
         setTimeout(() => {
           setTableError(null);
         }, 2000);
@@ -395,8 +408,14 @@ function Order() {
         );
         setTimeAdded(response.data.order.time_added);
         localStorage.setItem("order", "[]");
+        if ("vibrate" in navigator && typeof window !== "undefined") {
+          navigator.vibrate(20);
+        }
       } catch (err) {
         console.log(err);
+        if ("vibrate" in navigator && typeof window !== "undefined") {
+          navigator.vibrate(10);
+        }
       }
     }
   }

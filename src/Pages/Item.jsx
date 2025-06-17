@@ -72,6 +72,7 @@ function Item() {
   const navigate = useNavigate();
 
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const haptic = 20;
 
   const [item, setItem] = useState(null);
   const [orderCount, setOrderCount] = useState(0);
@@ -83,6 +84,10 @@ function Item() {
   }, [id]);
 
   const handleLikeClick = () => {
+    if ("vibrate" in navigator && typeof window !== "undefined") {
+      navigator.vibrate(haptic);
+    }
+
     let likedItems = JSON.parse(localStorage.getItem("liked_items") || "[]");
 
     if (likedItems.includes(id)) {
@@ -169,17 +174,26 @@ function Item() {
   };
 
   const handleAddToOrder = () => {
+    if ("vibrate" in navigator && typeof window !== "undefined") {
+      navigator.vibrate(haptic);
+    }
     setOrderCount(1);
     updateLocalStorage(1);
   };
 
   const increaseCount = () => {
+    if ("vibrate" in navigator && typeof window !== "undefined") {
+      navigator.vibrate(haptic);
+    }
     const newCount = orderCount + 1;
     setOrderCount(newCount);
     updateLocalStorage(newCount);
   };
 
   const decreaseCount = () => {
+    if ("vibrate" in navigator && typeof window !== "undefined") {
+      navigator.vibrate(haptic);
+    }
     if (orderCount === 1) {
       setRemoving(true);
       setTimeout(() => {
@@ -195,6 +209,9 @@ function Item() {
   };
 
   function exit() {
+    if ("vibrate" in navigator && typeof window !== "undefined") {
+      navigator.vibrate(haptic);
+    }
     localStorage.removeItem("show_food");
     navigate(-1);
   }

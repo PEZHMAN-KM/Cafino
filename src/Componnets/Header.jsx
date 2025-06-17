@@ -242,6 +242,12 @@ const Header = forwardRef(
                     setSearchActive(false);
                     setSearchTerm("");
                     setShowMenu(false);
+                    if (
+                      "vibrate" in navigator &&
+                      typeof window !== "undefined"
+                    ) {
+                      navigator.vibrate(20);
+                    }
                   }}
                   className="mr-2 cursor-pointer text-sm text-gray-500 dark:text-gray-300 transition-all duration-300">
                   بستن
@@ -261,6 +267,11 @@ const Header = forwardRef(
             }`}>
             <a
               href="/home"
+              onClick={() => {
+                if ("vibrate" in navigator && typeof window !== "undefined") {
+                  navigator.vibrate(10);
+                }
+              }}
               className="text-lg md:text-xl font-bold dark:text-white transition-colors duration-300">
               کافـی نـو
             </a>

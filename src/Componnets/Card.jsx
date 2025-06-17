@@ -23,17 +23,27 @@ function Card({
   const navigate = useNavigate();
   const [newlyAddedId, setNewlyAddedId] = useState(null);
   const [removingId, setRemovingId] = useState(null);
+  const haptic = 20;
 
   function selectFood(food_id) {
+    if ("vibrate" in navigator && typeof window !== "undefined") {
+      navigator.vibrate(10);
+    }
     localStorage.setItem("show_food", food_id);
     navigate("/item");
   }
 
   const increaseCount = () => {
+    if ("vibrate" in navigator && typeof window !== "undefined") {
+      navigator.vibrate(haptic);
+    }
     updateOrder(id, count + 1);
   };
 
   const decreaseCount = (id) => {
+    if ("vibrate" in navigator && typeof window !== "undefined") {
+      navigator.vibrate(haptic);
+    }
     const current = count || 1;
 
     if (current === 1) {
@@ -48,6 +58,9 @@ function Card({
   };
 
   const handleAddToOrder = (id) => {
+    if ("vibrate" in navigator) {
+      navigator.vibrate(haptic);
+    }
     updateOrder(id, 1);
     setNewlyAddedId(id);
     setTimeout(() => setNewlyAddedId(null), 400);
@@ -121,7 +134,7 @@ function Card({
                   className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center md:hover:bg-primary md:dark:hover:bg-primaryDark transition-colors duration-300 touch-manipulation">
                   <Icons.mines
                     className={
-                      "w-3 fill-black dark:fill-white hover:fill-white transition-colors duration-300"
+                      "w-3 fill-black dark:fill-white md:hover:fill-white transition-colors duration-300 touch-manipulation"
                     }
                   />
                 </button>

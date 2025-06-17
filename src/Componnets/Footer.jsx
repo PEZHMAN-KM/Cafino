@@ -5,6 +5,7 @@ const size_icon = 10;
 
 function Footer({ page }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const haptic = 10;
 
   const [totalOrderCount, setTotalOrderCount] = useState(0);
   const calculateTotal = () => {
@@ -37,12 +38,17 @@ function Footer({ page }) {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-white dark:bg-darkpalleteDark fixed w-screen bottom-0 md:hidden ${
+        } bg-white/30 dark:bg-darkpalleteDark/30 backdrop-blur-md shadow-lg border-t border-white/20 dark:border-white/10 fixed w-screen bottom-0 md:hidden ${
           page == 3 ? " px-6 pb-6 pt-3" : "p-6 rounded-t-3xl"
         }`}>
         <div className="flex items-center justify-between px-5">
           {/* Contact Us Button */}
           <a
+            onClick={() => {
+              if ("vibrate" in navigator && typeof window !== "undefined") {
+                navigator.vibrate(haptic);
+              }
+            }}
             className="hover:scale-125 transition-all duration-300"
             href="ContactUs">
             <Icons.call
@@ -50,11 +56,16 @@ function Footer({ page }) {
                 page == 4
                   ? "stroke-primary fill-primary"
                   : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
-              }`}
+              }`} 
             />
           </a>
           {/* Order Button */}
           <a
+            onClick={() => {
+              if ("vibrate" in navigator && typeof window !== "undefined") {
+                navigator.vibrate(haptic);
+              }
+            }}
             href="Order"
             className="relative hover:scale-125 transition-all duration-300">
             {totalOrderCount > 0 && (
@@ -72,6 +83,11 @@ function Footer({ page }) {
           </a>
           {/* Favorite Button */}
           <a
+            onClick={() => {
+              if ("vibrate" in navigator && typeof window !== "undefined") {
+                navigator.vibrate(haptic);
+              }
+            }}
             className="hover:scale-125 transition-all duration-300"
             href="FavoritePage">
             <Icons.favorite
@@ -84,6 +100,11 @@ function Footer({ page }) {
           </a>
           {/* Home Button */}
           <a
+            onClick={() => {
+              if ("vibrate" in navigator && typeof window !== "undefined") {
+                navigator.vibrate(haptic);
+              }
+            }}
             className="hover:scale-125 transition-all duration-300"
             href="Home">
             <Icons.home

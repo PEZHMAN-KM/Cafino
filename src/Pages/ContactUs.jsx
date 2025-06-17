@@ -52,7 +52,13 @@ const Waiter = ({
   </div>
 );
 const Location = () => (
-  <button className="bg-darkpallete dark:bg-darkpalleteDark hover:bg-darkpalleteDark dark:hover:bg-darkpallete p-5 pb-3 rounded-3xl transition-colors duration-300 cursor-pointer">
+  <button
+    onClick={() => {
+      if ("vibrate" in navigator && typeof window !== "undefined") {
+        navigator.vibrate(20);
+      }
+    }}
+    className="bg-darkpallete dark:bg-darkpalleteDark hover:bg-darkpalleteDark dark:hover:bg-darkpallete p-5 pb-3 rounded-3xl transition-colors duration-300 cursor-pointer">
     <img className="rounded-2xl w-50" src={itemImage} alt="" />
     <div className="flex justify-between items-center px-4 text-white pt-2">
       <Icons.location className={"w-8 stroke-white"} />
@@ -62,6 +68,11 @@ const Location = () => (
 );
 const PhoneNumber = () => (
   <a
+    onClick={() => {
+      if ("vibrate" in navigator && typeof window !== "undefined") {
+        navigator.vibrate(20);
+      }
+    }}
     href="tel:09114605574"
     className="bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary w-60 px-8 py-2 rounded-2xl flex items-center justify-between transition-colors duration-300">
     <Icons.call className="stroke-white fill-white w-8" />
@@ -69,7 +80,13 @@ const PhoneNumber = () => (
   </a>
 );
 const InstagramPage = () => (
-  <button className="bg-purple-700 dark:bg-purple-800 hover:bg-purple-900 dark:hover:bg-purple-600 w-60 px-8 py-2 rounded-2xl flex items-center justify-between transition-colors duration-300">
+  <button
+    onClick={() => {
+      if ("vibrate" in navigator && typeof window !== "undefined") {
+        navigator.vibrate(20);
+      }
+    }}
+    className="bg-purple-700 dark:bg-purple-800 hover:bg-purple-900 dark:hover:bg-purple-600 w-60 px-8 py-2 rounded-2xl flex items-center justify-between transition-colors duration-300">
     <Icons.instagram className={"stroke-white"} />
     <h1 className="text-xl font-bold text-white">KMP STUDIO</h1>
   </button>
@@ -89,6 +106,9 @@ function ContactUs() {
   async function addNotification(tableNumber) {
     if (tableNumber <= 0) {
       setError("لطفا شماره میز را درست وارد کنید!");
+      if ("vibrate" in navigator && typeof window !== "undefined") {
+        navigator.vibrate([50, 30, 50, 30, 70]);
+      }
       setTimeout(() => {
         setError(null);
       }, 2000);
@@ -106,11 +126,17 @@ function ContactUs() {
         }
       );
       setError("اطلاع داده شد. تا چند لحظه دیگه سالن‌دار میاد");
+      if ("vibrate" in navigator && typeof window !== "undefined") {
+        navigator.vibrate(20);
+      }
       setTimeout(() => {
         setError(null);
       }, 5000);
     } catch (err) {
       setError("خطا در تماس با سالن‌دار");
+      if ("vibrate" in navigator && typeof window !== "undefined") {
+        navigator.vibrate([50, 30, 50, 30, 70]);
+      }
       setTimeout(() => {
         setError(null);
       }, 10000);
