@@ -32,30 +32,18 @@
     animation: scale-up 0.4s ease-out forwards;
   }
 
-  @keyframes width-up {
-    0% {
-      transform: scaleX(0.1);
-      opacity: 0;
-    }
-    100% {
-      transform: scaleX(1);
-      opacity: 1;
-    }
-  }
-  .animate-width-up {
-    animation: width-up 0.4s ease-out forwards;
-  }
-
   @keyframes move-up {
     0% {
       transform: translateY(20px);
       opacity: 0;
       visibility: visible;
+      filter: blur(5px);
     }
     100% {
       transform: translateY(0);
       opacity: 1;
       visibility: visible;
+      filter: blur(0px);
     }
   }
   .animate-move-up {
@@ -75,9 +63,11 @@
   @keyframes opacity-up {
     0% {
       opacity: 0;
+      filter: blur(5px);
     }
     100% {
       opacity: 1;
+      filter: blur(0px);
     }
   }
   .animate-opacity-up {

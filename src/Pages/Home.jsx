@@ -5,18 +5,25 @@ import Footer from "../Componnets/Footer.jsx";
 import SubHeder from "../Componnets/SubHeder.jsx";
 import Card from "../Componnets/Card.jsx";
 
-import bannerImage from "../../public/Banner.jpg";
-
 import { BASE_PATH } from "../constants/paths.js";
 import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
+
+// FOR BANNER
+import bannerImage from "../../public/Banner.jpg";
 
 function Home() {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+
+  const [blurActive, setBlurActive] = useState(false);
+  const [activeCardData, setActiveCardData] = useState(null);
 
   const [hideIcons, setHideIcons] = useState(false);
   const scrollContainerRef = useRef(null);
   const headerRef = useRef(null);
   const headerInputRef = useRef(null);
+  const [footerShrink, setFooterShrink] = useState(false);
+  const lastScrollTop = useRef(0);
 
   const [selectedCategory, setSelectedCategory] = useState(1);
   const [items, setItems] = useState([]);
@@ -139,6 +146,7 @@ function Home() {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
+          // SCROLL FOR HIDEICONS ------------------------------------------------
           const currentScrollTop = scrollContainer.scrollTop;
 
           if (currentScrollTop <= 40) {
@@ -146,9 +154,19 @@ function Home() {
             window.dispatchEvent(new CustomEvent("closeMenus"));
           } else {
             setHideIcons(true);
-            // setHeaderMenuOpen(false);
-            // setSubHeaderMenuOpen(false);
           }
+
+          // SCROLL FOR FOOTER ------------------------------------------------
+          const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
+          const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
+
+          if (scrollingDown) {
+            setFooterShrink(true);
+          } else if (scrollingUp) {
+            setFooterShrink(false);
+          }
+
+          lastScrollTop.current = currentScrollTop <= 0 ? 0 : currentScrollTop;
 
           ticking = false;
         });
@@ -176,8 +194,67 @@ function Home() {
     }
   }, [searchActive, searchTerm, selectedCategory]);
 
+  // FOOTER SCROLL
+  // useEffect(() => {
+  //   const scrollContainer = scrollContainerRef.current;
+  //   if (!scrollContainer) return;
+
+  //   let lastScrollTop = 0;
+  //   let ticking = false;
+
+  //   const handleScroll = () => {
+  //     if (!ticking) {
+  //       window.requestAnimationFrame(() => {
+  //         const currentScrollTop = scrollContainer.scrollTop;
+
+  //         // بالا یا پایین اسکرول رفتن
+  //         const scrollingDown = currentScrollTop > lastScrollTop;
+
+  //         setHideIcons(currentScrollTop > 40);
+  //         setFooterShrink(scrollingDown); // 👈 shrink وقتی پایین میریم
+
+  //         lastScrollTop = currentScrollTop;
+  //         ticking = false;
+  //       });
+  //       ticking = true;
+  //     }
+  //   };
+
+  //   scrollContainer.addEventListener("scroll", handleScroll);
+  //   return () => scrollContainer.removeEventListener("scroll", handleScroll);
+  // }, []);
+
   return (
     <>
+      <AnimatePresence>
+        {blurActive && (
+          <>
+            {/* تارکننده */}
+            <motion.div
+              className="fixed inset-0 bg-black/20 backdrop-blur-md z-40 w-full h-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            {/* کارت بالا */}
+            {activeCardData && (
+              <motion.div
+                className="fixed left-1/2 top-1/2 z-50 w-[80vw] -translate-x-1/2 -translate-y-1/2"
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1.07, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}>
+                <Card
+                  expanded={true}
+                  {...activeCardData}
+                  setBlurActive={setBlurActive}
+                  setActiveCardData={setActiveCardData}
+                />
+              </motion.div>
+            )}
+          </>
+        )}
+      </AnimatePresence>
       {/* FOR FIX COLAPSE UP DOWN | [ H(SUBHEADER) => !HIDE - HIDE = H(HIDE) HEADER ] */}
       <div
         ref={scrollContainerRef}
@@ -185,8 +262,8 @@ function Home() {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-12 md:pb-3 lg:pb-0 ${
-          hideIcons && "pb-8 lg:pb-17"
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-15 md:pb-3 ${
+          hideIcons && "pb-20 lg:pb-17"
         }`}>
         <Header
           page={1}
@@ -214,7 +291,7 @@ function Home() {
                 isPageLoaded
                   ? "transition-all duration-300"
                   : "transition-none duration-0"
-              } sticky top-2 z-10 bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md border-white/20 dark:border-white/10 ${
+              } sticky top-2 pt-[env(safe-area-inset-top)] z-10 bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md border-white/20 dark:border-white/10 ${
                 !hideIcons
                   ? "h-29 lg:h-34 rounded-b-none w-screen m-0 shadow-lg border-b"
                   : "h-11 lg:h-17 rounded-3xl w-[98vw] mx-auto shadow-lg border"
@@ -246,12 +323,14 @@ function Home() {
                   sale_price={item.sale_price}
                   updateOrder={updateOrder}
                   count={orderCounts[item.id] || 0}
+                  setBlurActive={setBlurActive}
+                  setActiveCardData={setActiveCardData}
                 />
               ))}
             </div>
           )}
         </div>
-        <Footer page={1} />
+        <Footer page={1} shrink={footerShrink} />
       </div>
     </>
   );

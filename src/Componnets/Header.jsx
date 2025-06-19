@@ -219,7 +219,7 @@ const Header = forwardRef(
                   isPageLoaded
                     ? "transition-colors duration-300"
                     : "transition-none duration-0"
-                } flex-3/4 flex justify-center items-center bg-slowgray dark:bg-graypalleteDark p-1.5 gap-2 rounded-xl lg:flex-2/4 animate-width-up`}>
+                } flex-3/4 flex justify-center items-center bg-slowgray dark:bg-graypalleteDark p-1.5 gap-2 rounded-xl lg:flex-2/4 animate-scale-up`}>
                 <Icons.search
                   className={
                     "w-7 stroke-black dark:stroke-white transition-colors duration-300"

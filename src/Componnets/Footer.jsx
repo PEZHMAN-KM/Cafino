@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Icons } from "./Icons";
+import { h1 } from "framer-motion/client";
 
 const size_icon = 10;
+const pageTitles = {
+  1: "خونه",
+  2: "علاقه‌مندی",
+  3: "سبد خرید",
+  4: "تماس با ما",
+};
 
-function Footer({ page }) {
+function Footer({ page, shrink }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const haptic = 10;
 
@@ -37,84 +44,92 @@ function Footer({ page }) {
         <div
           className={`${
             isPageLoaded
-              ? "transition-colors duration-300"
+              ? "transition-all duration-300"
               : "transition-none duration-0"
-          } bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-lg border-t border-white/20 dark:border-white/10 fixed bottom-3 w-[98vw] md:hidden px-6 py-2 rounded-3xl`}>
-          <div className="flex items-center justify-between px-5">
-            {/* Contact Us Button */}
-            <a
-              onClick={() => {
-                if ("vibrate" in navigator && typeof window !== "undefined") {
-                  navigator.vibrate(haptic);
-                }
-              }}
-              className="transition-all duration-300"
-              href="ContactUs">
-              <Icons.call
-                className={` w-${size_icon} transition-colors duration-300 ${
-                  page == 4
-                    ? "stroke-primary fill-primary"
-                    : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
-                }`}
-              />
-            </a>
-            {/* Order Button */}
-            <a
-              onClick={() => {
-                if ("vibrate" in navigator && typeof window !== "undefined") {
-                  navigator.vibrate(haptic);
-                }
-              }}
-              href="Order"
-              className="relative transition-all duration-300">
-              {totalOrderCount > 0 && (
-                <div className="absolute -right-1 -top-1 bg-primary w-6 h-6 rounded-full flex justify-center items-center font-bold text-white text-sm">
-                  {totalOrderCount}
-                </div>
-              )}
-              <Icons.bag
-                className={` w-${size_icon} transition-colors duration-300 ${
-                  page == 3
-                    ? "stroke-primary"
-                    : "stroke-highgray dark:stroke-highgrayDark"
-                }`}
-              />
-            </a>
-            {/* Favorite Button */}
-            <a
-              onClick={() => {
-                if ("vibrate" in navigator && typeof window !== "undefined") {
-                  navigator.vibrate(haptic);
-                }
-              }}
-              className="transition-all duration-300"
-              href="FavoritePage">
-              <Icons.favorite
-                className={` w-${size_icon} transition-colors duration-300 ${
-                  page == 2
-                    ? "stroke-primary fill-primary"
-                    : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
-                }`}
-              />
-            </a>
-            {/* Home Button */}
-            <a
-              onClick={() => {
-                if ("vibrate" in navigator && typeof window !== "undefined") {
-                  navigator.vibrate(haptic);
-                }
-              }}
-              className="transition-all duration-300"
-              href="Home">
-              <Icons.home
-                className={` w-${size_icon} transition-colors duration-300 ${
-                  page == 1
-                    ? "stroke-primary fill-primary"
-                    : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
-                }`}
-              />
-            </a>
-          </div>
+          } ${
+            shrink ? "scale-50 w-fit" : "scale-100 w-[98vw]"
+          } origin-bottom bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-lg border-t border-white/20 dark:border-white/10 fixed bottom-3 md:hidden px-6 py-2 rounded-3xl`}>
+          {shrink ? (
+            <h1 className="text-2xl text-black dark:text-white text-center">
+              {pageTitles[page] || "صفحه ناشناس"}
+            </h1>
+          ) : (
+            <div className="flex items-center justify-between px-5">
+              {/* Contact Us Button */}
+              <a
+                onClick={() => {
+                  if ("vibrate" in navigator && typeof window !== "undefined") {
+                    navigator.vibrate(haptic);
+                  }
+                }}
+                className="transition-all duration-300"
+                href="ContactUs">
+                <Icons.call
+                  className={` w-${size_icon} transition-colors duration-300 ${
+                    page == 4
+                      ? "stroke-primary fill-primary"
+                      : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
+                  }`}
+                />
+              </a>
+              {/* Order Button */}
+              <a
+                onClick={() => {
+                  if ("vibrate" in navigator && typeof window !== "undefined") {
+                    navigator.vibrate(haptic);
+                  }
+                }}
+                href="Order"
+                className="relative transition-all duration-300">
+                {totalOrderCount > 0 && (
+                  <div className="absolute -right-1 -top-1 bg-primary w-6 h-6 rounded-full flex justify-center items-center font-bold text-white text-sm">
+                    {totalOrderCount}
+                  </div>
+                )}
+                <Icons.bag
+                  className={` w-${size_icon} transition-colors duration-300 ${
+                    page == 3
+                      ? "stroke-primary"
+                      : "stroke-highgray dark:stroke-highgrayDark"
+                  }`}
+                />
+              </a>
+              {/* Favorite Button */}
+              <a
+                onClick={() => {
+                  if ("vibrate" in navigator && typeof window !== "undefined") {
+                    navigator.vibrate(haptic);
+                  }
+                }}
+                className="transition-all duration-300"
+                href="FavoritePage">
+                <Icons.favorite
+                  className={` w-${size_icon} transition-colors duration-300 ${
+                    page == 2
+                      ? "stroke-primary fill-primary"
+                      : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
+                  }`}
+                />
+              </a>
+              {/* Home Button */}
+              <a
+                onClick={() => {
+                  if ("vibrate" in navigator && typeof window !== "undefined") {
+                    navigator.vibrate(haptic);
+                  }
+                }}
+                className="transition-all duration-300"
+                href="Home">
+                <Icons.home
+                  className={` w-${size_icon} transition-colors duration-300 ${
+                    page == 1
+                      ? "stroke-primary fill-primary"
+                      : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
+                  }`}
+                />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -28,7 +28,7 @@ export default function OrderReceiptOverlay({
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center transition-colors duration-300">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-md z-50 flex justify-center items-center transition-colors duration-300">
       <div className="bg-backgroundcolor dark:bg-backgroundcolorDark w-full mx-2 max-w-md lg:max-w-lg rounded-2xl shadow-lg overflow-hidden animate-scale-up">
         <div className="p-4">
           <div className="flex justify-between items-center">

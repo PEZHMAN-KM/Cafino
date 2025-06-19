@@ -1,12 +1,54 @@
+/* -------------------------- PULSE LIKE SIRI IN APPLE -------------------------- */
+/* #nprogress .bar,
+#nprogress .peg,
+#nprogress .spinner {
+  display: none !important;
+}
+
+.route-pulse-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  border: 5px solid transparent;
+  border-radius: 2rem;
+  pointer-events: none;
+  animation: pulse-border 1.2s ease-in-out;
+  box-shadow: 0 0 20px 5px var(--pulse-color);
+  filter: blur(3px);
+  opacity: 0.9;
+}
+
+@keyframes pulse-border {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.08);
+    opacity: 0;
+  }
+} */
+
+/* -------------------------- JUST LINE ON TOP -------------------------- */
+.route-pulse-loader {
+  display: none !important;
+}
+
 #nprogress .bar {
-  background: #c67c4e !important;
   height: 3px;
+  background: var(--nprogress-color) !important;
 }
 
 #nprogress .peg {
-  box-shadow: 0 0 10px #c67c4e, 0 0 5px #c67c4e !important;
+  box-shadow: 0 0 10px var(--nprogress-color), 0 0 5px var(--nprogress-color) !important;
 }
 
 #nprogress .spinner {
   display: none !important;
 }
+
+

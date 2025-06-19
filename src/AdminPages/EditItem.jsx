@@ -308,7 +308,7 @@ function EditItem() {
                   />
                 </div>
                 <button className="w-full bg-adminAction dark:bg-adminActionDark px-3 py-2 rounded-xl text-xl text-white hover:bg-adminActionDark dark:hover:bg-adminAction transition-colors duration-300">
-                  اضافه کردن
+                  اصلاح کردن
                 </button>
                 <p className="text-adminError transition-colors duration-300">
                   {textError}

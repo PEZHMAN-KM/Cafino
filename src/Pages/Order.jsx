@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import itemImage from "../../public/No_Item.png";
 import axios from "axios";
 import { BASE_PATH, LIMIT_DATA } from "../constants/paths.js";
@@ -236,6 +236,45 @@ const CheckOutItem = ({ name, count, price, sale_price }) => (
 );
 
 function Order() {
+  // SCROLL FOOTER -------------------------------------------------
+  const scrollContainerRef = useRef(null);
+  const lastScrollTop = useRef(0);
+  const [footerShrink, setFooterShrink] = useState(false);
+
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollTop = scrollContainer.scrollTop;
+
+          const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
+          const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
+
+          if (scrollingDown) {
+            setFooterShrink(true);
+          } else if (scrollingUp) {
+            setFooterShrink(false);
+          }
+
+          lastScrollTop.current = currentScrollTop <= 0 ? 0 : currentScrollTop;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    scrollContainer.addEventListener("scroll", handleScroll);
+    return () => {
+      scrollContainer.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  // ----------------------------------------------------------------
+
   const [orderItems, setOrderItems] = useState([]);
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
   const [tableNumber, setTableNumber] = useState(0);
@@ -432,6 +471,7 @@ function Order() {
   return (
     <>
       <div
+        ref={scrollContainerRef}
         className={`${
           isPageLoaded
             ? "transition-colors duration-300"
@@ -468,7 +508,10 @@ function Order() {
             </div>
           </div>
         </div>
-        <div className="w-screen fixed bottom-20 md:bottom-5 transition-all duration-300">
+        <div
+          className={`w-screen fixed md:bottom-5 transition-all duration-30 ${
+            footerShrink ? "bottom-10" : "bottom-20"
+          }`}>
           <div
             className={`${
               isPageLoaded
@@ -495,7 +538,7 @@ function Order() {
             </div>
           </div>
         </div>
-        <Footer page={3} />
+        <Footer page={3} shrink={footerShrink} />
       </div>
       <OrderReceiptOverlay
         visible={showReceipt}

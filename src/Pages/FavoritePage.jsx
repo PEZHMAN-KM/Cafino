@@ -1,114 +1,190 @@
-import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+  import React, { useState, useEffect, useRef } from "react";
+  import axios from "axios";
 
-import { BASE_PATH } from "../constants/paths.js";
-import Header from "../Componnets/Header.jsx";
-import Footer from "../Componnets/Footer.jsx";
-import Card from "../Componnets/Card.jsx";
+  import { BASE_PATH } from "../constants/paths.js";
+  import Header from "../Componnets/Header.jsx";
+  import Footer from "../Componnets/Footer.jsx";
+  import Card from "../Componnets/Card.jsx";
 
-function FavoritePage() {
-  const [isPageLoaded, setIsPageLoaded] = useState(false);
+  import { AnimatePresence, motion } from "framer-motion";
 
-  const [items, setItems] = useState([]);
-  const [error, setError] = useState(null);
+  function FavoritePage() {
+    const [isPageLoaded, setIsPageLoaded] = useState(false);
 
-  const [orderCounts, setOrderCounts] = useState({});
+    const [blurActive, setBlurActive] = useState(false);
+    const [activeCardData, setActiveCardData] = useState(null);
 
-  const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
+    const [items, setItems] = useState([]);
+    const [error, setError] = useState(null);
 
-  const updateOrder = (id, newCount) => {
-    const updatedCounts = { ...orderCounts };
+    const [orderCounts, setOrderCounts] = useState({});
 
-    if (newCount > 0) {
-      updatedCounts[id] = newCount;
-    } else {
-      delete updatedCounts[id];
-    }
+    const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
 
-    const orderArray = Object.entries(updatedCounts).map(([key, value]) => [
-      Number(key),
-      value,
-    ]);
-    localStorage.setItem("order", JSON.stringify(orderArray));
-    setOrderCounts(updatedCounts);
-    window.dispatchEvent(new Event("orderUpdated"));
-  };
+    // SCROLL FOOTER -------------------------------------------------
+    const scrollContainerRef = useRef(null);
+    const lastScrollTop = useRef(0);
+    const [footerShrink, setFooterShrink] = useState(false);
 
-  useEffect(() => {
-    const storedOrder = JSON.parse(localStorage.getItem("order") || "[]");
-    const counts = {};
-    storedOrder.forEach(([id, count]) => {
-      counts[id] = count;
-    });
-    setOrderCounts(counts);
-  }, []);
+    useEffect(() => {
+      const scrollContainer = scrollContainerRef.current;
+      if (!scrollContainer) return;
 
-  useEffect(() => {
-    // For flashing on LOADING PAGE
-    setIsPageLoaded(true);
-  }, []);
+      let ticking = false;
 
-  useEffect(() => {
-    const lided_food = localStorage.getItem("liked_items");
+      const handleScroll = () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            const currentScrollTop = scrollContainer.scrollTop;
 
-    async function fetchItems() {
-      setError(null);
-      try {
-        const response = await axios.post(
-          `${BASE_PATH}/food/get_food_list_by_id`,
-          lided_food,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        setItems([...response.data]);
-      } catch (err) {
-        setError("آیتمی یافت نشد!");
+            const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
+            const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
+
+            if (scrollingDown) {
+              setFooterShrink(true);
+            } else if (scrollingUp) {
+              setFooterShrink(false);
+            }
+
+            lastScrollTop.current = currentScrollTop <= 0 ? 0 : currentScrollTop;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+
+      scrollContainer.addEventListener("scroll", handleScroll);
+      return () => {
+        scrollContainer.removeEventListener("scroll", handleScroll);
+      };
+    }, []);
+    // ----------------------------------------------------------------
+
+    const updateOrder = (id, newCount) => {
+      const updatedCounts = { ...orderCounts };
+
+      if (newCount > 0) {
+        updatedCounts[id] = newCount;
+      } else {
+        delete updatedCounts[id];
       }
-    }
 
-    fetchItems();
-  }, []);
+      const orderArray = Object.entries(updatedCounts).map(([key, value]) => [
+        Number(key),
+        value,
+      ]);
+      localStorage.setItem("order", JSON.stringify(orderArray));
+      setOrderCounts(updatedCounts);
+      window.dispatchEvent(new Event("orderUpdated"));
+    };
 
-  return (
-    <>
-      <div
-        className={`${
-          isPageLoaded
-            ? "transition-colors duration-300"
-            : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 lg:pt-20 md:pb-3`}>
-        <Header
-          page={2}
-          text={"علاقه مندی ها"}
-          showMenu={headerMenuOpen}
-          setShowMenu={setHeaderMenuOpen}
-        />
-        {error && <p className="text-center my-4 text-primary">{error}</p>}
-        {!error && (
-          <div className="grid max-xs:grid-cols-1 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 3xl:grid-cols-10 4xl:grid-cols-12 gap-y-4 gap-x-2 mt-2 justify-center items-center">
-            {items.map((item) => (
-              <Card
-                key={item.id}
-                id={item.id}
-                in_sale={item.in_sale}
-                pic_url={item.pic_url}
-                name={item.name}
-                description={item.description}
-                price={item.price}
-                sale_price={item.sale_price}
-                updateOrder={updateOrder}
-                count={orderCounts[item.id] || 0}
+    useEffect(() => {
+      const storedOrder = JSON.parse(localStorage.getItem("order") || "[]");
+      const counts = {};
+      storedOrder.forEach(([id, count]) => {
+        counts[id] = count;
+      });
+      setOrderCounts(counts);
+    }, []);
+
+    useEffect(() => {
+      // For flashing on LOADING PAGE
+      setIsPageLoaded(true);
+    }, []);
+
+    useEffect(() => {
+      const lided_food = localStorage.getItem("liked_items");
+
+      async function fetchItems() {
+        setError(null);
+        try {
+          const response = await axios.post(
+            `${BASE_PATH}/food/get_food_list_by_id`,
+            lided_food,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          setItems([...response.data]);
+        } catch (err) {
+          setError("آیتمی یافت نشد!");
+        }
+      }
+
+      fetchItems();
+    }, []);
+
+    return (
+      <>
+        <AnimatePresence>
+          {blurActive && (
+            <>
+              {/* تارکننده */}
+              <motion.div
+                className="fixed inset-0 bg-black/20 backdrop-blur-md z-40 w-full h-full"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
               />
-            ))}
-          </div>
-        )}
-        <Footer page={2} />
-      </div>
-    </>
-  );
-}
 
-export default FavoritePage;
+              {/* کارت بالا */}
+              {activeCardData && (
+                <motion.div
+                  className="fixed left-1/2 top-1/2 z-50 w-80 -translate-x-1/2 -translate-y-1/2"
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  animate={{ scale: 1.07, opacity: 1 }}
+                  exit={{ scale: 0.95, opacity: 0 }}>
+                  <Card
+                    {...activeCardData}
+                    setBlurActive={setBlurActive}
+                    setActiveCardData={setActiveCardData}
+                  />
+                </motion.div>
+              )}
+            </>
+          )}
+        </AnimatePresence>
+
+        <div
+          ref={scrollContainerRef}
+          className={`${
+            isPageLoaded
+              ? "transition-colors duration-300"
+              : "transition-none duration-0"
+          } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 lg:pt-20 md:pb-3`}>
+          <Header
+            page={2}
+            text={"علاقه مندی ها"}
+            showMenu={headerMenuOpen}
+            setShowMenu={setHeaderMenuOpen}
+          />
+          {error && <p className="text-center my-4 text-primary">{error}</p>}
+          {!error && (
+            <div className="grid max-xs:grid-cols-1 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 3xl:grid-cols-10 4xl:grid-cols-12 gap-y-4 gap-x-2 mt-2 justify-center items-center">
+              {items.map((item) => (
+                <Card
+                  key={item.id}
+                  id={item.id}
+                  in_sale={item.in_sale}
+                  pic_url={item.pic_url}
+                  name={item.name}
+                  description={item.description}
+                  price={item.price}
+                  sale_price={item.sale_price}
+                  updateOrder={updateOrder}
+                  count={orderCounts[item.id] || 0}
+                  setBlurActive={setBlurActive}
+                  setActiveCardData={setActiveCardData}
+                />
+              ))}
+            </div>
+          )}
+          <Footer page={2} shrink={footerShrink} />
+        </div>
+      </>
+    );
+  }
+
+  export default FavoritePage;

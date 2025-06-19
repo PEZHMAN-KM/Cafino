@@ -3,7 +3,7 @@ import Footer from "../Componnets/Footer.jsx";
 
 import itemImage from "../../public/2.jpg";
 import { BASE_PATH, LIMIT_DATA } from "../constants/paths";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Icons } from "../Componnets/Icons.jsx";
 import axios from "axios";
 
@@ -97,6 +97,45 @@ const InstagramPage = () => (
 );
 
 function ContactUs() {
+  // SCROLL FOOTER -------------------------------------------------
+  const scrollContainerRef = useRef(null);
+  const lastScrollTop = useRef(0);
+  const [footerShrink, setFooterShrink] = useState(false);
+
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollTop = scrollContainer.scrollTop;
+
+          const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
+          const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
+
+          if (scrollingDown) {
+            setFooterShrink(true);
+          } else if (scrollingUp) {
+            setFooterShrink(false);
+          }
+
+          lastScrollTop.current = currentScrollTop <= 0 ? 0 : currentScrollTop;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    scrollContainer.addEventListener("scroll", handleScroll);
+    return () => {
+      scrollContainer.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  // ----------------------------------------------------------------
+
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
   const [tableNumber, setTableNumber] = useState(null);
   const [error, setError] = useState(null);
@@ -150,6 +189,7 @@ function ContactUs() {
   return (
     <>
       <div
+        ref={scrollContainerRef}
         className={`${
           isPageLoaded
             ? "transition-colors duration-300"
@@ -182,7 +222,7 @@ function ContactUs() {
           </div>
         </div>
       </div>
-      <Footer page={4} />
+      <Footer page={4} shrink={footerShrink} />
     </>
   );
 }
