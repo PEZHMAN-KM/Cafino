@@ -2,7 +2,7 @@ import Header from "../Componnets/Header.jsx";
 import Footer from "../Componnets/Footer.jsx";
 
 import itemImage from "../../public/2.jpg";
-import { BASE_PATH } from "../constants/paths";
+import { BASE_PATH, LIMIT_DATA } from "../constants/paths";
 import { useState, useEffect } from "react";
 import { Icons } from "../Componnets/Icons.jsx";
 import axios from "axios";
@@ -19,7 +19,11 @@ const Waiter = ({
       isPageLoaded
         ? "transition-colors duration-300"
         : "transition-none duration-0"
-    } bg-white dark:bg-darkpalleteDark flex justify-between gap-1 items-center w-screen m-5 my-2 py-3 px-3 rounded-3xl border-2 border-highgray dark:border-graypalleteDark`}>
+    } bg-white dark:bg-darkpalleteDark flex justify-between gap-1 items-center w-screen m-5 my-2 py-3 px-3 rounded-3xl border-2 ${
+      error
+        ? "border-adminError dark:border-adminErrorDark"
+        : "border-highgray dark:border-graypalleteDark"
+    } `}>
     <div>
       <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold dark:text-white transition-colors duration-300">
         تماس با سالندار
@@ -39,13 +43,13 @@ const Waiter = ({
               : "transition-none duration-0"
           } w-15 h-15 text-4xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl`}
           type="number"
-          // defaultValue={tableNumber}
+          Value={tableNumber}
           onChange={(e) => setTableNumber(Number(e.target.value))}
         />
       </div>
       <button
         onClick={() => addNotification(tableNumber)}
-        className="w-15 h-15 bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary rounded-2xl flex items-center justify-center transition-colors duration-300">
+        className="w-15 h-15 bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary rounded-2xl flex items-center justify-center cursor-pointer transition-colors duration-300">
         <Icons.bell className={"w-10 stroke-white"} />
       </button>
     </div>
@@ -94,7 +98,7 @@ const InstagramPage = () => (
 
 function ContactUs() {
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
-  const [tableNumber, setTableNumber] = useState(0);
+  const [tableNumber, setTableNumber] = useState(null);
   const [error, setError] = useState(null);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
@@ -104,7 +108,7 @@ function ContactUs() {
   }, []);
 
   async function addNotification(tableNumber) {
-    if (tableNumber <= 0) {
+    if (tableNumber < 1 || tableNumber > LIMIT_DATA) {
       setError("لطفا شماره میز را درست وارد کنید!");
       if ("vibrate" in navigator && typeof window !== "undefined") {
         navigator.vibrate([50, 30, 50, 30, 70]);
@@ -150,7 +154,7 @@ function ContactUs() {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark h-screen pb-22 w-screen overflow-y-auto scrollbar scrollbar-none`}>
+        } bg-backgroundcolor dark:bg-backgroundcolorDark h-screen pb-22 w-screen overflow-y-auto scrollbar scrollbar-none lg:pt-20`}>
         <Header
           page={4}
           text={"تماس با ما"}

@@ -178,14 +178,15 @@ function Home() {
 
   return (
     <>
+      {/* FOR FIX COLAPSE UP DOWN | [ H(SUBHEADER) => !HIDE - HIDE = H(HIDE) HEADER ] */}
       <div
         ref={scrollContainerRef}
         className={`${
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 md:pb-5 ${
-          !hideIcons ? "pb-60 md:pb-5" : "pb-26 md:pb-49"
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-12 md:pb-3 lg:pb-0 ${
+          hideIcons && "pb-8 lg:pb-17"
         }`}>
         <Header
           page={1}
@@ -211,10 +212,12 @@ function Home() {
               setSearchActive={setSearchActive}
               className={`${
                 isPageLoaded
-                  ? "transition-colors duration-300"
+                  ? "transition-all duration-300"
                   : "transition-none duration-0"
-              } sticky top-0 z-10 w-screen bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-md border-b border-white/20 dark:border-white/10 ${
-                !hideIcons ? "h-34 md:h-44" : "h-17"
+              } sticky top-2 z-10 bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md border-white/20 dark:border-white/10 ${
+                !hideIcons
+                  ? "h-29 lg:h-34 rounded-b-none w-screen m-0 shadow-lg border-b"
+                  : "h-11 lg:h-17 rounded-3xl w-[98vw] mx-auto shadow-lg border"
               }`}
             />
           )}

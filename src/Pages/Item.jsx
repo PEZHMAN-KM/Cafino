@@ -1,7 +1,7 @@
 import itemImage from "../../public/No_Item.png";
 import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
-import { BASE_PATH } from "../constants/paths";
+import { BASE_PATH, LIMIT_DATA } from "../constants/paths";
 import { useNavigate } from "react-router-dom";
 import { Icons } from "../Componnets/Icons";
 
@@ -186,8 +186,10 @@ function Item() {
       navigator.vibrate(haptic);
     }
     const newCount = orderCount + 1;
-    setOrderCount(newCount);
-    updateLocalStorage(newCount);
+    if (newCount <= LIMIT_DATA) {
+      setOrderCount(newCount);
+      updateLocalStorage(newCount);
+    }
   };
 
   const decreaseCount = () => {
@@ -226,7 +228,7 @@ function Item() {
               isPageLoaded
                 ? "transition-colors duration-300"
                 : "transition-none duration-0"
-            } bg-white dark:bg-darkpalleteDark p-5 rounded-2xl w-full flex items-center text-highgray dark:text-highgrayDark gap-3 hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white`}>
+            } cursor-pointer bg-white dark:bg-darkpalleteDark p-5 rounded-2xl w-full flex items-center text-highgray dark:text-highgrayDark gap-3 hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white`}>
             <Icons.arrow className="w-8 rotate-180 stroke-3 dark:hover:text-white" />
             <h1 className="text-2xl font-bold dark:text-white">برگشت</h1>
           </div>
@@ -257,7 +259,7 @@ function Item() {
               <div className="absolute lg:static lg:top-auto lg:left-auto lg:w-1/2 lg:pt-0 top-5 right-5">
                 <button
                   onClick={handleLikeClick}
-                  className={`bg-white dark:bg-darkpalleteDark p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-300 group hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white
+                  className={`bg-white/30 dark:bg-darkpalleteDark/30 backdrop-blur-md shadow-lg cursor-pointer p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-300 group hover:bg-subprimary/30 dark:hover:bg-subprimaryDark/30 border border-white/20 dark:border-white/10 hover:text-black dark:hover:text-white
                   ${
                     isLiked
                       ? "bg-slowprimary dark:bg-darkpalleteDark text-red-500"
@@ -284,7 +286,7 @@ function Item() {
               <div className="absolute lg:static lg:top-auto lg:right-auto lg:w-1/2 lg:pt-0 top-5 left-5">
                 <button
                   onClick={() => exit()}
-                  className="bg-white dark:bg-darkpalleteDark p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-300 hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white">
+                  className="bg-white/30 dark:bg-darkpalleteDark/30 backdrop-blur-md shadow-lg cursor-pointer p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-300 hover:bg-subprimary/30 dark:hover:bg-subprimaryDark/30 border border-white/20 dark:border-white/10 hover:text-black dark:hover:text-white">
                   <Icons.arrow className="w-8 rotate-180 stroke-3 dark:hover:text-white" />
                   <h1 className="hidden transition-colors duration-300 lg:block text-2xl font-bold dark:text-white">
                     برگشت
@@ -321,7 +323,7 @@ function Item() {
               {orderCount === 0 ? (
                 <button
                   onClick={handleAddToOrder}
-                  className="bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary text-white text-lg lg:text-2xl font-bold p-2 lg:px-5 lg:py-3 rounded-2xl transition-colors duration-300 animate-scale-up">
+                  className="bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary hover:scale-105 text-white cursor-pointer text-lg lg:text-2xl font-bold p-2 lg:px-5 lg:py-3 rounded-2xl transition-all duration-300 animate-scale-up">
                   افزودن به سبد خرید
                 </button>
               ) : (
@@ -331,17 +333,36 @@ function Item() {
                   }`}>
                   <button
                     onClick={increaseCount}
-                    className="w-14 h-14 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary text-white transition-colors duration-300">
+                    className="w-14 h-14 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary text-white cursor-pointer transition-colors duration-300">
                     <Icons.plus className={"w-9 stroke-white"} />
                   </button>
 
-                  <span className="w-12 text-center text-4xl font-bold dark:text-white inline-block">
+                  {/* <span className="w-12 text-center text-4xl font-bold dark:text-white inline-block">
                     {orderCount}
-                  </span>
+                  </span> */}
+
+                  <input
+                    className="w-12 text-center text-4xl font-bold dark:text-white inline-block"
+                    type="number"
+                    value={orderCount}
+                    onChange={(e) => {
+                      if (e.target.value < 1) {
+                        setRemoving(true);
+                        setTimeout(() => {
+                          setOrderCount(0);
+                          updateLocalStorage(0);
+                          setRemoving(false);
+                        }, 300);
+                      } else if (e.target.value <= LIMIT_DATA) {
+                        setOrderCount(Number(e.target.value));
+                        updateLocalStorage(Number(e.target.value));
+                      }
+                    }}
+                  />
 
                   <button
                     onClick={decreaseCount}
-                    className="border-2 flex items-center justify-center border-primary dark:border-primaryDark hover:bg-primaryDark dark:hover:bg-primary hover:border-primaryDark dark:hover:border-primary text-white w-12 h-12 rounded-full transition-colors duration-300">
+                    className="border-2 flex items-center justify-center border-primary dark:border-primaryDark hover:bg-primaryDark dark:hover:bg-primary hover:border-primaryDark dark:hover:border-primary text-white cursor-pointer w-12 h-12 rounded-full transition-colors duration-300">
                     <Icons.mines
                       className={
                         "w-8 fill-black dark:fill-white hover:fill-white transition-colors duration-300"

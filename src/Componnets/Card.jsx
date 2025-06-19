@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import itemImage from "../../public/No_Item.png";
 import { useNavigate } from "react-router-dom";
 import { Icons } from "./Icons";
-import { BASE_PATH } from "../constants/paths";
+import { BASE_PATH, LIMIT_DATA } from "../constants/paths";
 
 const formatPrice = (num) => {
   if (num == null || isNaN(num)) return "";
@@ -37,7 +37,7 @@ function Card({
     if ("vibrate" in navigator && typeof window !== "undefined") {
       navigator.vibrate(haptic);
     }
-    updateOrder(id, count + 1);
+    if (count < LIMIT_DATA) updateOrder(id, count + 1);
   };
 
   const decreaseCount = (id) => {
@@ -123,7 +123,7 @@ function Card({
                     e.stopPropagation();
                     increaseCount(id);
                   }}
-                  className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full md:hover:bg-primaryDark md:dark:hover:bg-primary transition-colors duration-300 touch-manipulation">
+                  className="w-7 h-7 cursor-pointer flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full md:hover:bg-primaryDark md:dark:hover:bg-primary transition-colors duration-300 touch-manipulation">
                   <Icons.plus className={"w-7 stroke-white"} />
                 </button>
                 <button
@@ -131,7 +131,7 @@ function Card({
                     e.stopPropagation();
                     decreaseCount(id);
                   }}
-                  className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center md:hover:bg-primary md:dark:hover:bg-primaryDark transition-colors duration-300 touch-manipulation">
+                  className="w-7 h-7 cursor-pointer border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center md:hover:bg-primary md:dark:hover:bg-primaryDark transition-colors duration-300 touch-manipulation">
                   <Icons.mines
                     className={
                       "w-3 fill-black dark:fill-white md:hover:fill-white transition-colors duration-300 touch-manipulation"
@@ -145,7 +145,7 @@ function Card({
                   e.stopPropagation();
                   handleAddToOrder(id);
                 }}
-                className="flex justify-center items-center rounded-2xl bg-primary dark:bg-primaryDark md:hover:bg-primaryDark md:dark:hover:bg-primary w-13 h-13 transition-colors duration-300 touch-manipulation">
+                className="flex justify-center items-center cursor-pointer rounded-2xl bg-primary dark:bg-primaryDark md:hover:bg-primaryDark md:dark:hover:bg-primary w-13 h-13 transition-colors duration-300 touch-manipulation">
                 <Icons.plus className={"w-10 stroke-white"} />
               </button>
             )}

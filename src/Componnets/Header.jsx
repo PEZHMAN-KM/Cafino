@@ -160,121 +160,125 @@ const Header = forwardRef(
 
     return (
       <>
-        <div
-          className={`${
-            isPageLoaded
-              ? "transition-colors duration-300"
-              : "transition-none duration-0"
-          } z-10 flex justify-center items-center max-w-screen gap-3 p-5 py-3 bg-backgroundcolor dark:bg-backgroundcolorDark ${
-            page !== 1 ? "sticky top-0" : ""
-          }`}>
-          <div className="hidden md:flex-1/4 md:flex gap-2">
-            <div
-              className="transition-all duration-300 hover:scale-105"
-              onClick={toggleMenu}>
-              <TopMenu />
-            </div>
-            <button
-              className="transition-all duration-300 hover:scale-105"
-              onClick={toggleDarkMode}>
-              <Icons.darkMode
-                className={`${
-                  isDark ? "rotate-0 fill-white" : "rotate-180 fill-black"
-                } w-8 transition-all duration-300 ease-out`}
-              />
-            </button>
-          </div>
-          {showMenu && (
-            <div className="absolute right-5 top-12 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50">
-              <div className="py-1">
-                <a
-                  href="/home"
-                  className="block text-start w-full px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
-                  خانه
-                </a>
-                <a
-                  href="/favoritepage"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
-                  علاقه مندی ها
-                </a>
-                <a
-                  href="/order"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
-                  سفارشات
-                </a>
-                <a
-                  href="/contactus"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
-                  تماس با ما
-                </a>
-              </div>
-            </div>
-          )}
-          {page == 1 ? (
-            <div
-              className={`${
-                isPageLoaded
-                  ? "transition-colors duration-300"
-                  : "transition-none duration-0"
-              } flex-3/4 flex justify-center items-center bg-slowgray dark:bg-graypalleteDark p-1.5 gap-2 rounded-xl md:flex-2/4 animate-width-up`}>
-              <Icons.search
-                className={
-                  "w-7 stroke-black dark:stroke-white transition-colors duration-300"
-                }
-              />
-              <input
-                className="w-full bg-transparent dark:text-white focus:outline-none placeholder-highgrayDark dark:placeholder-highgray transition-colors duration-300"
-                type="text"
-                placeholder="جستجو در کافی نو"
-                value={searchTerm}
-                ref={headerInputRef}
-                onFocus={() => {
-                  setSearchActive(true);
-                  setShowMenu(false);
-                }}
-                // onBlur={() => setSearchActive(false)}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              {searchActive && (
-                <button
-                  onClick={() => {
-                    fetchItems();
-                    setSearchActive(false);
-                    setSearchTerm("");
-                    setShowMenu(false);
-                    if (
-                      "vibrate" in navigator &&
-                      typeof window !== "undefined"
-                    ) {
-                      navigator.vibrate(20);
-                    }
-                  }}
-                  className="mr-2 cursor-pointer text-sm text-gray-500 dark:text-gray-300 transition-all duration-300">
-                  بستن
-                </button>
-              )}
-            </div>
-          ) : (
-            <div className="flex-3/4">
-              <h1 className="text-center text-2xl font-black dark:text-white transition-colors duration-300">
-                {text}
-              </h1>
-            </div>
-          )}
+        <div className="flex justify-center items-center w-screen">
           <div
-            className={`md:text-end ${
-              page == 1 ? "flex-1/4" : "hidden md:flex-1/4 md:block"
+            className={`${
+              isPageLoaded
+                ? "transition-colors duration-300"
+                : "transition-none duration-0"
+            } z-10 flex justify-center items-center gap-3 p-5 py-3 ${
+              page !== 1
+                ? "lg:fixed lg:top-2 mt-2 lg:mt-0 w-[98vw] mx-auto bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-lg border rounded-3xl border-white/20 dark:border-white/10"
+                : "w-screen bg-backgroundcolor dark:bg-backgroundcolorDark"
             }`}>
-            <a
-              href="/home"
-              onClick={() => {
-                if ("vibrate" in navigator && typeof window !== "undefined") {
-                  navigator.vibrate(10);
-                }
-              }}
-              className="text-lg md:text-xl font-bold dark:text-white transition-colors duration-300">
-              کافـی نـو
-            </a>
+            <div className="hidden md:flex-1/4 md:flex gap-2">
+              <div
+                className="transition-all duration-300 hover:scale-105 cursor-pointer"
+                onClick={toggleMenu}>
+                <TopMenu />
+              </div>
+              <button
+                className="transition-all duration-300 hover:scale-105 hidden lg:block cursor-pointer"
+                onClick={toggleDarkMode}>
+                <Icons.darkMode
+                  className={`${
+                    isDark ? "rotate-0 fill-white" : "rotate-180 fill-black"
+                  } w-8 transition-all duration-300 ease-out`}
+                />
+              </button>
+            </div>
+            {showMenu && (
+              <div className="absolute right-5 top-12 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50">
+                <div className="py-1">
+                  <a
+                    href="/home"
+                    className="block text-start w-full px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                    خانه
+                  </a>
+                  <a
+                    href="/favoritepage"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                    علاقه مندی ها
+                  </a>
+                  <a
+                    href="/order"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                    سفارشات
+                  </a>
+                  <a
+                    href="/contactus"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                    تماس با ما
+                  </a>
+                </div>
+              </div>
+            )}
+            {page == 1 ? (
+              <div
+                className={`${
+                  isPageLoaded
+                    ? "transition-colors duration-300"
+                    : "transition-none duration-0"
+                } flex-3/4 flex justify-center items-center bg-slowgray dark:bg-graypalleteDark p-1.5 gap-2 rounded-xl lg:flex-2/4 animate-width-up`}>
+                <Icons.search
+                  className={
+                    "w-7 stroke-black dark:stroke-white transition-colors duration-300"
+                  }
+                />
+                <input
+                  className="w-full bg-transparent dark:text-white focus:outline-none placeholder-highgrayDark dark:placeholder-highgray transition-colors duration-300"
+                  type="text"
+                  placeholder="جستجو در کافی نو"
+                  value={searchTerm}
+                  ref={headerInputRef}
+                  onFocus={() => {
+                    setSearchActive(true);
+                    setShowMenu(false);
+                  }}
+                  // onBlur={() => setSearchActive(false)}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                {searchActive && (
+                  <button
+                    onClick={() => {
+                      fetchItems();
+                      setSearchActive(false);
+                      setSearchTerm("");
+                      setShowMenu(false);
+                      if (
+                        "vibrate" in navigator &&
+                        typeof window !== "undefined"
+                      ) {
+                        navigator.vibrate(20);
+                      }
+                    }}
+                    className="mr-2 cursor-pointer text-sm text-gray-500 dark:text-gray-300 transition-all duration-300">
+                    بستن
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="flex-3/4">
+                <h1 className="text-center text-2xl font-black dark:text-white transition-colors duration-300">
+                  {text}
+                </h1>
+              </div>
+            )}
+            <div
+              className={`md:text-end ${
+                page == 1 ? "flex-1/4" : "hidden md:flex-1/4 md:block"
+              }`}>
+              <a
+                href="/home"
+                onClick={() => {
+                  if ("vibrate" in navigator && typeof window !== "undefined") {
+                    navigator.vibrate(10);
+                  }
+                }}
+                className="text-lg lg:text-xl font-bold dark:text-white transition-colors duration-300">
+                کافـی نـو
+              </a>
+            </div>
           </div>
         </div>
       </>

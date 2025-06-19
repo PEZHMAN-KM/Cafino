@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import itemImage from "../../public/No_Item.png";
 import axios from "axios";
-import { BASE_PATH } from "../constants/paths.js";
+import { BASE_PATH, LIMIT_DATA } from "../constants/paths.js";
 import { useNavigate } from "react-router-dom";
 
 import Footer from "../Componnets/Footer.jsx";
@@ -28,9 +28,9 @@ const OrderBox = ({
   orderError,
 }) => (
   <div className="pt-2 mb-4 border-b-4 border-primary dark:border-primaryDark transition-colors duration-300">
-    <h2 className="font-extrabold text-3xl px-8 dark:text-white transition-colors duration-300 pb-5">
+    <h1 className="font-extrabold text-3xl px-8 dark:text-white transition-colors duration-300 pb-5">
       آیتم های خرید
-    </h2>
+    </h1>
     <div
       className={`${
         orderItems.length === 0
@@ -42,30 +42,28 @@ const OrderBox = ({
           {orderError}
         </h1>
       ) : (
-        <div className="animate-scale-up">
-          {orderItems.map((item) => (
-            <div
-              onClick={() => selectFood(item.id)}
-              href="/item"
-              key={item.id}
-              className={` ${
-                item.in_sale ? "bg-slowprimary dark:bg-slowprimaryDark" : ""
-              } cursor-pointer hover:bg-slowgray border-b-1 border-t-1 lg:border-r-1 lg:border-l-1 lg:border-t-0 lg:border-b-0 hover:dark:bg-slowgrayDark transition-colors duration-300 rounded-2xl ${
-                removingId === item.id ? "animate-scale-out" : ""
-              }`}>
-              <OrderItem
-                id={item.id}
-                in_sale={item.in_sale}
-                name={item.name}
-                category_name={item.category_name}
-                count={item.count}
-                handleIncreaseCount={handleIncreaseCount}
-                handleDecreaseCount={handleDecreaseCount}
-                pic_url={item.pic_url}
-              />
-            </div>
-          ))}
-        </div>
+        orderItems.map((item) => (
+          <div
+            onClick={() => selectFood(item.id)}
+            href="/item"
+            key={item.id}
+            className={` ${
+              item.in_sale ? "bg-slowprimary dark:bg-slowprimaryDark" : ""
+            } hover:bg-slowgray border-b-1 border-t-1 lg:border-r-1 lg:border-l-1 lg:border-t-0 lg:border-b-0 hover:dark:bg-slowgrayDark transition-colors duration-300 rounded-2xl ${
+              removingId === item.id ? "animate-scale-out" : ""
+            }`}>
+            <OrderItem
+              id={item.id}
+              in_sale={item.in_sale}
+              name={item.name}
+              category_name={item.category_name}
+              count={item.count}
+              handleIncreaseCount={handleIncreaseCount}
+              handleDecreaseCount={handleDecreaseCount}
+              pic_url={item.pic_url}
+            />
+          </div>
+        ))
       )}
     </div>
   </div>
@@ -115,7 +113,7 @@ const CountController = ({ itemId, count, onIncrease, onDecrease }) => {
           e.stopPropagation();
           onIncrease(itemId);
         }}
-        className="w-7 h-7 flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
+        className="w-7 h-7 cursor-pointer flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
         <Icons.plus className={"w-7 stroke-white"} />
       </button>
       <span className="w-9 text-center text-4xl font-bold dark:text-white inline-block">
@@ -126,7 +124,7 @@ const CountController = ({ itemId, count, onIncrease, onDecrease }) => {
           e.stopPropagation();
           onDecrease(itemId);
         }}
-        className="w-7 h-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center hover:bg-primary dark:hover:bg-primaryDark transition-colors duration-300">
+        className="w-7 h-7 cursor-pointer border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center hover:bg-primary dark:hover:bg-primaryDark transition-colors duration-300">
         <Icons.mines
           className={
             "w-3 fill-black dark:fill-white hover:fill-white transition-colors duration-300"
@@ -258,7 +256,7 @@ function Order() {
       navigator.vibrate(20);
     }
     const updatedItems = orderItems.map((item) => {
-      if (item.id === id) {
+      if (item.id === id && item.count < LIMIT_DATA) {
         return { ...item, count: item.count + 1 };
       }
       return item;
@@ -367,7 +365,7 @@ function Order() {
     const rawOrder = localStorage.getItem("order");
 
     if (rawOrder != "[]") {
-      if (tableNumber <= 0) {
+      if (tableNumber < 1 || tableNumber > LIMIT_DATA) {
         setTableError("لطفا شماره میز را درست وارد کنید!");
         if ("vibrate" in navigator && typeof window !== "undefined") {
           navigator.vibrate([50, 30, 50, 30, 70]);
@@ -438,7 +436,7 @@ function Order() {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-60 md:pb-50`}>
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-60 md:pb-50 lg:pt-20`}>
         <Header
           page={3}
           text={"سبد خرید"}
@@ -470,14 +468,14 @@ function Order() {
             </div>
           </div>
         </div>
-        <div className="w-full justify-center fixed bottom-11 md:bottom-5 mt-10 flex md:px-5 transition-all duration-300">
+        <div className="w-screen fixed bottom-20 md:bottom-5 transition-all duration-300">
           <div
             className={`${
               isPageLoaded
                 ? "transition-colors duration-300"
                 : "transition-none duration-0"
-            } w-full bg-white p-4 rounded-2xl dark:bg-darkpalleteDark`}>
-            <div className="flex justify-center flex-col items-center w-full pb-5">
+            } w-[98vw] mx-auto animate-move-up p-4 rounded-3xl bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-lg border-white/20 dark:border-white/10 border`}>
+            <div className="flex justify-center flex-col items-center w-full">
               <div className="flex justify-between w-full items-center pb-3">
                 <div className="flex items-center gap-2">
                   <Icons.wallet className={"w-10 stroke-primary"} />
@@ -491,8 +489,8 @@ function Order() {
               </div>
               <button
                 onClick={() => addOrder()}
-                className="w-full p-5 rounded-2xl bg-primary text-white text-2xl dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300">
-                پرداخت
+                className="w-full p-5 rounded-2xl bg-primary text-white text-2xl dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary cursor-pointer transition-colors duration-300">
+                ثبت سفارش
               </button>
             </div>
           </div>
