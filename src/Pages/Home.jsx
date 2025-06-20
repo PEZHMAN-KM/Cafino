@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import Header from "../Componnets/Header.jsx";
 import SubHeder from "../Componnets/SubHeder.jsx";
 import Card from "../Componnets/Card.jsx";
 
 import { BASE_PATH } from "../constants/paths.js";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
+import { useAnimation } from "../constants/AnimationContext.jsx";
 
 // FOR BANNER
 import bannerImage from "../../public/Banner.jpg";
@@ -14,22 +14,25 @@ import bannerImage from "../../public/Banner.jpg";
 function Home({
   setFooterShrink,
   setCurrentPage,
+  setHeaderMenuOpen,
+  headerMenuOpen,
+  // PAGE 01 ------------------------
+  setHideIcons,
+  hideIcons,
   searchActive,
   setSearchActive,
   searchTerm,
   setHeaderShrink,
   headerInputRef,
   setFetchItems,
-  setHeaderMenuOpen,
-  headerMenuOpen,
+  scrollContainerRef,
 }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const shouldAnimate = useAnimation();
+  const MotionOrDiv = shouldAnimate ? motion.div : "div";
 
   const [blurActive, setBlurActive] = useState(false);
   const [activeCardData, setActiveCardData] = useState(null);
-
-  const [hideIcons, setHideIcons] = useState(false);
-  const scrollContainerRef = useRef(null);
 
   const lastScrollTop = useRef(0);
 
@@ -131,7 +134,10 @@ function Home({
 
   function scrollToTopAndFocus() {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      scrollContainerRef.current.scrollTo({
+        top: 0,
+        ...(shouldAnimate ? { behavior: "smooth" } : {}),
+      });
     }
     if (headerInputRef.current) {
       headerInputRef.current.focus();
@@ -222,7 +228,7 @@ function Home({
         {blurActive && (
           <>
             {/* تارکننده */}
-            <motion.div
+            <MotionOrDiv
               className="fixed inset-0 bg-black/20 backdrop-blur-md z-40 w-full h-full"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -231,7 +237,7 @@ function Home({
 
             {/* کارت بالا */}
             {activeCardData && (
-              <motion.div
+              <MotionOrDiv
                 className="fixed left-1/2 top-1/2 z-50 w-[80vw] -translate-x-1/2 -translate-y-1/2"
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1.07, opacity: 1 }}
@@ -242,7 +248,7 @@ function Home({
                   setBlurActive={setBlurActive}
                   setActiveCardData={setActiveCardData}
                 />
-              </motion.div>
+              </MotionOrDiv>
             )}
           </>
         )}
@@ -271,10 +277,10 @@ function Home({
                 isPageLoaded
                   ? "transition-all duration-300"
                   : "transition-none duration-0"
-              } sticky pt-[env(safe-area-inset-top)] z-10 bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md border-white/20 dark:border-white/10 ${
+              } sticky z-10 bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md border-white/20 dark:border-white/10 shadow-lg ${
                 !hideIcons
-                  ? "top-16 h-29 lg:h-34 rounded-b-none w-screen m-0 shadow-lg border-b"
-                  : "top-2 h-11 lg:h-17 rounded-3xl w-[98vw] mx-auto shadow-lg border"
+                  ? "top-16 h-29 lg:h-34 rounded-b-none w-screen m-0 border-b"
+                  : "top-2 h-11 lg:h-17 rounded-3xl w-[98vw] mx-auto border"
               }`}
             />
           )}

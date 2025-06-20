@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { BASE_PATH } from "../constants/paths";
 import axios from "axios";
 import { Icons } from "../Componnets/Icons";
+import { useBlur } from "../constants/BlurContext.jsx";
 
 const TableNumber = ({ tableNumber }) => (
   <div className="bg-white dark:bg-black text-black dark:text-white px-4 py-1 w-fit rounded-3xl border-2 border-adminBackgroundColor dark:border-adminBackgroundColorDark flex justify-center items-center gap-5 transition-colors duration-300">
@@ -100,6 +101,7 @@ const WaiterRequest = ({
 
 function WaiterPage() {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const reduceBlur = useBlur();
 
   const [isDark, setIsDark] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -251,34 +253,17 @@ function WaiterPage() {
     getProfilePic();
     getNOtification();
 
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme) {
-      setIsDark(savedTheme === "dark");
-      if (savedTheme === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    } else {
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      setIsDark(prefersDark);
-      if (prefersDark) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }
+    const isDarkNow = document.documentElement.classList.contains("dark");
+    setIsDark(isDarkNow);
   }, []);
   const toggleDarkMode = () => {
-    if (isDark) {
-      document.documentElement.classList.remove("dark");
+    const root = document.documentElement;
+    if (root.classList.contains("dark")) {
+      root.classList.remove("dark");
       localStorage.setItem("theme", "light");
       setIsDark(false);
     } else {
-      document.documentElement.classList.add("dark");
+      root.classList.add("dark");
       localStorage.setItem("theme", "dark");
       setIsDark(true);
     }
@@ -320,7 +305,11 @@ function WaiterPage() {
               isPageLoaded
                 ? "transition-colors duration-300"
                 : "transition-none duration-0"
-            } bg-white/30 dark:bg-darkpalleteDark/30 w-full rounded-3xl py-2 px-4 flex justify-between items-center backdrop-blur-md shadow-lg border-white/20 dark:border-white/10`}>
+            } ${
+              reduceBlur
+                ? "bg-white dark:bg-darkpalleteDark"
+                : "bg-white/30 dark:bg-darkpalleteDark/30 border-white/20 dark:border-white/10 border"
+            }  w-full rounded-3xl py-2 px-4 flex justify-between items-center backdrop-blur-md shadow-lg`}>
             <div
               className={`${
                 isPageLoaded

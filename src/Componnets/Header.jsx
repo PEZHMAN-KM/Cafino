@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { Icons } from "./Icons";
 import { PAGE_TITLES } from "../constants/paths";
+import { useBlur } from "../constants/BlurContext.jsx";
 
 const Header = forwardRef(
   (
@@ -29,6 +30,7 @@ const Header = forwardRef(
     const [isPageLoaded, setIsPageLoaded] = useState(false);
     const [isDark, setIsDark] = useState(false);
     const inputRef = useRef(null);
+    const reduceBlur = useBlur();
 
     useImperativeHandle(ref, () => ({
       focusSearchInput: () => {
@@ -44,35 +46,18 @@ const Header = forwardRef(
       // For flashing on LOADING PAGE
       setIsPageLoaded(true);
 
-      const savedTheme = localStorage.getItem("theme");
-
-      if (savedTheme) {
-        setIsDark(savedTheme === "dark");
-        if (savedTheme === "dark") {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
-      } else {
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        setIsDark(prefersDark);
-        if (prefersDark) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
-      }
+      const isDarkNow = document.documentElement.classList.contains("dark");
+      setIsDark(isDarkNow);
     }, []);
 
     const toggleDarkMode = () => {
-      if (isDark) {
-        document.documentElement.classList.remove("dark");
+      const root = document.documentElement;
+      if (root.classList.contains("dark")) {
+        root.classList.remove("dark");
         localStorage.setItem("theme", "light");
         setIsDark(false);
       } else {
-        document.documentElement.classList.add("dark");
+        root.classList.add("dark");
         localStorage.setItem("theme", "dark");
         setIsDark(true);
       }
@@ -91,14 +76,18 @@ const Header = forwardRef(
               isPageLoaded
                 ? "transition-all duration-300"
                 : "transition-none duration-0"
-            } z-10 origin-top flex justify-center items-center gap-3 p-5 py-3 ${
+            } z-20 origin-top flex justify-center items-center gap-3 p-5 py-3 ${
               headerShrink && page !== 2
                 ? `scale-0! ${page !== 1 ? "md:scale-none!" : ""}`
                 : ""
             } ${
               page !== 1
-                ? `fixed top-2 w-[98vw] mx-auto bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-lg border rounded-3xl border-white/20 dark:border-white/10`
-                : "fixed top-0 w-screen bg-backgroundcolor dark:bg-backgroundcolorDark"
+                ? `fixed top-2 w-[98vw] mx-auto ${
+                    reduceBlur
+                      ? "bg-backgroundcolor dark:bg-backgroundcolorDark"
+                      : "bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30"
+                  } backdrop-blur-md border border-white/20 dark:border-white/10 shadow-lg rounded-3xl`
+                : "fixed top-0 w-screen"
             }`}>
             <div className="hidden md:flex-1/4 md:flex gap-2">
               <div

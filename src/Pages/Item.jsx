@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { BASE_PATH, LIMIT_DATA } from "../constants/paths";
 import { Icons } from "../Componnets/Icons";
 import axios from "axios";
+import { useBlur } from "../constants/BlurContext.jsx";
 
 const formatPrice = (num) => {
   if (num == null || isNaN(num)) return "";
@@ -65,11 +66,12 @@ const Description = ({ className, description }) => (
   </div>
 );
 
-function Item({ setCurrentPage }) {
+function Item({ setCurrentPage, setHeaderShrink, setHideIcons }) {
   const [isLiked, setIsLiked] = useState(false);
   const id = Number(localStorage.getItem("show_food"));
 
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const reduceBlur = useBlur();
   const haptic = 20;
 
   const [item, setItem] = useState(null);
@@ -123,25 +125,6 @@ function Item({ setCurrentPage }) {
   useEffect(() => {
     // For flashing on LOADING PAGE
     setIsPageLoaded(true);
-
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme) {
-      if (savedTheme === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    } else {
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      if (prefersDark) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }
   });
 
   useEffect(() => {
@@ -214,25 +197,29 @@ function Item({ setCurrentPage }) {
     }
     localStorage.removeItem("show_food");
     setCurrentPage(1);
+    setHeaderShrink(false);
+    setHideIcons(false);
   }
 
-  if (!item)
-    return (
-      <div className="flex flex-col gap-2 justify-center items-center w-screen h-screen">
-        <h1 className="text-2xl font-bold dark:text-white">آیتم یافت نشد!</h1>
-        <button onClick={() => exit()}>
-          <div
-            className={`${
-              isPageLoaded
-                ? "transition-colors duration-300"
-                : "transition-none duration-0"
-            } cursor-pointer bg-white dark:bg-darkpalleteDark p-5 rounded-2xl w-full flex items-center text-highgray dark:text-highgrayDark gap-3 hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white`}>
-            <Icons.arrow className="w-8 rotate-180 stroke-3 dark:hover:text-white" />
-            <h1 className="text-2xl font-bold dark:text-white">برگشت</h1>
-          </div>
-        </button>
-      </div>
-    );
+  // ITEM NOT FOUND ---------------------------------------------------------
+
+  // if (!item)
+  //   return (
+  //     <div className="flex flex-col gap-2 justify-center items-center w-screen h-screen">
+  //       <h1 className="text-2xl font-bold dark:text-white">آیتم یافت نشد!</h1>
+  //       <button onClick={() => exit()}>
+  //         <div
+  //           className={`${
+  //             isPageLoaded
+  //               ? "transition-colors duration-300"
+  //               : "transition-none duration-0"
+  //           } cursor-pointer bg-white dark:bg-darkpalleteDark p-5 rounded-2xl w-full flex items-center text-highgray dark:text-highgrayDark gap-3 hover:bg-slowprimary dark:hover:bg-subprimaryDark hover:text-black dark:hover:text-white`}>
+  //           <Icons.arrow className="w-8 rotate-180 stroke-3 dark:hover:text-white" />
+  //           <h1 className="text-2xl font-bold dark:text-white">برگشت</h1>
+  //         </div>
+  //       </button>
+  //     </div>
+  //   );
 
   return (
     <>
@@ -247,7 +234,7 @@ function Item({ setCurrentPage }) {
             <img
               className="w-screen aspect-square object-cover p-2 rounded-3xl"
               src={
-                item.pic_url
+                item?.pic_url
                   ? `${BASE_PATH}/files/${item.pic_url.split("/").pop()}`
                   : itemImage
               }
@@ -257,7 +244,11 @@ function Item({ setCurrentPage }) {
               <div className="absolute lg:static lg:top-auto lg:left-auto lg:w-1/2 lg:pt-0 top-5 right-5">
                 <button
                   onClick={handleLikeClick}
-                  className={`bg-white/30 dark:bg-darkpalleteDark/30 backdrop-blur-md shadow-lg cursor-pointer p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-300 group hover:bg-subprimary/30 dark:hover:bg-subprimaryDark/30 border border-white/20 dark:border-white/10 hover:text-black dark:hover:text-white
+                  className={`${
+                    reduceBlur
+                      ? "bg-white dark:bg-darkpalleteDark hover:bg-subprimary dark:hover:bg-subprimaryDark"
+                      : "bg-white/30 dark:bg-darkpalleteDark/30 hover:bg-subprimary/30 dark:hover:bg-subprimaryDark/30 border border-white/20 dark:border-white/10"
+                  } backdrop-blur-md shadow-lg cursor-pointer p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-300 group hover:text-black dark:hover:text-white
                   ${
                     isLiked
                       ? "bg-slowprimary dark:bg-darkpalleteDark text-red-500"
@@ -284,7 +275,11 @@ function Item({ setCurrentPage }) {
               <div className="absolute lg:static lg:top-auto lg:right-auto lg:w-1/2 lg:pt-0 top-5 left-5">
                 <button
                   onClick={() => exit()}
-                  className="bg-white/30 dark:bg-darkpalleteDark/30 backdrop-blur-md shadow-lg cursor-pointer p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-300 hover:bg-subprimary/30 dark:hover:bg-subprimaryDark/30 border border-white/20 dark:border-white/10 hover:text-black dark:hover:text-white">
+                  className={`${
+                    reduceBlur
+                      ? "bg-white dark:bg-darkpalleteDark hover:bg-subprimary dark:hover:bg-subprimaryDark"
+                      : "bg-white/30 dark:bg-darkpalleteDark/30 hover:bg-subprimary/30 dark:hover:bg-subprimaryDark/30 border border-white/20 dark:border-white/10"
+                  } backdrop-blur-md shadow-lg cursor-pointer p-5 rounded-2xl lg:w-full flex items-center gap-3 text-highgray dark:text-highgrayDark transition-all duration-300 hover:text-black dark:hover:text-white`}>
                   <Icons.arrow className="w-8 rotate-180 stroke-3 dark:hover:text-white" />
                   <h1 className="hidden transition-colors duration-300 lg:block text-2xl font-bold dark:text-white">
                     برگشت
@@ -296,14 +291,14 @@ function Item({ setCurrentPage }) {
           <div>
             <div className="w-screen lg:w-auto p-2 pt-0">
               <NamePanel
-                name={item.name}
-                category={item.category_name}
-                price={item.price}
-                sale_price={item.sale_price}
+                name={item?.name}
+                category={item?.category_name}
+                price={item?.price}
+                sale_price={item?.sale_price}
                 className={"block lg:hidden"}
               />
               <Description
-                description={item.description}
+                description={item?.description}
                 className={"block lg:hidden"}
               />
               {/* <Size /> */}
@@ -377,9 +372,9 @@ function Item({ setCurrentPage }) {
               </h1>
               <div className="flex justify-center items-end gap-1">
                 <h1 className="text-3xl lg:text-5xl font-bold dark:text-white transition-colors duration-300">
-                  {item.sale_price
-                    ? formatPrice(item.sale_price)
-                    : formatPrice(item.price)}
+                  {item?.sale_price
+                    ? formatPrice(item?.sale_price)
+                    : formatPrice(item?.price)}
                 </h1>
                 <h3 className="dark:text-slowgray text-sm lg:text-3xl transition-colors duration-300">
                   تومان
@@ -387,14 +382,14 @@ function Item({ setCurrentPage }) {
               </div>
             </div>
             <Description
-              description={item.description}
+              description={item?.description}
               className={"hidden lg:block w-full"}
             />
             <NamePanel
-              name={item.name}
-              category={item.category_name}
-              price={item.price}
-              sale_price={item.sale_price}
+              name={item?.name}
+              category={item?.category_name}
+              price={item?.price}
+              sale_price={item?.sale_price}
               className={"hidden lg:block w-full"}
             />
           </div>

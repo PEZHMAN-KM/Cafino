@@ -140,34 +140,17 @@ function AdminHeader() {
     getUserInfo();
     getProfilePic();
 
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme) {
-      setIsDark(savedTheme === "dark");
-      if (savedTheme === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    } else {
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      setIsDark(prefersDark);
-      if (prefersDark) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }
+    const isDarkNow = document.documentElement.classList.contains("dark");
+    setIsDark(isDarkNow);
   }, []);
   const toggleDarkMode = () => {
-    if (isDark) {
-      document.documentElement.classList.remove("dark");
+    const root = document.documentElement;
+    if (root.classList.contains("dark")) {
+      root.classList.remove("dark");
       localStorage.setItem("theme", "light");
       setIsDark(false);
     } else {
-      document.documentElement.classList.add("dark");
+      root.classList.add("dark");
       localStorage.setItem("theme", "dark");
       setIsDark(true);
     }

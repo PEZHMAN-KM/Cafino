@@ -52,7 +52,7 @@
     0% {
       transform: translateY(20px);
       opacity: 0;
-      visibility: visible;
+      visibility: hidden;
       filter: blur(5px);
     }
     100% {
@@ -64,7 +64,6 @@
   }
   .animate-move-up {
     animation: move-up 0.4s ease-out forwards;
-    visibility: hidden;
   }
   .delay-0 {
     animation-delay: 0s;
@@ -91,11 +90,14 @@
   }
 }
 
-/* FOR TURN OFF ALL ANIMATION
- .no-anim * { 
+/* FOR TURN OFF ALL ANIMATION */
+.no-anim * {
   animation: none !important;
   transition: none !important;
-} */
+}
+.reduce-blur * {
+  backdrop-filter: none !important;
+}
 
 @theme {
   --color-primary: #c67c4e;

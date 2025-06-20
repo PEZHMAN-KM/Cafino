@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Icons } from "./Icons";
 import { PAGE_TITLES } from "../constants/paths";
+import { useBlur } from "../constants/BlurContext.jsx";
 
 const size_icon = 10;
 
-function Footer({ page, shrink, setFooterShrink, setPage, setHeaderShrink }) {
+function Footer({
+  page,
+  shrink,
+  setFooterShrink,
+  setPage,
+  setHeaderShrink,
+  shouldAnimate,
+  // PAGE 01 ------------------------------
+  setHideIcons,
+  scrollContainerRef,
+}) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const reduceBlur = useBlur();
   const haptic = 10;
 
   const [totalOrderCount, setTotalOrderCount] = useState(0);
@@ -40,9 +52,11 @@ function Footer({ page, shrink, setFooterShrink, setPage, setHeaderShrink }) {
             isPageLoaded
               ? "transition-all duration-300"
               : "transition-none duration-0"
-          } ${
-            shrink ? "scale-50 w-fit" : "scale-100 w-[98vw]"
-          } origin-bottom bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-lg border-t border-white/20 dark:border-white/10 fixed bottom-3 md:hidden px-6 py-2 rounded-3xl`}>
+          } ${shrink ? "scale-50 w-fit" : "scale-100 w-[98vw]"} origin-bottom ${
+            reduceBlur
+              ? "bg-backgroundcolor dark:bg-backgroundcolorDark"
+              : "bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 border-white/20 dark:border-white/10 border"
+          } backdrop-blur-md shadow-lg fixed bottom-3 md:hidden px-6 py-2 rounded-3xl`}>
           {shrink ? (
             <button
               onClick={() => setFooterShrink(false)}
@@ -59,6 +73,7 @@ function Footer({ page, shrink, setFooterShrink, setPage, setHeaderShrink }) {
                   }
                   setPage(4);
                   setHeaderShrink(false);
+                  setHideIcons(false);
                 }}
                 className="transition-all duration-300">
                 <Icons.call
@@ -77,6 +92,7 @@ function Footer({ page, shrink, setFooterShrink, setPage, setHeaderShrink }) {
                   }
                   setPage(3);
                   setHeaderShrink(false);
+                  setHideIcons(false);
                 }}
                 href="Order"
                 className="relative transition-all duration-300">
@@ -101,6 +117,7 @@ function Footer({ page, shrink, setFooterShrink, setPage, setHeaderShrink }) {
                   }
                   setPage(2);
                   setHeaderShrink(false);
+                  setHideIcons(false);
                 }}
                 className="transition-all duration-300"
                 href="FavoritePage">
@@ -120,6 +137,11 @@ function Footer({ page, shrink, setFooterShrink, setPage, setHeaderShrink }) {
                   }
                   setPage(1);
                   setHeaderShrink(false);
+                  setHideIcons(false);
+                  scrollContainerRef.current.scrollTo({
+                    top: 0,
+                    ...(shouldAnimate ? { behavior: "smooth" } : {}),
+                  });
                 }}
                 className="transition-all duration-300"
                 href="Home">

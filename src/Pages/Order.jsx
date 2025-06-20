@@ -3,9 +3,9 @@ import itemImage from "../../public/No_Item.png";
 import axios from "axios";
 import { BASE_PATH, LIMIT_DATA } from "../constants/paths.js";
 
-import Header from "../Componnets/Header.jsx";
 import OrderReceiptOverlay from "../Componnets/OrderReceiptOverlay.jsx";
 import { Icons } from "../Componnets/Icons.jsx";
+import { useBlur } from "../constants/BlurContext.jsx";
 
 // heroicon
 // هیرو ایکون معروف واس ایکون ولی کامل نیست
@@ -285,7 +285,7 @@ function Order({
   // ----------------------------------------------------------------
 
   const [orderItems, setOrderItems] = useState([]);
-  const [tableNumber, setTableNumber] = useState(undefined);
+  const [tableNumber, setTableNumber] = useState(null);
   const [timeAdded, setTimeAdded] = useState(null);
 
   const [showReceipt, setShowReceipt] = useState(false);
@@ -294,6 +294,7 @@ function Order({
 
   const [removingId, setRemovingId] = useState(null);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const reduceBlur = useBlur();
 
   const handleIncreaseCount = (id) => {
     if ("vibrate" in navigator && typeof window !== "undefined") {
@@ -448,10 +449,12 @@ function Order({
             },
           }
         );
-        setTimeAdded(response.data.order.time_added);
-        localStorage.setItem("order", "[]");
-        if ("vibrate" in navigator && typeof window !== "undefined") {
-          navigator.vibrate(20);
+        if (response.status == 200) {
+          setTimeAdded(response.data.order.time_added);
+          localStorage.setItem("order", "[]");
+          if ("vibrate" in navigator && typeof window !== "undefined") {
+            navigator.vibrate(20);
+          }
         }
       } catch (err) {
         console.log(err);
@@ -515,7 +518,11 @@ function Order({
               isPageLoaded
                 ? "transition-colors duration-300"
                 : "transition-none duration-0"
-            } w-[98vw] mx-auto animate-move-up p-4 rounded-3xl bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-lg border-white/20 dark:border-white/10 border`}>
+            } w-[98vw] mx-auto animate-move-up p-4 rounded-3xl ${
+              reduceBlur
+                ? "bg-backgroundcolor dark:bg-backgroundcolorDark"
+                : "bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 border-white/20 dark:border-white/10 border"
+            } backdrop-blur-md shadow-lg`}>
             <div className="flex justify-center flex-col items-center w-full">
               <div className="flex justify-between w-full items-center pb-3">
                 <div className="flex items-center gap-2">

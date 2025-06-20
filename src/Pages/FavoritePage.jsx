@@ -5,6 +5,7 @@ import { BASE_PATH } from "../constants/paths.js";
 import Card from "../Componnets/Card.jsx";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { useAnimation } from "../constants/AnimationContext";
 
 function FavoritePage({
   setFooterShrink,
@@ -13,6 +14,8 @@ function FavoritePage({
   setHeaderShrink,
 }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const shouldAnimate = useAnimation();
+  const MotionOrDiv = shouldAnimate ? motion.div : "div";
 
   const [blurActive, setBlurActive] = useState(false);
   const [activeCardData, setActiveCardData] = useState(null);
@@ -134,7 +137,7 @@ function FavoritePage({
         {blurActive && (
           <>
             {/* تارکننده */}
-            <motion.div
+            <MotionOrDiv
               className="fixed inset-0 bg-black/20 backdrop-blur-md z-40 w-full h-full"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -143,7 +146,7 @@ function FavoritePage({
 
             {/* کارت بالا */}
             {activeCardData && (
-              <motion.div
+              <MotionOrDiv
                 className="fixed left-1/2 top-1/2 z-50 w-80 -translate-x-1/2 -translate-y-1/2"
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1.07, opacity: 1 }}
@@ -153,7 +156,7 @@ function FavoritePage({
                   setBlurActive={setBlurActive}
                   setActiveCardData={setActiveCardData}
                 />
-              </motion.div>
+              </MotionOrDiv>
             )}
           </>
         )}

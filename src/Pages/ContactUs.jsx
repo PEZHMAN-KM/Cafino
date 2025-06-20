@@ -19,7 +19,7 @@ const Waiter = ({
         : "transition-none duration-0"
     } bg-white dark:bg-darkpalleteDark flex justify-between gap-1 items-center w-screen m-5 my-2 py-3 px-3 rounded-3xl border-2 ${
       error
-        ? "border-adminError dark:border-adminErrorDark"
+        ? "border-primary dark:border-primaryDark"
         : "border-highgray dark:border-graypalleteDark"
     } `}>
     <div>
@@ -141,7 +141,7 @@ function ContactUs({ setFooterShrink, setHeaderMenuOpen, setHeaderShrink }) {
   }, []);
   // ----------------------------------------------------------------
 
-  const [tableNumber, setTableNumber] = useState(undefined);
+  const [tableNumber, setTableNumber] = useState(null);
   const [error, setError] = useState(null);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
@@ -200,6 +200,7 @@ function ContactUs({ setFooterShrink, setHeaderMenuOpen, setHeaderShrink }) {
             : "transition-none duration-0"
         } bg-backgroundcolor dark:bg-backgroundcolorDark h-screen pb-22 w-screen overflow-y-auto scrollbar scrollbar-none pt-16 md:pt-20`}>
         <div className="grid grid-cols-1">
+          {/* ------------------------------------------ CALL WAITER ------------------------------------------ */}
           <div className="col-span-1 flex justify-center items-start w-screen lg:w-2/3 mx-auto animate-scale-up">
             <Waiter
               tableNumber={tableNumber}
@@ -209,12 +210,15 @@ function ContactUs({ setFooterShrink, setHeaderMenuOpen, setHeaderShrink }) {
               isPageLoaded={isPageLoaded}
             />
           </div>
+          {/* -------------------------------------------- LOCATION -------------------------------------------- */}
           <div className="col-span-1 flex justify-center mt-0 md:mt-2 animate-move-up">
             <Location />
           </div>
+          {/* ------------------------------------------ PHONE COLLOR ------------------------------------------ */}
           <div className="col-span-1 flex justify-center items-center mt-2 md:mt-4 animate-move-up delay-1">
             <PhoneNumber />
           </div>
+          {/* ----------------------------------------- INSTAGRAM PAGE ----------------------------------------- */}
           <div className="col-span-1 flex justify-center items-center my-2 md:my-4 animate-move-up delay-2">
             <InstagramPage />
           </div>

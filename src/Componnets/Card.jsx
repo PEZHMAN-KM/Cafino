@@ -4,6 +4,7 @@ import { Icons } from "./Icons";
 import { BASE_PATH, LIMIT_DATA } from "../constants/paths";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { useAnimation } from "../constants/AnimationContext";
 
 const formatPrice = (num) => {
   if (num == null || isNaN(num)) return "";
@@ -31,6 +32,9 @@ function Card({
 
   // TOUCH CONTROLL FOR LONG PRESS LIKE IOS ---------------------------------
   const [isLongPressed, setIsLongPressed] = useState(false);
+  const shouldAnimate = useAnimation();
+  const MotionOrDiv = shouldAnimate ? motion.div : "div";
+
   const longPressTimer = useRef(null);
 
   const startYRef = useRef(0);
@@ -53,14 +57,12 @@ function Card({
       });
     }, 400);
   };
-
   const handleTouchMove = (e) => {
     const currentY = e.touches[0].clientY;
     if (Math.abs(currentY - startYRef.current) > 10) {
       clearTimeout(longPressTimer.current);
     }
   };
-
   const handleTouchEnd = () => {
     clearTimeout(longPressTimer.current);
     setIsLongPressed(false);
@@ -115,7 +117,7 @@ function Card({
   return (
     <>
       <div onClick={() => selectFood(id)} key={id}>
-        <motion.div
+        <MotionOrDiv
           onTouchStartCapture={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -228,7 +230,7 @@ function Card({
                     </h1>
                   )}
 
-                  <h1 className="text-md font-medium dark:text-white transition-colors duration-300 line-through">
+                  <h1 className="text-sm font-medium dark:text-white transition-colors duration-300 line-through">
                     {formatPrice(price)} تومان
                   </h1>
                 </div>
@@ -243,7 +245,7 @@ function Card({
                   </h1>
                 )}
                 <div className="flex justify-end items-center gap-1">
-                  <h1 className="text-2xl font-bold dark:text-white transition-colors duration-300">
+                  <h1 className="text-xl font-bold dark:text-white transition-colors duration-300">
                     {sale_price ? formatPrice(sale_price) : formatPrice(price)}
                   </h1>
                   <h3 className="text-sm dark:text-slowgray transition-colors duration-300">
@@ -253,7 +255,7 @@ function Card({
               </div>
             </div>
           </div>
-        </motion.div>
+        </MotionOrDiv>
       </div>
       {/* </div> */}
     </>

@@ -579,7 +579,7 @@ function AdminHome() {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        }bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
+        } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
         <AdminHeader />
         <div
           className={`${

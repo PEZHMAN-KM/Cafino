@@ -3,6 +3,7 @@ import itemImage from "../../public/No_Item.png";
 import { Icons } from "./Icons";
 import { BASE_PATH } from "../constants/paths";
 import { AnimatePresence, motion } from "framer-motion";
+import { useAnimation } from "../constants/AnimationContext";
 
 const formatPrice = (num) =>
   num == null || isNaN(num) ? "" : Number(num).toLocaleString("en-US");
@@ -26,16 +27,18 @@ export default function OrderReceiptOverlay({
   timeAdded,
   refreshAllData,
 }) {
+  const shouldAnimate = useAnimation();
+  const MotionOrDiv = shouldAnimate ? motion.div : "div";
   if (!visible) return null;
 
   return (
-    <motion.div
+    <MotionOrDiv
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       className="fixed inset-0 bg-black/50 backdrop-blur-md z-50 flex justify-center items-center">
-      <motion.div
+      <MotionOrDiv
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
@@ -139,7 +142,7 @@ export default function OrderReceiptOverlay({
             </button>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </MotionOrDiv>
+    </MotionOrDiv>
   );
 }
