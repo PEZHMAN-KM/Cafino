@@ -1,6 +1,6 @@
 import landingImage from "../../public/landing.jpg";
 
-function Landing() {
+function Landing({ setCurrentPage }) {
   return (
     <>
       <div className="flex justify-baseline items-center flex-col bg-black w-screen h-screen overflow-hidden">
@@ -20,16 +20,16 @@ function Landing() {
                 همه روزه ساعت 9 الی 23 شب
               </h3>
             </div>
-            <a
+            <button
               onClick={() => {
                 if ("vibrate" in navigator && typeof window !== "undefined") {
                   navigator.vibrate(10);
                 }
+                setCurrentPage(1);
               }}
-              href="/Home"
               className="px-15 py-3 bg-primary mt-5 rounded-2xl text-2xl font-medium  hover:bg-subprimary hover:text-primaryDark transition-colors duration-300">
               منوی سفارشات
-            </a>
+            </button>
           </div>
         </div>
       </div>

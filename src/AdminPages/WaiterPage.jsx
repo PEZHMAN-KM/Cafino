@@ -33,7 +33,7 @@ const WaiterRequest = ({
   getNOtification,
 }) => (
   <div
-    className={`flex flex-col justify-center items-center w-full ${
+    className={`flex flex-col justify-center items-center w-full select-none ${
       removingId === id ? "animate-scale-out" : ""
     } ${clickedButtonId === id ? "animate-scale-out" : ""}`}>
     <div
@@ -56,7 +56,7 @@ const WaiterRequest = ({
             <div className="flex justify-center items-center gap-3">
               <button
                 onClick={() => doneNotification(id)}
-                className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+                className="cursor-pointer bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
                 انجام شد
               </button>
               <button
@@ -68,7 +68,7 @@ const WaiterRequest = ({
                     setClickedButtonId(null);
                   }, 300);
                 }}
-                className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
+                className="cursor-pointer bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
                 لغو بررسی
               </button>
             </div>
@@ -82,7 +82,7 @@ const WaiterRequest = ({
                   setClickedButtonId(null);
                 }, 300);
               }}
-              className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+              className="cursor-pointer bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
               پذیرش بررسی
             </button>
           )}
@@ -314,22 +314,24 @@ function WaiterPage() {
             isPageLoaded
               ? "transition-colors duration-300"
               : "transition-none duration-0"
-          } p-2 sticky top-0 z-10 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark rounded-b-3xl`}>
+          } p-2 sticky top-0 z-10`}>
           <div
             className={`${
               isPageLoaded
                 ? "transition-colors duration-300"
                 : "transition-none duration-0"
-            } bg-white dark:bg-darkpalleteDark w-full rounded-3xl py-3 px-4 flex justify-between items-center`}>
+            } bg-white/30 dark:bg-darkpalleteDark/30 w-full rounded-3xl py-2 px-4 flex justify-between items-center backdrop-blur-md shadow-lg border-white/20 dark:border-white/10`}>
             <div
               className={`${
                 isPageLoaded
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
-              } text-xl flex gap-5 font-semibold text-darkpallete  dark:text-white`}>
+              } text-xl flex gap-5 font-semibold text-darkpallete dark:text-white`}>
               <h1>کافـی نـو</h1>
               {/* DARK MODE BUTTON */}
-              <button className="hidden md:block" onClick={toggleDarkMode}>
+              <button
+                className="hidden md:block cursor-pointer"
+                onClick={toggleDarkMode}>
                 <Icons.darkMode
                   className={`${
                     isDark ? "rotate-0 fill-white" : "rotate-180 fill-black"
@@ -338,11 +340,11 @@ function WaiterPage() {
               </button>
             </div>
 
-            <h1 className="md:hidden text-3xl text-black dark:text-white font-extrabold text-center p-2 rounded-3xl">
+            <h1 className="md:hidden text-xl text-black dark:text-white font-extrabold text-center p-2 rounded-3xl">
               سالن‌دار
             </h1>
             <div className="cursor-pointer relative" onClick={toggleMenu}>
-              <div className="flex justify-center items-center flex-row-reverse gap-2">
+              <div className="flex justify-center items-center flex-row-reverse cursor-pointer gap-2">
                 <img
                   className={`w-15 h-15 rounded-full spect-square object-cover border-2 transition-all duration-300 ${
                     showMenu
@@ -366,12 +368,12 @@ function WaiterPage() {
                   <div className="py-1">
                     <a
                       href="/changeuserinfo"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                      className="cursor-pointer block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
                       تنظیمات
                     </a>
                     <button
                       onClick={logOut}
-                      className="block w-full text-right px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                      className="cursor-pointer block w-full text-right px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
                       خروج
                     </button>
                   </div>

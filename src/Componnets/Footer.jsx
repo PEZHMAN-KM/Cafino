@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Icons } from "./Icons";
-import { h1 } from "framer-motion/client";
 
 const size_icon = 10;
 const pageTitles = {
@@ -10,7 +9,7 @@ const pageTitles = {
   4: "تماس با ما",
 };
 
-function Footer({ page, shrink }) {
+function Footer({ page, shrink, setFooterShrink, setPage }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const haptic = 10;
 
@@ -50,20 +49,22 @@ function Footer({ page, shrink }) {
             shrink ? "scale-50 w-fit" : "scale-100 w-[98vw]"
           } origin-bottom bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-lg border-t border-white/20 dark:border-white/10 fixed bottom-3 md:hidden px-6 py-2 rounded-3xl`}>
           {shrink ? (
-            <h1 className="text-2xl text-black dark:text-white text-center">
+            <button
+              onClick={() => setFooterShrink(false)}
+              className="text-2xl text-black dark:text-white text-center select-none">
               {pageTitles[page] || "صفحه ناشناس"}
-            </h1>
+            </button>
           ) : (
             <div className="flex items-center justify-between px-5">
               {/* Contact Us Button */}
-              <a
+              <button
                 onClick={() => {
                   if ("vibrate" in navigator && typeof window !== "undefined") {
                     navigator.vibrate(haptic);
                   }
+                  setPage(4);
                 }}
-                className="transition-all duration-300"
-                href="ContactUs">
+                className="transition-all duration-300">
                 <Icons.call
                   className={` w-${size_icon} transition-colors duration-300 ${
                     page == 4
@@ -71,13 +72,14 @@ function Footer({ page, shrink }) {
                       : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
                   }`}
                 />
-              </a>
+              </button>
               {/* Order Button */}
-              <a
+              <button
                 onClick={() => {
                   if ("vibrate" in navigator && typeof window !== "undefined") {
                     navigator.vibrate(haptic);
                   }
+                  setPage(3);
                 }}
                 href="Order"
                 className="relative transition-all duration-300">
@@ -93,13 +95,14 @@ function Footer({ page, shrink }) {
                       : "stroke-highgray dark:stroke-highgrayDark"
                   }`}
                 />
-              </a>
+              </button>
               {/* Favorite Button */}
-              <a
+              <button
                 onClick={() => {
                   if ("vibrate" in navigator && typeof window !== "undefined") {
                     navigator.vibrate(haptic);
                   }
+                  setPage(2);
                 }}
                 className="transition-all duration-300"
                 href="FavoritePage">
@@ -110,13 +113,14 @@ function Footer({ page, shrink }) {
                       : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
                   }`}
                 />
-              </a>
+              </button>
               {/* Home Button */}
-              <a
+              <button
                 onClick={() => {
                   if ("vibrate" in navigator && typeof window !== "undefined") {
                     navigator.vibrate(haptic);
                   }
+                  setPage(1);
                 }}
                 className="transition-all duration-300"
                 href="Home">
@@ -127,7 +131,7 @@ function Footer({ page, shrink }) {
                       : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
                   }`}
                 />
-              </a>
+              </button>
             </div>
           )}
         </div>

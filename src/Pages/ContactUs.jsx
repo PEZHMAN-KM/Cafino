@@ -1,6 +1,4 @@
 import Header from "../Componnets/Header.jsx";
-import Footer from "../Componnets/Footer.jsx";
-
 import itemImage from "../../public/2.jpg";
 import { BASE_PATH, LIMIT_DATA } from "../constants/paths";
 import React, { useState, useEffect, useRef } from "react";
@@ -43,7 +41,7 @@ const Waiter = ({
               : "transition-none duration-0"
           } w-15 h-15 text-4xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl`}
           type="number"
-          Value={tableNumber}
+          value={tableNumber}
           onChange={(e) => setTableNumber(Number(e.target.value))}
         />
       </div>
@@ -96,11 +94,10 @@ const InstagramPage = () => (
   </button>
 );
 
-function ContactUs() {
+function ContactUs({ setFooterShrink, setCurrentPage }) {
   // SCROLL FOOTER -------------------------------------------------
   const scrollContainerRef = useRef(null);
   const lastScrollTop = useRef(0);
-  const [footerShrink, setFooterShrink] = useState(false);
 
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
@@ -137,7 +134,7 @@ function ContactUs() {
   // ----------------------------------------------------------------
 
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
-  const [tableNumber, setTableNumber] = useState(null);
+  const [tableNumber, setTableNumber] = useState(undefined);
   const [error, setError] = useState(null);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
@@ -196,6 +193,7 @@ function ContactUs() {
             : "transition-none duration-0"
         } bg-backgroundcolor dark:bg-backgroundcolorDark h-screen pb-22 w-screen overflow-y-auto scrollbar scrollbar-none lg:pt-20`}>
         <Header
+          setCurrentPage={setCurrentPage}
           page={4}
           text={"تماس با ما"}
           showMenu={headerMenuOpen}
@@ -222,7 +220,6 @@ function ContactUs() {
           </div>
         </div>
       </div>
-      <Footer page={4} shrink={footerShrink} />
     </>
   );
 }

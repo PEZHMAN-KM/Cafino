@@ -227,10 +227,23 @@ function ChangeUserInfo() {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("theme") == "dark") {
-      document.documentElement.classList.add("dark");
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme) {
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     } else {
-      document.documentElement.classList.remove("dark");
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      if (prefersDark) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     }
   });
 
@@ -256,7 +269,7 @@ function ChangeUserInfo() {
               </div>
             </button>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-3">
             <div className="flex flex-col items-center space-y-4">
               <div
                 className="border-2 border-dashed border-gray-300 dark:border-graypalleteDark rounded-lg p-4 text-center cursor-pointer hover:border-adminAction dark:hover:border-adminActionDark transition-colors w-full max-w-md"
@@ -317,38 +330,40 @@ function ChangeUserInfo() {
               </div>
             </div>
 
-            {/* Username Field */}
-            <div>
-              <label className="block text-gray-700 dark:text-white mb-2">
-                نام کاربری
-              </label>
-              <input
-                type="text"
-                value={userInfo.username || ""}
-                onChange={(e) =>
-                  setUserInfo({ ...userInfo, username: e.target.value })
-                }
-                className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-adminPrimary dark:focus:ring-adminPrimaryDark"
-              />
-            </div>
+            <div className="flex flex-col justify-center gap-3 md:flex-row max-w-full">
+              {/* Username Field */}
+              <div className="w-full">
+                <label className="block text-gray-700 dark:text-white mb-2">
+                  نام کاربری
+                </label>
+                <input
+                  type="text"
+                  value={userInfo.username || ""}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, username: e.target.value })
+                  }
+                  className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-adminPrimary dark:focus:ring-adminPrimaryDark"
+                />
+              </div>
 
-            {/* full_name Field */}
-            <div>
-              <label className="block text-gray-700 dark:text-white mb-2">
-                نام و نام خانوادگی
-              </label>
-              <input
-                type="text"
-                value={userInfo.full_name || ""}
-                onChange={(e) =>
-                  setUserInfo({ ...userInfo, full_name: e.target.value })
-                }
-                className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-adminPrimary dark:focus:ring-adminPrimaryDark"
-              />
+              {/* full_name Field */}
+              <div className="w-full">
+                <label className="block text-gray-700 dark:text-white mb-2">
+                  نام و نام خانوادگی
+                </label>
+                <input
+                  type="text"
+                  value={userInfo.full_name || ""}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, full_name: e.target.value })
+                  }
+                  className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-adminPrimary dark:focus:ring-adminPrimaryDark"
+                />
+              </div>
             </div>
 
             {/* Password Field */}
-            <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark rounded-3xl bg p-4">
+            <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark rounded-3xl bg p-3">
               <label className="block text-gray-700 dark:text-white mb-2">
                 رمز عبور جدید
               </label>

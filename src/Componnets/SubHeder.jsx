@@ -9,6 +9,7 @@ function SubHeder({
   setShowMenu,
   onSearchClick,
   setSearchActive,
+  setCurrentPage,
 }) {
   const [onCategory, setOnCategory] = useState(1);
   const haptic = 10;
@@ -44,26 +45,26 @@ function SubHeder({
           {showMenu && hideIcons && (
             <div className="absolute right-2 top-7 lg:right-5 lg:top-14 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50">
               <div className="py-1">
-                <a
-                  href="/home"
-                  className="block text-start w-full px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                <button
+                  onClick={() => setCurrentPage(1)}
+                  className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
                   خانه
-                </a>
-                <a
-                  href="/favoritepage"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                </button>
+                <button
+                  onClick={() => setCurrentPage(2)}
+                  className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
                   علاقه مندی ها
-                </a>
-                <a
-                  href="/order"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                </button>
+                <button
+                  onClick={() => setCurrentPage(3)}
+                  className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
                   سفارشات
-                </a>
-                <a
-                  href="/contactus"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                </button>
+                <button
+                  onClick={() => setCurrentPage(4)}
+                  className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
                   تماس با ما
-                </a>
+                </button>
               </div>
             </div>
           )}

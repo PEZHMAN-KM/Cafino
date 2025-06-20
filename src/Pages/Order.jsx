@@ -4,7 +4,6 @@ import axios from "axios";
 import { BASE_PATH, LIMIT_DATA } from "../constants/paths.js";
 import { useNavigate } from "react-router-dom";
 
-import Footer from "../Componnets/Footer.jsx";
 import Header from "../Componnets/Header.jsx";
 import OrderReceiptOverlay from "../Componnets/OrderReceiptOverlay.jsx";
 import { Icons } from "../Componnets/Icons.jsx";
@@ -45,7 +44,6 @@ const OrderBox = ({
         orderItems.map((item) => (
           <div
             onClick={() => selectFood(item.id)}
-            href="/item"
             key={item.id}
             className={` ${
               item.in_sale ? "bg-slowprimary dark:bg-slowprimaryDark" : ""
@@ -176,7 +174,7 @@ const UserNumber = ({
             : "transition-none duration-0"
         } w-13 h-13 text-3xl font-bold text-center border-2 bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl`}
         type="number"
-        // value={tableNumber}
+        value={tableNumber || ""}
         onChange={(e) => setTableNumber(Number(e.target.value))}
       />
     </div>
@@ -235,11 +233,10 @@ const CheckOutItem = ({ name, count, price, sale_price }) => (
   </div>
 );
 
-function Order() {
+function Order({ setFooterShrink, footerShrink = false, setCurrentPage }) {
   // SCROLL FOOTER -------------------------------------------------
   const scrollContainerRef = useRef(null);
   const lastScrollTop = useRef(0);
-  const [footerShrink, setFooterShrink] = useState(false);
 
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
@@ -277,7 +274,7 @@ function Order() {
 
   const [orderItems, setOrderItems] = useState([]);
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
-  const [tableNumber, setTableNumber] = useState(0);
+  const [tableNumber, setTableNumber] = useState(undefined);
   const [timeAdded, setTimeAdded] = useState(null);
 
   const [showReceipt, setShowReceipt] = useState(false);
@@ -344,7 +341,7 @@ function Order() {
       navigator.vibrate(20);
     }
     localStorage.setItem("show_food", food_id);
-    navigate("/item");
+    setCurrentPage(5);
   }
 
   async function fetchItems() {
@@ -478,6 +475,7 @@ function Order() {
             : "transition-none duration-0"
         } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-60 md:pb-50 lg:pt-20`}>
         <Header
+          setCurrentPage={setCurrentPage}
           page={3}
           text={"سبد خرید"}
           showMenu={headerMenuOpen}
@@ -509,8 +507,8 @@ function Order() {
           </div>
         </div>
         <div
-          className={`w-screen fixed md:bottom-5 transition-all duration-30 ${
-            footerShrink ? "bottom-10" : "bottom-20"
+          className={`w-screen fixed transition-all duration-30 ${
+            footerShrink ? "bottom-10 md:bottom-5" : "bottom-20 md:bottom-5"
           }`}>
           <div
             className={`${
@@ -538,7 +536,6 @@ function Order() {
             </div>
           </div>
         </div>
-        <Footer page={3} shrink={footerShrink} />
       </div>
       <OrderReceiptOverlay
         visible={showReceipt}

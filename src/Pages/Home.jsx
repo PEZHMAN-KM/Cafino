@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import Header from "../Componnets/Header.jsx";
-import Footer from "../Componnets/Footer.jsx";
 import SubHeder from "../Componnets/SubHeder.jsx";
 import Card from "../Componnets/Card.jsx";
 
@@ -12,7 +11,7 @@ import { AnimatePresence, motion } from "framer-motion";
 // FOR BANNER
 import bannerImage from "../../public/Banner.jpg";
 
-function Home() {
+function Home({ setFooterShrink, setCurrentPage, currentPage }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   const [blurActive, setBlurActive] = useState(false);
@@ -22,7 +21,6 @@ function Home() {
   const scrollContainerRef = useRef(null);
   const headerRef = useRef(null);
   const headerInputRef = useRef(null);
-  const [footerShrink, setFooterShrink] = useState(false);
   const lastScrollTop = useRef(0);
 
   const [selectedCategory, setSelectedCategory] = useState(1);
@@ -194,36 +192,6 @@ function Home() {
     }
   }, [searchActive, searchTerm, selectedCategory]);
 
-  // FOOTER SCROLL
-  // useEffect(() => {
-  //   const scrollContainer = scrollContainerRef.current;
-  //   if (!scrollContainer) return;
-
-  //   let lastScrollTop = 0;
-  //   let ticking = false;
-
-  //   const handleScroll = () => {
-  //     if (!ticking) {
-  //       window.requestAnimationFrame(() => {
-  //         const currentScrollTop = scrollContainer.scrollTop;
-
-  //         // بالا یا پایین اسکرول رفتن
-  //         const scrollingDown = currentScrollTop > lastScrollTop;
-
-  //         setHideIcons(currentScrollTop > 40);
-  //         setFooterShrink(scrollingDown); // 👈 shrink وقتی پایین میریم
-
-  //         lastScrollTop = currentScrollTop;
-  //         ticking = false;
-  //       });
-  //       ticking = true;
-  //     }
-  //   };
-
-  //   scrollContainer.addEventListener("scroll", handleScroll);
-  //   return () => scrollContainer.removeEventListener("scroll", handleScroll);
-  // }, []);
-
   return (
     <>
       <AnimatePresence>
@@ -266,7 +234,8 @@ function Home() {
           hideIcons && "pb-20 lg:pb-17"
         }`}>
         <Header
-          page={1}
+          setCurrentPage={setCurrentPage}
+          page={currentPage}
           showMenu={headerMenuOpen}
           setShowMenu={setHeaderMenuOpen}
           searchActive={searchActive}
@@ -281,6 +250,7 @@ function Home() {
         <div className="animate-scale-up">
           {!searchActive && (
             <SubHeder
+              setCurrentPage={setCurrentPage}
               onCategorySelect={setSelectedCategory}
               hideIcons={hideIcons}
               showMenu={subHeaderMenuOpen}
@@ -325,12 +295,12 @@ function Home() {
                   count={orderCounts[item.id] || 0}
                   setBlurActive={setBlurActive}
                   setActiveCardData={setActiveCardData}
+                  setCurrentPage={setCurrentPage}
                 />
               ))}
             </div>
           )}
         </div>
-        <Footer page={1} shrink={footerShrink} />
       </div>
     </>
   );

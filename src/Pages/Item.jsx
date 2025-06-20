@@ -1,9 +1,8 @@
 import itemImage from "../../public/No_Item.png";
 import { useEffect, useState } from "react";
-import axios, { Axios } from "axios";
 import { BASE_PATH, LIMIT_DATA } from "../constants/paths";
-import { useNavigate } from "react-router-dom";
 import { Icons } from "../Componnets/Icons";
+import axios from "axios";
 
 const formatPrice = (num) => {
   if (num == null || isNaN(num)) return "";
@@ -66,10 +65,9 @@ const Description = ({ className, description }) => (
   </div>
 );
 
-function Item() {
+function Item({ setCurrentPage }) {
   const [isLiked, setIsLiked] = useState(false);
   const id = Number(localStorage.getItem("show_food"));
-  const navigate = useNavigate();
 
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const haptic = 20;
@@ -215,7 +213,7 @@ function Item() {
       navigator.vibrate(haptic);
     }
     localStorage.removeItem("show_food");
-    navigate(-1);
+    setCurrentPage(1);
   }
 
   if (!item)

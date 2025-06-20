@@ -3,6 +3,22 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* LIGHT IN GLASS */
+/* @layer utilities {
+  .soft-glow {
+    filter: drop-shadow(0 0 2px rgba(255, 200, 0, 0.4))
+      drop-shadow(0 0 6px rgba(255, 200, 0, 0.3))
+      drop-shadow(0 0 12px rgba(255, 200, 0, 0.2));
+  }
+}
+@layer utilities {
+  .soft-glow-dark {
+    filter: drop-shadow(0 0 2px rgba(0, 200, 255, 0.5))
+      drop-shadow(0 0 8px rgba(0, 200, 255, 0.3))
+      drop-shadow(0 0 16px rgba(0, 200, 255, 0.2));
+  }
+} */
+
 @layer utilities {
   @keyframes scale-out {
     0% {

@@ -1,8 +1,8 @@
 import AdminHeader from "./AdminHeader";
 import { useState, useEffect, useRef } from "react";
-import axios, { Axios } from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_PATH } from "../constants/paths";
+import axios from "axios";
 
 const ArrowIcon = ({ className }) => {
   return (

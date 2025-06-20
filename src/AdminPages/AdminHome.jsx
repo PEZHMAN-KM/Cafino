@@ -105,7 +105,7 @@ const OrderTable = ({
               <div key={index}>
                 <OrderItem
                   name={item.name}
-                  description={item.description}
+                  category_name={item.category_name}
                   count={item.quantity}
                   price={item.price}
                   in_sale={item.in_sale}
@@ -171,7 +171,7 @@ const OrderTable = ({
 
 const OrderItem = ({
   name,
-  description,
+  category_name,
   count,
   price,
   in_sale,
@@ -194,7 +194,7 @@ const OrderItem = ({
         {name}
       </h1>
       <p className="text-sm lg:text-xl text-slowgrayDark dark:text-slowgray max-xs:truncate max-xs:max-w-20 max-xs:w-fit">
-        {description}
+        {category_name}
       </p>
     </div>
     <div className="flex flex-col justify-end items-end ml-2">

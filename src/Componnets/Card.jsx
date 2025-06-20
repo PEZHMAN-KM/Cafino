@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from "react";
 import itemImage from "../../public/No_Item.png";
-import { useNavigate } from "react-router-dom";
 import { Icons } from "./Icons";
 import { BASE_PATH, LIMIT_DATA } from "../constants/paths";
 
@@ -24,8 +23,8 @@ function Card({
   setBlurActive,
   setActiveCardData,
   expanded = false,
+  setCurrentPage,
 }) {
-  const navigate = useNavigate();
   const [newlyAddedId, setNewlyAddedId] = useState(null);
   const [removingId, setRemovingId] = useState(null);
   const haptic = 20;
@@ -58,7 +57,7 @@ function Card({
   const handleTouchMove = (e) => {
     const currentY = e.touches[0].clientY;
     if (Math.abs(currentY - startYRef.current) > 10) {
-      clearTimeout(longPressTimer.current); // لغو چون کاربر حرکت داده
+      clearTimeout(longPressTimer.current);
     }
   };
 
@@ -76,7 +75,8 @@ function Card({
       navigator.vibrate(10);
     }
     localStorage.setItem("show_food", food_id);
-    navigate("/item");
+    // navigate("/item");
+    setCurrentPage(5);
   }
 
   const increaseCount = () => {

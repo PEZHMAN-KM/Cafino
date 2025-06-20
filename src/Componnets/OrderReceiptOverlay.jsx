@@ -2,6 +2,7 @@ import React from "react";
 import itemImage from "../../public/No_Item.png";
 import { Icons } from "./Icons";
 import { BASE_PATH } from "../constants/paths";
+import { AnimatePresence, motion } from "framer-motion";
 
 const formatPrice = (num) =>
   num == null || isNaN(num) ? "" : Number(num).toLocaleString("en-US");
@@ -28,8 +29,18 @@ export default function OrderReceiptOverlay({
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-md z-50 flex justify-center items-center transition-colors duration-300">
-      <div className="bg-backgroundcolor dark:bg-backgroundcolorDark w-full mx-2 max-w-md lg:max-w-lg rounded-2xl shadow-lg overflow-hidden animate-scale-up">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 bg-black/50 backdrop-blur-md z-50 flex justify-center items-center">
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="bg-backgroundcolor dark:bg-backgroundcolorDark w-full mx-2 max-w-md lg:max-w-lg rounded-2xl shadow-lg overflow-hidden">
         <div className="p-4">
           <div className="flex justify-between items-center">
             <h2 className="text-black dark:text-white text-2xl font-extrabold">
@@ -128,7 +139,7 @@ export default function OrderReceiptOverlay({
             </button>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
