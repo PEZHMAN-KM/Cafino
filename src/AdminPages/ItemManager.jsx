@@ -52,13 +52,18 @@ const ItemTable = ({
   sale_price,
   deleteFood,
   editFood,
+  removingId,
+  setClickedButtonId,
+  clickedButtonId,
 }) => {
   return (
     <div
-      className={`grid grid-cols-4 lg:grid-cols-5 items-center text-center text-sm md:text-xl font-bold gap-2 rounded-xl px-2 transition-colors duration-300 ${
+      className={`grid grid-cols-4 lg:grid-cols-5 items-center text-center text-sm md:text-xl font-bold gap-2 rounded-xl px-2 transition-colors duration-300 animate-scale-up ${
         in_sale
           ? "bg-adminAction text-adminBackgroundColor dark:bg-adminActionDark"
           : "bg-white dark:bg-darkpalleteDark dark:text-white"
+      } ${removingId === id ? "animate-scale-out" : ""} ${
+        clickedButtonId === id ? "animate-scale-out" : ""
       }`}>
       <div className="hidden lg:flex justify-center items-center">
         <img
@@ -88,7 +93,13 @@ const ItemTable = ({
       </div>
       <div className="flex justify-center items-center gap-2 my-1 md:my-2">
         <button
-          onClick={() => deleteFood(id)}
+          onClick={() => {
+            deleteFood(id);
+            setClickedButtonId(id);
+            setTimeout(async () => {
+              setClickedButtonId(null);
+            }, 300);
+          }}
           className="flex justify-center items-center bg-adminError md:px-1 md:py-0.5 text-white rounded-lg md:hover:scale-105 md:hover:bg-adminErrorDark transition-all duration-300">
           <Icons.delete className="w-8 md:w-6 stroke-white" />
           <h1 className="hidden md:block md:w-14 md:text-sm">پاک کردن</h1>
@@ -105,12 +116,24 @@ const ItemTable = ({
 };
 
 // WAITER CONTROL -------------------------------------------------
-const WaiterItem = ({ id, pic_url, full_name, username, UnEmployUser }) => {
+const WaiterItem = ({
+  id,
+  pic_url,
+  full_name,
+  username,
+  UnEmployUser,
+  removingId,
+  setClickedButtonId,
+  clickedButtonId,
+}) => {
   return (
-    <div className="flex justify-between items-center text-start text-xl font-bold rounded-3xl px-2 bg-white dark:bg-darkpalleteDark dark:text-white transition-colors duration-300">
+    <div
+      className={`flex justify-between items-center text-start text-xl font-bold rounded-3xl px-2 bg-white dark:bg-darkpalleteDark dark:text-white transition-colors duration-300 animate-scale-up ${
+        removingId === id ? "animate-scale-out" : ""
+      } ${clickedButtonId === id ? "animate-scale-out" : ""}`}>
       <div className="flex justify-center items-center">
         <img
-          className="hidden md:inline w-20 h-20 p-2 aspect-square object-cover rounded-2xl"
+          className="size-16 md:size-20 p-2 aspect-square object-cover rounded-full"
           src={
             pic_url
               ? `${BASE_PATH}/files/${pic_url.split("/").pop()}`
@@ -124,9 +147,15 @@ const WaiterItem = ({ id, pic_url, full_name, username, UnEmployUser }) => {
         </div>
       </div>
       <button
-        onClick={() => UnEmployUser(id)}
-        className="flex justify-center items-center bg-adminError md:px-1 md:py-0.5 text-white rounded-lg md:hover:scale-105 md:hover:bg-adminErrorDark transition-all duration-300">
-        <Icons.delete className="w-8 md:w-6 stroke-white" />
+        onClick={() => {
+          UnEmployUser(id);
+          setClickedButtonId(id);
+          setTimeout(async () => {
+            setClickedButtonId(null);
+          }, 300);
+        }}
+        className="flex justify-center items-center bg-adminError p-1 md:px-1 md:py-0.5 text-white rounded-lg md:hover:scale-105 md:hover:bg-adminErrorDark transition-all duration-300">
+        <Icons.delete className="w-6 stroke-white" />
         <h1 className="hidden md:block md:w-14 md:text-sm">اخراج</h1>
       </button>
     </div>
@@ -135,6 +164,8 @@ const WaiterItem = ({ id, pic_url, full_name, username, UnEmployUser }) => {
 
 const ItemManager = () => {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [removingId, setRemovingId] = useState(null);
+  const [clickedButtonId, setClickedButtonId] = useState(null);
 
   const { isAuthenticated } = UseAuth();
   const navigate = useNavigate();
@@ -169,7 +200,7 @@ const ItemManager = () => {
         },
       });
 
-      if (response.ok) {
+      if (response.status == 200) {
         const data = await response.json();
         setAllFood(data);
       }
@@ -180,28 +211,33 @@ const ItemManager = () => {
   }
   async function deleteFood(food_id) {
     checktoken();
+    setRemovingId(food_id);
     const token = JSON.parse(localStorage.getItem("user_data"));
-    try {
-      const response = await axios.delete(
-        `${BASE_PATH}/admin/food/delete_food`,
-        {
-          headers: {
-            Authorization: `Bearer ${token.access_token}`,
-            "Content-Type": "application/json",
-          },
-          data: { food_id },
-        }
-      );
-
-      if (response.status === 200) {
-        console.log("Deleted successfully:", response.data);
-        setAllFood((prevFoods) =>
-          prevFoods.filter((item) => item.id !== food_id)
+    setTimeout(async () => {
+      try {
+        const response = await axios.delete(
+          `${BASE_PATH}/admin/food/delete_food`,
+          {
+            headers: {
+              Authorization: `Bearer ${token.access_token}`,
+              "Content-Type": "application/json",
+            },
+            data: { food_id },
+          }
         );
+
+        if (response.status === 200) {
+          console.log("Deleted successfully:", response.data);
+          setAllFood((prevFoods) =>
+            prevFoods.filter((item) => item.id !== food_id)
+          );
+        }
+      } catch (error) {
+        console.error("Error Deleting food:", error);
+      } finally {
+        setRemovingId(null);
       }
-    } catch (error) {
-      console.error("Error Deleting food:", error);
-    }
+    }, 300);
   }
   function editFood(food_id) {
     checktoken();
@@ -239,29 +275,34 @@ const ItemManager = () => {
   }
   async function UnEmployUser(user_id) {
     checktoken();
+    setRemovingId(user_id);
 
     const token = JSON.parse(localStorage.getItem("user_data"));
-    try {
-      const response = await axios.put(
-        `${BASE_PATH}/admin/waitress/admin_unemploy_user`,
-        { user_id: user_id },
-        {
-          headers: {
-            Authorization: `Bearer ${token.access_token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        console.log("بیکاری با موفقیت انجام شد", response.data);
-        SetAllWaiter((prevFoods) =>
-          prevFoods.filter((item) => item.id !== user_id)
+    setTimeout(async () => {
+      try {
+        const response = await axios.put(
+          `${BASE_PATH}/admin/waitress/admin_unemploy_user`,
+          { user_id: user_id },
+          {
+            headers: {
+              Authorization: `Bearer ${token.access_token}`,
+              "Content-Type": "application/json",
+            },
+          }
         );
+
+        if (response.status === 200) {
+          console.log("بیکاری با موفقیت انجام شد", response.data);
+          SetAllWaiter((prevFoods) =>
+            prevFoods.filter((item) => item.id !== user_id)
+          );
+        }
+      } catch (error) {
+        console.error("کاربر بیکار نشد", error);
+      } finally {
+        setRemovingId(null);
       }
-    } catch (error) {
-      console.error("کاربر بیکار نشد", error);
-    }
+    }, 300);
   }
 
   return (
@@ -284,14 +325,14 @@ const ItemManager = () => {
               isPageLoaded
                 ? "transition-colors duration-300"
                 : "transition-none duration-0"
-            } grid grid-cols-1 xl:grid-cols-5 gap-2 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark`}>
+            } grid grid-cols-1 xl:grid-cols-6 gap-2 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark`}>
             {/* ITEM CONTROL */}
             <div
               className={`${
                 isPageLoaded
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
-              } col-span-1 xl:col-span-3 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:mr-2 rounded-3xl h-fit max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
+              } col-span-1 xl:col-span-4 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:mr-2 rounded-3xl h-fit max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
               <div className="flex justify-between items-center pl-4 py-3">
                 <h1
                   className={`${
@@ -366,6 +407,9 @@ const ItemManager = () => {
                         sale_price={item.sale_price}
                         deleteFood={deleteFood}
                         editFood={editFood}
+                        setClickedButtonId={setClickedButtonId}
+                        clickedButtonId={clickedButtonId}
+                        removingId={removingId}
                       />
                     </div>
                   ))
@@ -416,6 +460,9 @@ const ItemManager = () => {
                       full_name={item.full_name}
                       username={item.username}
                       UnEmployUser={UnEmployUser}
+                      setClickedButtonId={setClickedButtonId}
+                      clickedButtonId={clickedButtonId}
+                      removingId={removingId}
                     />
                   </div>
                 ))

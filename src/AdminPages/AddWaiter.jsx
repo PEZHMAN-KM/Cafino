@@ -1,27 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_PATH } from "../constants/paths";
 
 import AdminHeader from "./AdminHeader.jsx";
-
-const ArrowIcon = ({ className }) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className={className}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="m8.25 4.5 7.5 7.5-7.5 7.5"
-      />
-    </svg>
-  );
-};
+import { Icons } from "../Componnets/Icons.jsx";
 
 export default function AddWaiter() {
   const navigate = useNavigate();
@@ -60,6 +43,10 @@ export default function AddWaiter() {
     formData.append("password", form.password.value);
     formData.append("full_name", form.full_name.value);
 
+    if (preview) {
+      formData.append("pic", waiterImage);
+    }
+
     const token = JSON.parse(localStorage.getItem("user_data"));
 
     try {
@@ -69,7 +56,7 @@ export default function AddWaiter() {
         {
           headers: {
             Authorization: `Bearer ${token.access_token}`,
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -77,6 +64,49 @@ export default function AddWaiter() {
     } catch (err) {
       setError("خطا در ثبت گارسون جدید");
     }
+  };
+
+  // IMAGE INPUT HANDLEER -------------------------------
+  const [waiterImage, setWaiterImage] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setWaiterImage(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.currentTarget.classList.add(
+      "border-adminAction",
+      "dark:border-adminActionDark"
+    );
+  };
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove(
+      "border-adminAction",
+      "dark:border-adminActionDark"
+    );
+  };
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove(
+      "border-adminAction",
+      "dark:border-adminActionDark"
+    );
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setWaiterImage(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+  const handleDeleteImage = () => {
+    setWaiterImage(null);
+    setPreview(null);
   };
 
   return (
@@ -91,7 +121,7 @@ export default function AddWaiter() {
             </h1>
             <a href="/itemmanager">
               <div className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
-                <ArrowIcon
+                <Icons.arrow
                   className={
                     "w-8 rotate-180 stroke-3 stroke-black dark:stroke-white"
                   }
@@ -99,9 +129,52 @@ export default function AddWaiter() {
               </div>
             </a>
           </div>
-          {/* <h1 className="text-2xl lg:text-4xl font-extrabold text-black dark:text-white text-center mb-6 transition-colors duration-300">
-            افزودن گارسون جدید
-          </h1> */}
+          <div
+            className="border-2 border-dashed border-gray-300 dark:border-graypalleteDark rounded-lg p-4 text-center cursor-pointer hover:border-adminAction dark:hover:border-adminActionDark transition-colors w-full max-w-md"
+            onClick={() => fileInputRef.current.click()}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+              ref={fileInputRef}
+            />
+
+            {preview ? (
+              <div className="relative group">
+                <img
+                  src={preview}
+                  alt="Profile"
+                  className="max-h-48 mx-auto rounded-lg object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
+                  <span className="text-white">تغییر تصویر</span>
+                </div>
+                {preview && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteImage();
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white text-xl font-bold rounded-full flex items-center justify-center w-10 h-10 hover:bg-red-600 transition-colors duration-300">
+                    ✕
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="text-gray-500 dark:text-gray-400 py-8">
+                <Icons.addImage className="mx-auto h-12 w-12 mb-4" />
+                <p className="text-sm">برای آپلود تصویر کلیک کنید</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">
+                  یا تصویر را اینجا رها کنید
+                </p>
+              </div>
+            )}
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

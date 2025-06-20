@@ -94,7 +94,7 @@ const InstagramPage = () => (
   </button>
 );
 
-function ContactUs({ setFooterShrink, setCurrentPage }) {
+function ContactUs({ setFooterShrink, setHeaderMenuOpen, setHeaderShrink }) {
   // SCROLL FOOTER -------------------------------------------------
   const scrollContainerRef = useRef(null);
   const lastScrollTop = useRef(0);
@@ -113,10 +113,18 @@ function ContactUs({ setFooterShrink, setCurrentPage }) {
           const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
           const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
 
+          if (currentScrollTop <= 20) {
+            setHeaderShrink(false);
+          } else {
+            setHeaderShrink(true);
+          }
+
           if (scrollingDown) {
             setFooterShrink(true);
+            setHeaderMenuOpen(false);
           } else if (scrollingUp) {
             setFooterShrink(false);
+            setHeaderMenuOpen(false);
           }
 
           lastScrollTop.current = currentScrollTop <= 0 ? 0 : currentScrollTop;
@@ -133,7 +141,6 @@ function ContactUs({ setFooterShrink, setCurrentPage }) {
   }, []);
   // ----------------------------------------------------------------
 
-  const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
   const [tableNumber, setTableNumber] = useState(undefined);
   const [error, setError] = useState(null);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
@@ -191,14 +198,7 @@ function ContactUs({ setFooterShrink, setCurrentPage }) {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark h-screen pb-22 w-screen overflow-y-auto scrollbar scrollbar-none lg:pt-20`}>
-        <Header
-          setCurrentPage={setCurrentPage}
-          page={4}
-          text={"تماس با ما"}
-          showMenu={headerMenuOpen}
-          setShowMenu={setHeaderMenuOpen}
-        />
+        } bg-backgroundcolor dark:bg-backgroundcolorDark h-screen pb-22 w-screen overflow-y-auto scrollbar scrollbar-none pt-16 md:pt-20`}>
         <div className="grid grid-cols-1">
           <div className="col-span-1 flex justify-center items-start w-screen lg:w-2/3 mx-auto animate-scale-up">
             <Waiter

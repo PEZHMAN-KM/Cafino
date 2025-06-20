@@ -396,6 +396,17 @@ export const Icons = {
       </g>
     </svg>
   ),
+  addImage: (props) => (
+    <svg stroke="currentColor" fill="none" viewBox="0 0 48 48" {...props}>
+      <path
+        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  // SUB HEADER MENU ICON --------------------------
   menu: (props) => (
     <svg
       viewBox="0 0 24 24"
@@ -453,6 +464,75 @@ export const Icons = {
               y2={12}
               id="Path"
               stroke="white"
+              strokeWidth={2}
+              strokeLinecap="round"
+            />
+          </g>
+        </g>
+      </g>
+    </svg>
+  ),
+  // HEADER MENU ICON ------------------------------
+  topMenu: () => (
+    <svg
+      className="w-10"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      fill="none">
+      <g id="SVGRepo_bgCarrier" strokeWidth={0} />
+      <g
+        id="SVGRepo_tracerCarrier"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <g id="SVGRepo_iconCarrier">
+        <title>{"Menu"}</title>
+        <g
+          id="Page-1"
+          stroke="none"
+          strokeWidth={1}
+          fill="curre"
+          fillRule="evenodd">
+          <g id="Menu">
+            <rect
+              id="Rectangle"
+              fillRule="nonzero"
+              x={0}
+              y={0}
+              width={40}
+              height={40}
+            />
+            <line
+              x1={5}
+              y1={7}
+              x2={19}
+              y2={7}
+              id="Path"
+              className="stroke-black dark:stroke-white transition-colors duration-300"
+              stroke="black"
+              strokeWidth={2}
+              strokeLinecap="round"
+            />
+            <line
+              x1={5}
+              y1={17}
+              x2={19}
+              y2={17}
+              id="Path"
+              className="stroke-black dark:stroke-white transition-colors duration-300"
+              stroke="black"
+              strokeWidth={2}
+              strokeLinecap="round"
+            />
+            <line
+              x1={5}
+              y1={12}
+              x2={19}
+              y2={12}
+              id="Path"
+              className="stroke-black dark:stroke-white transition-colors duration-300"
+              stroke="black"
               strokeWidth={2}
               strokeLinecap="round"
             />

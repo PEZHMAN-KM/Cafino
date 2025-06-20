@@ -32,7 +32,7 @@ function SubHeder({
       <div className={className}>
         <div
           className={`z-10 flex justify-baseline lg:justify-center items-center py-1 lg:py-2 scrollbar scrollbar-none overflow-x-auto px-2 ${
-            !hideIcons ? "gap-2 lg:gap-3" : "gap-1 lg:gap-3  rounded-3xl"
+            !hideIcons ? "gap-2 lg:gap-3" : "gap-1 lg:gap-3 rounded-3xl"
           }`}>
           {/* MENU BUTTON */}
           <div

@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Icons } from "./Icons";
+import { PAGE_TITLES } from "../constants/paths";
 
 const size_icon = 10;
-const pageTitles = {
-  1: "خونه",
-  2: "علاقه‌مندی",
-  3: "سبد خرید",
-  4: "تماس با ما",
-};
 
-function Footer({ page, shrink, setFooterShrink, setPage }) {
+function Footer({ page, shrink, setFooterShrink, setPage, setHeaderShrink }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const haptic = 10;
 
@@ -52,7 +47,7 @@ function Footer({ page, shrink, setFooterShrink, setPage }) {
             <button
               onClick={() => setFooterShrink(false)}
               className="text-2xl text-black dark:text-white text-center select-none">
-              {pageTitles[page] || "صفحه ناشناس"}
+              {PAGE_TITLES[page] || "صفحه ناشناس"}
             </button>
           ) : (
             <div className="flex items-center justify-between px-5">
@@ -63,6 +58,7 @@ function Footer({ page, shrink, setFooterShrink, setPage }) {
                     navigator.vibrate(haptic);
                   }
                   setPage(4);
+                  setHeaderShrink(false);
                 }}
                 className="transition-all duration-300">
                 <Icons.call
@@ -80,6 +76,7 @@ function Footer({ page, shrink, setFooterShrink, setPage }) {
                     navigator.vibrate(haptic);
                   }
                   setPage(3);
+                  setHeaderShrink(false);
                 }}
                 href="Order"
                 className="relative transition-all duration-300">
@@ -103,6 +100,7 @@ function Footer({ page, shrink, setFooterShrink, setPage }) {
                     navigator.vibrate(haptic);
                   }
                   setPage(2);
+                  setHeaderShrink(false);
                 }}
                 className="transition-all duration-300"
                 href="FavoritePage">
@@ -121,6 +119,7 @@ function Footer({ page, shrink, setFooterShrink, setPage }) {
                     navigator.vibrate(haptic);
                   }
                   setPage(1);
+                  setHeaderShrink(false);
                 }}
                 className="transition-all duration-300"
                 href="Home">

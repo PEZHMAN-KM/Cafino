@@ -484,7 +484,7 @@ function AdminHome() {
         ...response.data.requested_notifs,
       ]);
     } catch (error) {
-      console.error("خطا در دریافت نوتفیکیشن ها:", error);
+      // console.error("خطا در دریافت نوتفیکیشن ها:", error);
     }
   }
   async function progressNotification(notif_id) {

@@ -11,7 +11,18 @@ import { AnimatePresence, motion } from "framer-motion";
 // FOR BANNER
 import bannerImage from "../../public/Banner.jpg";
 
-function Home({ setFooterShrink, setCurrentPage, currentPage }) {
+function Home({
+  setFooterShrink,
+  setCurrentPage,
+  searchActive,
+  setSearchActive,
+  searchTerm,
+  setHeaderShrink,
+  headerInputRef,
+  setFetchItems,
+  setHeaderMenuOpen,
+  headerMenuOpen,
+}) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   const [blurActive, setBlurActive] = useState(false);
@@ -19,8 +30,7 @@ function Home({ setFooterShrink, setCurrentPage, currentPage }) {
 
   const [hideIcons, setHideIcons] = useState(false);
   const scrollContainerRef = useRef(null);
-  const headerRef = useRef(null);
-  const headerInputRef = useRef(null);
+
   const lastScrollTop = useRef(0);
 
   const [selectedCategory, setSelectedCategory] = useState(1);
@@ -28,12 +38,6 @@ function Home({ setFooterShrink, setCurrentPage, currentPage }) {
   const [error, setError] = useState(null);
 
   const [orderCounts, setOrderCounts] = useState({});
-
-  const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
-  const [subHeaderMenuOpen, setSubHeaderMenuOpen] = useState(false);
-
-  const [searchActive, setSearchActive] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
 
   const updateOrder = (id, newCount) => {
     const updatedCounts = { ...orderCounts };
@@ -65,8 +69,11 @@ function Home({ setFooterShrink, setCurrentPage, currentPage }) {
             },
           }
         );
-
-        setItems(response.data);
+        if (response.status == 204) {
+          setError("نتیجه‌ای یافت نشد");
+        } else {
+          setItems(response.data);
+        }
       } catch (err) {
         setError("خطا در دریافت داده‌ها");
       }
@@ -81,10 +88,18 @@ function Home({ setFooterShrink, setCurrentPage, currentPage }) {
             },
           }
         );
+
         setItems([
           ...response.data.on_sale_food,
           ...response.data.not_on_sale_food,
         ]);
+
+        if (
+          response.data.on_sale_food.length === 0 &&
+          response.data.not_on_sale_food.length === 0
+        ) {
+          setError("نتیجه‌ای یافت نشد");
+        }
       } catch (err) {
         setError("خطا در دریافت داده‌ها");
       }
@@ -147,11 +162,12 @@ function Home({ setFooterShrink, setCurrentPage, currentPage }) {
           // SCROLL FOR HIDEICONS ------------------------------------------------
           const currentScrollTop = scrollContainer.scrollTop;
 
-          if (currentScrollTop <= 40) {
+          if (currentScrollTop < 30) {
             setHideIcons(false);
-            window.dispatchEvent(new CustomEvent("closeMenus"));
-          } else {
+            setHeaderShrink(false);
+          } else if (currentScrollTop > 100) {
             setHideIcons(true);
+            setHeaderShrink(true);
           }
 
           // SCROLL FOR FOOTER ------------------------------------------------
@@ -159,8 +175,10 @@ function Home({ setFooterShrink, setCurrentPage, currentPage }) {
           const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
 
           if (scrollingDown) {
+            setHeaderMenuOpen(false);
             setFooterShrink(true);
           } else if (scrollingUp) {
+            setHeaderMenuOpen(false);
             setFooterShrink(false);
           }
 
@@ -191,6 +209,12 @@ function Home({ setFooterShrink, setCurrentPage, currentPage }) {
       fetchItems();
     }
   }, [searchActive, searchTerm, selectedCategory]);
+
+  useEffect(() => {
+    if (setFetchItems) {
+      setFetchItems(() => fetchItems);
+    }
+  }, [selectedCategory]);
 
   return (
     <>
@@ -231,75 +255,63 @@ function Home({ setFooterShrink, setCurrentPage, currentPage }) {
             ? "transition-colors duration-300"
             : "transition-none duration-0"
         } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-15 md:pb-3 ${
-          hideIcons && "pb-20 lg:pb-17"
+          hideIcons && "" // pb-20 lg:pb-17
         }`}>
-        <Header
-          setCurrentPage={setCurrentPage}
-          page={currentPage}
-          showMenu={headerMenuOpen}
-          setShowMenu={setHeaderMenuOpen}
-          searchActive={searchActive}
-          setSearchActive={setSearchActive}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          fetchItems={fetchItems}
-          ref={headerRef}
-          headerInputRef={headerInputRef}
-        />
-
         <div className="animate-scale-up">
           {!searchActive && (
             <SubHeder
               setCurrentPage={setCurrentPage}
               onCategorySelect={setSelectedCategory}
               hideIcons={hideIcons}
-              showMenu={subHeaderMenuOpen}
+              showMenu={headerMenuOpen}
+              setShowMenu={setHeaderMenuOpen}
               onSearchClick={scrollToTopAndFocus}
-              setShowMenu={setSubHeaderMenuOpen}
               setSearchActive={setSearchActive}
               className={`${
                 isPageLoaded
                   ? "transition-all duration-300"
                   : "transition-none duration-0"
-              } sticky top-2 pt-[env(safe-area-inset-top)] z-10 bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md border-white/20 dark:border-white/10 ${
+              } sticky pt-[env(safe-area-inset-top)] z-10 bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md border-white/20 dark:border-white/10 ${
                 !hideIcons
-                  ? "h-29 lg:h-34 rounded-b-none w-screen m-0 shadow-lg border-b"
-                  : "h-11 lg:h-17 rounded-3xl w-[98vw] mx-auto shadow-lg border"
+                  ? "top-16 h-29 lg:h-34 rounded-b-none w-screen m-0 shadow-lg border-b"
+                  : "top-2 h-11 lg:h-17 rounded-3xl w-[98vw] mx-auto shadow-lg border"
               }`}
             />
           )}
-          {/* BANNER IMAGE */}
-          {/* <div className="flex justify-center items-center w-screen">
-            <img
-              className="object-center object-cover p-4 rounded-4xl"
-              src={bannerImage}
-              alt=""
-            />
-          </div> */}
+          <div className="mt-20">
+            {/* BANNER IMAGE */}
+            {/* <div className="flex justify-center items-center w-screen">
+              <img
+                className="object-center object-cover p-4 rounded-4xl"
+                src={bannerImage}
+                alt=""
+              />
+            </div> */}
 
-          {error && <p className="text-center my-4 text-primary">{error}</p>}
+            {error && <p className="text-center my-4 text-primary">{error}</p>}
 
-          {!error && (
-            <div className="grid max-xs:grid-cols-1 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 3xl:grid-cols-10 4xl:grid-cols-12 gap-y-4 gap-x-2 mt-2 justify-center items-center">
-              {items.map((item) => (
-                <Card
-                  key={item.id}
-                  id={item.id}
-                  in_sale={item.in_sale}
-                  pic_url={item.pic_url}
-                  name={item.name}
-                  description={item.description}
-                  price={item.price}
-                  sale_price={item.sale_price}
-                  updateOrder={updateOrder}
-                  count={orderCounts[item.id] || 0}
-                  setBlurActive={setBlurActive}
-                  setActiveCardData={setActiveCardData}
-                  setCurrentPage={setCurrentPage}
-                />
-              ))}
-            </div>
-          )}
+            {!error && (
+              <div className="grid max-xs:grid-cols-1 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 3xl:grid-cols-10 4xl:grid-cols-12 gap-y-4 gap-x-2 mt-2 justify-center items-center">
+                {items.map((item) => (
+                  <Card
+                    key={item.id}
+                    id={item.id}
+                    in_sale={item.in_sale}
+                    pic_url={item.pic_url}
+                    name={item.name}
+                    description={item.description}
+                    price={item.price}
+                    sale_price={item.sale_price}
+                    updateOrder={updateOrder}
+                    count={orderCounts[item.id] || 0}
+                    setBlurActive={setBlurActive}
+                    setActiveCardData={setActiveCardData}
+                    setCurrentPage={setCurrentPage}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

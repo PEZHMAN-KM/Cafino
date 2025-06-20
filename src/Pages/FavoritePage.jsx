@@ -2,12 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 import { BASE_PATH } from "../constants/paths.js";
-import Header from "../Componnets/Header.jsx";
 import Card from "../Componnets/Card.jsx";
 
 import { AnimatePresence, motion } from "framer-motion";
 
-function FavoritePage({ setFooterShrink, setCurrentPage }) {
+function FavoritePage({
+  setFooterShrink,
+  setCurrentPage,
+  setHeaderMenuOpen,
+  setHeaderShrink,
+}) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   const [blurActive, setBlurActive] = useState(false);
@@ -17,8 +21,6 @@ function FavoritePage({ setFooterShrink, setCurrentPage }) {
   const [error, setError] = useState(null);
 
   const [orderCounts, setOrderCounts] = useState({});
-
-  const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
 
   // SCROLL FOOTER -------------------------------------------------
   const scrollContainerRef = useRef(null);
@@ -38,10 +40,18 @@ function FavoritePage({ setFooterShrink, setCurrentPage }) {
           const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
           const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
 
+          if (currentScrollTop <= 20) {
+            setHeaderShrink(false);
+          } else {
+            setHeaderShrink(true);
+          }
+
           if (scrollingDown) {
             setFooterShrink(true);
+            setHeaderMenuOpen(false);
           } else if (scrollingUp) {
             setFooterShrink(false);
+            setHeaderMenuOpen(false);
           }
 
           lastScrollTop.current = currentScrollTop <= 0 ? 0 : currentScrollTop;
@@ -105,7 +115,11 @@ function FavoritePage({ setFooterShrink, setCurrentPage }) {
             },
           }
         );
-        setItems([...response.data]);
+        if (response.status == 204) {
+          setError("نتیجه‌ای یافت نشد");
+        } else {
+          setItems([...response.data]);
+        }
       } catch (err) {
         setError("آیتمی یافت نشد!");
       }
@@ -151,14 +165,7 @@ function FavoritePage({ setFooterShrink, setCurrentPage }) {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-26 lg:pt-20 md:pb-3`}>
-        <Header
-          setCurrentPage={setCurrentPage}
-          page={2}
-          text={"علاقه مندی ها"}
-          showMenu={headerMenuOpen}
-          setShowMenu={setHeaderMenuOpen}
-        />
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-18 md:pb-3 pt-16 md:pt-20`}>
         {error && <p className="text-center my-4 text-primary">{error}</p>}
         {!error && (
           <div className="grid max-xs:grid-cols-1 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 3xl:grid-cols-10 4xl:grid-cols-12 gap-y-4 gap-x-2 mt-2 justify-center items-center">

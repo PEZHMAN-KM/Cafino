@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from "react";
 import itemImage from "../../public/No_Item.png";
 import axios from "axios";
 import { BASE_PATH, LIMIT_DATA } from "../constants/paths.js";
-import { useNavigate } from "react-router-dom";
 
 import Header from "../Componnets/Header.jsx";
 import OrderReceiptOverlay from "../Componnets/OrderReceiptOverlay.jsx";
@@ -24,7 +23,6 @@ const OrderBox = ({
   handleDecreaseCount,
   removingId,
   selectFood,
-  orderError,
 }) => (
   <div className="pt-2 mb-4 border-b-4 border-primary dark:border-primaryDark transition-colors duration-300">
     <h1 className="font-extrabold text-3xl px-8 dark:text-white transition-colors duration-300 pb-5">
@@ -38,7 +36,7 @@ const OrderBox = ({
       } divide-highgray dark:divide-graypalleteDark grid lg:border-b-1 lg:border-highgray dark:border-graypalleteDark transition-colors duration-300`}>
       {orderItems.length === 0 ? (
         <h1 className="text-center text-xl md:text-3xl font-black text-slowgrayDark dark:text-slowgray py-5 transition-colors duration-300 animate-opacity-up">
-          {orderError}
+          سبد خرید خالی است
         </h1>
       ) : (
         orderItems.map((item) => (
@@ -233,7 +231,13 @@ const CheckOutItem = ({ name, count, price, sale_price }) => (
   </div>
 );
 
-function Order({ setFooterShrink, footerShrink = false, setCurrentPage }) {
+function Order({
+  setFooterShrink,
+  footerShrink = false,
+  setCurrentPage,
+  setHeaderShrink,
+  setHeaderMenuOpen,
+}) {
   // SCROLL FOOTER -------------------------------------------------
   const scrollContainerRef = useRef(null);
   const lastScrollTop = useRef(0);
@@ -252,10 +256,18 @@ function Order({ setFooterShrink, footerShrink = false, setCurrentPage }) {
           const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
           const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
 
+          if (currentScrollTop <= 20) {
+            setHeaderShrink(false);
+          } else {
+            setHeaderShrink(true);
+          }
+
           if (scrollingDown) {
             setFooterShrink(true);
+            setHeaderMenuOpen(false);
           } else if (scrollingUp) {
             setFooterShrink(false);
+            setHeaderMenuOpen(false);
           }
 
           lastScrollTop.current = currentScrollTop <= 0 ? 0 : currentScrollTop;
@@ -273,18 +285,14 @@ function Order({ setFooterShrink, footerShrink = false, setCurrentPage }) {
   // ----------------------------------------------------------------
 
   const [orderItems, setOrderItems] = useState([]);
-  const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
   const [tableNumber, setTableNumber] = useState(undefined);
   const [timeAdded, setTimeAdded] = useState(null);
 
   const [showReceipt, setShowReceipt] = useState(false);
-  const navigate = useNavigate();
 
   const [tableError, setTableError] = useState(null);
-  const [orderError, SetOrderError] = useState("سبد خرید خالی است");
 
   const [removingId, setRemovingId] = useState(null);
-
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   const handleIncreaseCount = (id) => {
@@ -473,14 +481,7 @@ function Order({ setFooterShrink, footerShrink = false, setCurrentPage }) {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-60 md:pb-50 lg:pt-20`}>
-        <Header
-          setCurrentPage={setCurrentPage}
-          page={3}
-          text={"سبد خرید"}
-          showMenu={headerMenuOpen}
-          setShowMenu={setHeaderMenuOpen}
-        />
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-60 md:pb-50 pt-16 md:pt-20`}>
         <div className="grid grid-cols-1">
           <div className="col-span-1">
             <OrderBox
@@ -489,7 +490,6 @@ function Order({ setFooterShrink, footerShrink = false, setCurrentPage }) {
               handleDecreaseCount={handleDecreaseCount}
               removingId={removingId}
               selectFood={selectFood}
-              orderError={orderError}
             />
           </div>
           <div className="w-screen lg:w-2/3 mx-auto">

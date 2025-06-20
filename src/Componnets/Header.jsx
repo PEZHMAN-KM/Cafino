@@ -6,83 +6,12 @@ import React, {
   useEffect,
 } from "react";
 import { Icons } from "./Icons";
-
-const TopMenu = () => {
-  return (
-    <svg
-      className="w-10"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      xmlnsXlink="http://www.w3.org/1999/xlink"
-      fill="black">
-      <g id="SVGRepo_bgCarrier" strokeWidth={0} />
-      <g
-        id="SVGRepo_tracerCarrier"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <g id="SVGRepo_iconCarrier">
-        <title>{"Menu"}</title>
-        <g
-          id="Page-1"
-          stroke="none"
-          strokeWidth={1}
-          fill="none"
-          fillRule="evenodd">
-          <g id="Menu">
-            <rect
-              id="Rectangle"
-              fillRule="nonzero"
-              x={0}
-              y={0}
-              width={40}
-              height={40}
-            />
-            <line
-              x1={5}
-              y1={7}
-              x2={19}
-              y2={7}
-              id="Path"
-              className="stroke-black dark:stroke-white transition-colors duration-300"
-              stroke="black"
-              strokeWidth={2}
-              strokeLinecap="round"
-            />
-            <line
-              x1={5}
-              y1={17}
-              x2={19}
-              y2={17}
-              id="Path"
-              className="stroke-black dark:stroke-white transition-colors duration-300"
-              stroke="black"
-              strokeWidth={2}
-              strokeLinecap="round"
-            />
-            <line
-              x1={5}
-              y1={12}
-              x2={19}
-              y2={12}
-              id="Path"
-              className="stroke-black dark:stroke-white transition-colors duration-300"
-              stroke="black"
-              strokeWidth={2}
-              strokeLinecap="round"
-            />
-          </g>
-        </g>
-      </g>
-    </svg>
-  );
-};
+import { PAGE_TITLES } from "../constants/paths";
 
 const Header = forwardRef(
   (
     {
       page,
-      text,
       showMenu,
       setShowMenu,
       searchActive,
@@ -92,6 +21,8 @@ const Header = forwardRef(
       fetchItems,
       headerInputRef,
       setCurrentPage,
+      headerShrink,
+      setHeaderShrink,
     },
     ref
   ) => {
@@ -135,18 +66,6 @@ const Header = forwardRef(
       }
     }, []);
 
-    useEffect(() => {
-      const closeMenuHandler = () => {
-        setShowMenu(false);
-      };
-
-      window.addEventListener("closeMenus", closeMenuHandler);
-
-      return () => {
-        window.removeEventListener("closeMenus", closeMenuHandler);
-      };
-    }, []);
-
     const toggleDarkMode = () => {
       if (isDark) {
         document.documentElement.classList.remove("dark");
@@ -161,22 +80,31 @@ const Header = forwardRef(
 
     return (
       <>
-        <div className="flex justify-center items-center w-screen">
+        <div
+          className={`flex justify-center origin-top items-center w-screen transition-all duration-100 ${
+            headerShrink && page !== 2
+              ? `${page !== 1 ? "md:max-h-full!" : ""} max-h-0!`
+              : "max-h-full!"
+          }`}>
           <div
             className={`${
               isPageLoaded
-                ? "transition-colors duration-300"
+                ? "transition-all duration-300"
                 : "transition-none duration-0"
-            } z-10 flex justify-center items-center gap-3 p-5 py-3 ${
+            } z-10 origin-top flex justify-center items-center gap-3 p-5 py-3 ${
+              headerShrink && page !== 2
+                ? `scale-0! ${page !== 1 ? "md:scale-none!" : ""}`
+                : ""
+            } ${
               page !== 1
-                ? "lg:fixed lg:top-2 mt-2 lg:mt-0 w-[98vw] mx-auto bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-lg border rounded-3xl border-white/20 dark:border-white/10"
-                : "w-screen bg-backgroundcolor dark:bg-backgroundcolorDark"
+                ? `fixed top-2 w-[98vw] mx-auto bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md shadow-lg border rounded-3xl border-white/20 dark:border-white/10`
+                : "fixed top-0 w-screen bg-backgroundcolor dark:bg-backgroundcolorDark"
             }`}>
             <div className="hidden md:flex-1/4 md:flex gap-2">
               <div
                 className="transition-all duration-300 hover:scale-105 cursor-pointer"
                 onClick={toggleMenu}>
-                <TopMenu />
+                <Icons.topMenu />
               </div>
               <button
                 className="transition-all duration-300 hover:scale-105 hidden lg:block cursor-pointer"
@@ -192,22 +120,38 @@ const Header = forwardRef(
               <div className="absolute right-5 top-12 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50">
                 <div className="py-1">
                   <button
-                    onClick={() => setCurrentPage(1)}
+                    onClick={() => {
+                      setCurrentPage(1);
+                      setShowMenu(false);
+                      setHeaderShrink(false);
+                    }}
                     className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
                     خانه
                   </button>
                   <button
-                    onClick={() => setCurrentPage(2)}
+                    onClick={() => {
+                      setCurrentPage(2);
+                      setShowMenu(false);
+                      setHeaderShrink(false);
+                    }}
                     className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
                     علاقه مندی ها
                   </button>
                   <button
-                    onClick={() => setCurrentPage(3)}
+                    onClick={() => {
+                      setCurrentPage(3);
+                      setShowMenu(false);
+                      setHeaderShrink(false);
+                    }}
                     className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
                     سفارشات
                   </button>
                   <button
-                    onClick={() => setCurrentPage(4)}
+                    onClick={() => {
+                      setCurrentPage(4);
+                      setShowMenu(false);
+                      setHeaderShrink(false);
+                    }}
                     className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
                     تماس با ما
                   </button>
@@ -241,7 +185,7 @@ const Header = forwardRef(
                 {searchActive && (
                   <button
                     onClick={() => {
-                      fetchItems();
+                      if (fetchItems) fetchItems();
                       setSearchActive(false);
                       setSearchTerm("");
                       setShowMenu(false);
@@ -260,7 +204,7 @@ const Header = forwardRef(
             ) : (
               <div className="flex-3/4">
                 <h1 className="text-center text-2xl font-black dark:text-white transition-colors duration-300">
-                  {text}
+                  {PAGE_TITLES[page] || "صفحه ناشناس"}
                 </h1>
               </div>
             )}
@@ -274,6 +218,7 @@ const Header = forwardRef(
                     navigator.vibrate(10);
                   }
                   setCurrentPage(1);
+                  setShowMenu(false);
                 }}
                 className="text-lg lg:text-xl font-bold dark:text-white transition-colors duration-300">
                 کافـی نـو
