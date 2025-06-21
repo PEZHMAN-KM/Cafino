@@ -44,6 +44,13 @@ function Footer({
     };
   }, []);
 
+  function goToTop() {
+    scrollContainerRef.current.scrollTo({
+      top: 0,
+      ...(shouldAnimate ? { behavior: "smooth" } : {}),
+    });
+  }
+
   return (
     <>
       <div className="flex justify-center items-center">
@@ -74,6 +81,7 @@ function Footer({
                   setPage(4);
                   setHeaderShrink(false);
                   setHideIcons(false);
+                  goToTop();
                 }}
                 className="transition-all duration-300">
                 <Icons.call
@@ -93,6 +101,7 @@ function Footer({
                   setPage(3);
                   setHeaderShrink(false);
                   setHideIcons(false);
+                  goToTop();
                 }}
                 href="Order"
                 className="relative transition-all duration-300">
@@ -118,6 +127,7 @@ function Footer({
                   setPage(2);
                   setHeaderShrink(false);
                   setHideIcons(false);
+                  goToTop();
                 }}
                 className="transition-all duration-300"
                 href="FavoritePage">
@@ -138,10 +148,7 @@ function Footer({
                   setPage(1);
                   setHeaderShrink(false);
                   setHideIcons(false);
-                  scrollContainerRef.current.scrollTo({
-                    top: 0,
-                    ...(shouldAnimate ? { behavior: "smooth" } : {}),
-                  });
+                  goToTop();
                 }}
                 className="transition-all duration-300"
                 href="Home">

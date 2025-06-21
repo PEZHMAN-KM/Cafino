@@ -68,8 +68,8 @@ const Header = forwardRef(
         <div
           className={`flex justify-center origin-top items-center w-screen transition-all duration-100 ${
             headerShrink && page !== 2
-              ? `${page !== 1 ? "md:max-h-full!" : ""} max-h-0!`
-              : "max-h-full!"
+              ? `${page !== 1 ? "md:max-h-full!" : "lg:opacity-0"} max-h-0!`
+              : "max-h-full! opacity-100"
           }`}>
           <div
             className={`${
@@ -208,6 +208,7 @@ const Header = forwardRef(
                   }
                   setCurrentPage(1);
                   setShowMenu(false);
+                  setHeaderShrink(false);
                 }}
                 className="text-lg lg:text-xl font-bold dark:text-white transition-colors duration-300">
                 کافـی نـو

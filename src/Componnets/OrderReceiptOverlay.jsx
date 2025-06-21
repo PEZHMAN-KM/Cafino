@@ -4,6 +4,7 @@ import { Icons } from "./Icons";
 import { BASE_PATH } from "../constants/paths";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAnimation } from "../constants/AnimationContext";
+import { useBlur } from "../constants/BlurContext.jsx";
 
 const formatPrice = (num) =>
   num == null || isNaN(num) ? "" : Number(num).toLocaleString("en-US");
@@ -29,6 +30,8 @@ export default function OrderReceiptOverlay({
 }) {
   const shouldAnimate = useAnimation();
   const MotionOrDiv = shouldAnimate ? motion.div : "div";
+  const reduceBlur = useBlur();
+
   if (!visible) return null;
 
   return (
@@ -37,7 +40,9 @@ export default function OrderReceiptOverlay({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 bg-black/50 backdrop-blur-md z-50 flex justify-center items-center">
+      className={`fixed inset-0 ${
+        reduceBlur ? "bg-black/70" : "bg-black/20"
+      } backdrop-blur-md z-50 flex justify-center items-center`}>
       <MotionOrDiv
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

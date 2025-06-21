@@ -7,6 +7,7 @@ import { BASE_PATH } from "../constants/paths.js";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAnimation } from "../constants/AnimationContext.jsx";
+import { useBlur } from "../constants/BlurContext.jsx";
 
 // FOR BANNER
 import bannerImage from "../../public/Banner.jpg";
@@ -30,6 +31,7 @@ function Home({
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const shouldAnimate = useAnimation();
   const MotionOrDiv = shouldAnimate ? motion.div : "div";
+  const reduceBlur = useBlur();
 
   const [blurActive, setBlurActive] = useState(false);
   const [activeCardData, setActiveCardData] = useState(null);
@@ -138,9 +140,15 @@ function Home({
         top: 0,
         ...(shouldAnimate ? { behavior: "smooth" } : {}),
       });
-    }
-    if (headerInputRef.current) {
-      headerInputRef.current.focus();
+
+      // صبر کن تا اسکرول به بالا برسه
+      setTimeout(
+        () => {
+          headerInputRef.current?.focus();
+          setSearchActive(true);
+        },
+        shouldAnimate ? 400 : 0
+      ); // زمان باید با مدت انیمیشن تطابق داشته باشه
     }
   }
 
@@ -229,7 +237,9 @@ function Home({
           <>
             {/* تارکننده */}
             <MotionOrDiv
-              className="fixed inset-0 bg-black/20 backdrop-blur-md z-40 w-full h-full"
+              className={`fixed inset-0 ${
+                reduceBlur ? "bg-black/70" : "bg-black/20"
+              } backdrop-blur-md z-40 w-full h-full`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -272,7 +282,7 @@ function Home({
               showMenu={headerMenuOpen}
               setShowMenu={setHeaderMenuOpen}
               onSearchClick={scrollToTopAndFocus}
-              setSearchActive={setSearchActive}
+              // setSearchActive={setSearchActive}
               className={`${
                 isPageLoaded
                   ? "transition-all duration-300"

@@ -62,6 +62,7 @@ const App = () => {
             setCurrentPage={setCurrentPage}
             setHeaderMenuOpen={setHeaderMenuOpen}
             setHeaderShrink={setHeaderShrink}
+            scrollContainerRef={scrollContainerRef}
           />
         );
       case 3:
@@ -72,6 +73,7 @@ const App = () => {
             setCurrentPage={setCurrentPage}
             setHeaderMenuOpen={setHeaderMenuOpen}
             setHeaderShrink={setHeaderShrink}
+            scrollContainerRef={scrollContainerRef}
           />
         );
       case 4:
@@ -80,6 +82,7 @@ const App = () => {
             setFooterShrink={setFooterShrink}
             setHeaderMenuOpen={setHeaderMenuOpen}
             setHeaderShrink={setHeaderShrink}
+            scrollContainerRef={scrollContainerRef}
           />
         );
       case 5:

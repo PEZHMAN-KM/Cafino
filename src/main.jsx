@@ -50,25 +50,15 @@ if (detectShouldDisableAnimations()) {
   document.body.classList.add("no-anim");
 }
 
-// function detectShouldReduceBlur() {
-//   const deviceMemory = navigator.deviceMemory || 4;
-//   const ua = navigator.userAgent.toLowerCase();
+const lacksModernFeatures = () => {
+  return (
+    !("OffscreenCanvas" in window) ||
+    !CSS.supports("backdrop-filter", "blur(10px)") ||
+    !window.WebGL2RenderingContext
+  );
+};
 
-//   const isLowBlurDevice =
-//     deviceMemory <= 2 ||
-//     ua.includes("a9 2018") ||
-//     ua.includes("j5") ||
-//     ua.includes("android 8") ||
-//     ua.includes("m10") ||
-//     ua.includes("lg k");
-
-//   return isLowBlurDevice;
-// }
-
-// if (detectShouldReduceBlur()) {
-//   document.body.classList.add("reduce-blur");
-// }
-const REDUCE_BLUR = false;
+const REDUCE_BLUR = lacksModernFeatures();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

@@ -94,9 +94,13 @@ const InstagramPage = () => (
   </button>
 );
 
-function ContactUs({ setFooterShrink, setHeaderMenuOpen, setHeaderShrink }) {
+function ContactUs({
+  setFooterShrink,
+  setHeaderMenuOpen,
+  setHeaderShrink,
+  scrollContainerRef,
+}) {
   // SCROLL FOOTER -------------------------------------------------
-  const scrollContainerRef = useRef(null);
   const lastScrollTop = useRef(0);
 
   useEffect(() => {

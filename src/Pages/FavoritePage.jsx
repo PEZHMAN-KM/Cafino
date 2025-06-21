@@ -12,6 +12,7 @@ function FavoritePage({
   setCurrentPage,
   setHeaderMenuOpen,
   setHeaderShrink,
+  scrollContainerRef,
 }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const shouldAnimate = useAnimation();
@@ -26,7 +27,6 @@ function FavoritePage({
   const [orderCounts, setOrderCounts] = useState({});
 
   // SCROLL FOOTER -------------------------------------------------
-  const scrollContainerRef = useRef(null);
   const lastScrollTop = useRef(0);
 
   useEffect(() => {

@@ -237,9 +237,9 @@ function Order({
   setCurrentPage,
   setHeaderShrink,
   setHeaderMenuOpen,
+  scrollContainerRef,
 }) {
   // SCROLL FOOTER -------------------------------------------------
-  const scrollContainerRef = useRef(null);
   const lastScrollTop = useRef(0);
 
   useEffect(() => {
@@ -436,9 +436,6 @@ function Order({
         table_number: tableNumber,
         // message,
       };
-
-      setShowReceipt(true);
-
       try {
         const response = await axios.post(
           `${BASE_PATH}/order/add_order`,
@@ -449,24 +446,26 @@ function Order({
             },
           }
         );
-        if (response.status == 200) {
-          setTimeAdded(response.data.order.time_added);
-          localStorage.setItem("order", "[]");
+        if (response.status == 201) {
           if ("vibrate" in navigator && typeof window !== "undefined") {
             navigator.vibrate(20);
           }
+          setTimeAdded(response.data.order.time_added);
+          setShowReceipt(true);
+          localStorage.setItem("order", "[]");
+          // fetchItems();
         }
       } catch (err) {
         console.log(err);
         if ("vibrate" in navigator && typeof window !== "undefined") {
-          navigator.vibrate(10);
+          navigator.vibrate([50, 30, 50, 30, 70]);
         }
       }
     }
   }
   const refreshAllData = () => {
     fetchItems();
-    setTableNumber(0);
+    setTableNumber(null);
     setShowReceipt(false);
     window.dispatchEvent(new Event("orderUpdated"));
   };

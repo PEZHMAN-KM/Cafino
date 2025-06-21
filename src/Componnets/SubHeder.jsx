@@ -8,7 +8,7 @@ function SubHeder({
   showMenu,
   setShowMenu,
   onSearchClick,
-  setSearchActive,
+  // setSearchActive,
   setCurrentPage,
 }) {
   const [onCategory, setOnCategory] = useState(1);
@@ -75,7 +75,7 @@ function SubHeder({
                 navigator.vibrate(haptic);
               }
               onSearchClick();
-              setSearchActive(true);
+              // setSearchActive(true);
             }}
             className={`bg-graypallete p-2 lg:p-3 shrink-0 font-bold rounded-2xl cursor-pointer transition-all duration-300 lg:hover:scale-102 lg:hover:bg-highgray touch-manipulation ${
               !hideIcons ? "hidden" : "block"
