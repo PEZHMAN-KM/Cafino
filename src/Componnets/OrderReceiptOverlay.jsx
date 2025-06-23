@@ -78,7 +78,7 @@ export default function OrderReceiptOverlay({
                       : itemImage
                   }
                   alt={item.name}
-                  className="w-12 h-12 lg:w-18 lg:h-18 rounded-xl object-cover"
+                  className="w-12 h-12 lg:w-18 lg:h-18 rounded-xl object-cover pointer-events-none touch-none"
                 />
                 <div className="flex-1 mx-3">
                   <div className="font-bold text-black lg:text-2xl dark:text-white flex gap-2 justify-start items-center">

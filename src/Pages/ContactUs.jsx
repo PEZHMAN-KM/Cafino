@@ -1,6 +1,4 @@
-import Header from "../Componnets/Header.jsx";
-import itemImage from "../../public/2.jpg";
-import { BASE_PATH, LIMIT_DATA } from "../constants/paths";
+import { BASE_PATH, LIMIT_DATA, LOCATION } from "../constants/paths";
 import React, { useState, useEffect, useRef } from "react";
 import { Icons } from "../Componnets/Icons.jsx";
 import axios from "axios";
@@ -10,6 +8,7 @@ const Waiter = ({
   tableNumber,
   setTableNumber,
   error,
+  tableError,
   isPageLoaded,
 }) => (
   <div
@@ -17,29 +16,36 @@ const Waiter = ({
       isPageLoaded
         ? "transition-colors duration-300"
         : "transition-none duration-0"
-    } bg-white dark:bg-darkpalleteDark flex justify-between gap-1 items-center w-screen m-5 my-2 py-3 px-3 rounded-3xl border-2 ${
+    } bg-white dark:bg-darkpalleteDark flex justify-between items-center w-screen p-2 xs:p-3 m-2 rounded-3xl border-2 ${
       error
-        ? "border-primary dark:border-primaryDark"
+        ? tableError
+          ? "border-adminError dark:border-adminErrorDark"
+          : "border-primary dark:border-primaryDark"
         : "border-highgray dark:border-graypalleteDark"
     } `}>
     <div>
-      <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold dark:text-white transition-colors duration-300">
+      <h1 className="text-lg md:text-2xl font-extrabold dark:text-white transition-colors duration-300">
         تماس با سالندار
       </h1>
-      <h3 className="text-xs md:text-sm lg:text-lg text-slowgrayDark dark:text-slowgray transition-colors duration-300">
-        از درست بودن شماره میز اطمینان حاصل کنید
-        <br />
-        {error && <span className="text-Start my-4 text-primary">{error}</span>}
+      <h3
+        className={`text-xs md:text-lg font-bold ${
+          error
+            ? tableError
+              ? "text-adminError"
+              : "text-primary"
+            : "text-slowgrayDark dark:text-slowgray"
+        } transition-colors duration-300`}>
+        {error ? error : "از درست بودن شماره میز اطمینان حاصل کنید"}
       </h3>
     </div>
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1 xs:gap-2">
       <div>
         <input
           className={`${
             isPageLoaded
               ? "transition-colors duration-300"
               : "transition-none duration-0"
-          } w-15 h-15 text-4xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl`}
+          } size-10 xs:size-13 text-3xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl`}
           type="number"
           value={tableNumber}
           onChange={(e) => setTableNumber(Number(e.target.value))}
@@ -47,26 +53,39 @@ const Waiter = ({
       </div>
       <button
         onClick={() => addNotification(tableNumber)}
-        className="w-15 h-15 bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary rounded-2xl flex items-center justify-center cursor-pointer transition-colors duration-300">
-        <Icons.bell className={"w-10 stroke-white"} />
+        className="size-10 xs:size-13 bg-primary dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary rounded-2xl flex items-center justify-center cursor-pointer transition-colors duration-300">
+        <Icons.bell className={"w-6 xs:w-8 stroke-white"} />
       </button>
     </div>
   </div>
 );
-const Location = () => (
-  <button
+const Location = ({ setIframeLoaded, iframeLoaded }) => (
+  <a
     onClick={() => {
       if ("vibrate" in navigator && typeof window !== "undefined") {
         navigator.vibrate(20);
       }
     }}
+    href="https://nshn.ir/_bfkwn5FLuBe"
     className="bg-darkpallete dark:bg-darkpalleteDark hover:bg-darkpalleteDark dark:hover:bg-darkpallete p-5 pb-3 rounded-3xl transition-colors duration-300 cursor-pointer">
-    <img className="rounded-2xl w-50" src={itemImage} alt="" />
+    {!iframeLoaded && (
+      <div className="fixed flex flex-col items-center justify-center gap-5 size-50! rounded-2xl w-full h-full animate-shimmer">
+        <Icons.location className={"w-12 stroke-gray-300"} />
+        <span className="text-gray-300">در حال بارگذاری نقشه...</span>
+      </div>
+    )}
+    <iframe
+      title="map-iframe"
+      src={LOCATION}
+      allowFullScreen
+      className="size-50! rounded-2xl z-10"
+      onLoad={() => setIframeLoaded(true)}
+      loading="lazy"></iframe>
     <div className="flex justify-between items-center px-4 text-white pt-2">
       <Icons.location className={"w-8 stroke-white"} />
       <h1 className="text-xl font-bold">آدرس کـــــــــافه</h1>
     </div>
-  </button>
+  </a>
 );
 const PhoneNumber = () => (
   <a
@@ -82,16 +101,17 @@ const PhoneNumber = () => (
   </a>
 );
 const InstagramPage = () => (
-  <button
+  <a
     onClick={() => {
       if ("vibrate" in navigator && typeof window !== "undefined") {
         navigator.vibrate(20);
       }
     }}
+    href="https://www.instagram.com/pezhmankazemimir?igsh=MWdibjNqeHgyczNzZg=="
     className="bg-purple-700 dark:bg-purple-800 hover:bg-purple-900 dark:hover:bg-purple-600 w-60 px-8 py-2 rounded-2xl flex items-center justify-between transition-colors duration-300">
     <Icons.instagram className={"stroke-white"} />
-    <h1 className="text-xl font-bold text-white">KMP STUDIO</h1>
-  </button>
+    <h1 className="text-xl font-bold text-white">PEZHMAN.KM</h1>
+  </a>
 );
 
 function ContactUs({
@@ -147,7 +167,10 @@ function ContactUs({
 
   const [tableNumber, setTableNumber] = useState(null);
   const [error, setError] = useState(null);
+  const [tableError, setTableError] = useState(null);
+
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [iframeLoaded, setIframeLoaded] = useState(false);
 
   useEffect(() => {
     // For flashing on LOADING PAGE
@@ -155,17 +178,21 @@ function ContactUs({
   }, []);
 
   async function addNotification(tableNumber) {
-    if (tableNumber < 1 || tableNumber > LIMIT_DATA) {
+    if ((tableNumber < 1 || tableNumber > LIMIT_DATA, LOCA)) {
+      LOCATION;
       setError("لطفا شماره میز را درست وارد کنید!");
+      setTableError(true);
       if ("vibrate" in navigator && typeof window !== "undefined") {
         navigator.vibrate([50, 30, 50, 30, 70]);
       }
       setTimeout(() => {
         setError(null);
+        setTableError(null);
       }, 2000);
       return;
     }
     setError(null);
+    setTableError(null);
     try {
       const response = await axios.post(
         `${BASE_PATH}/notification/add_notif`,
@@ -185,11 +212,13 @@ function ContactUs({
       }, 5000);
     } catch (err) {
       setError("خطا در تماس با سالن‌دار");
+      setTableError(null);
       if ("vibrate" in navigator && typeof window !== "undefined") {
         navigator.vibrate([50, 30, 50, 30, 70]);
       }
       setTimeout(() => {
         setError(null);
+        setTableError(null);
       }, 10000);
     }
   }
@@ -202,7 +231,7 @@ function ContactUs({
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark h-screen pb-22 w-screen overflow-y-auto scrollbar scrollbar-none pt-16 md:pt-20`}>
+        } bg-backgroundcolor dark:bg-backgroundcolorDark h-full pb-22 w-screen overflow-y-auto scrollbar scrollbar-none pt-18 md:pt-20`}>
         <div className="grid grid-cols-1">
           {/* ------------------------------------------ CALL WAITER ------------------------------------------ */}
           <div className="col-span-1 flex justify-center items-start w-screen lg:w-2/3 mx-auto animate-scale-up">
@@ -212,11 +241,15 @@ function ContactUs({
               addNotification={addNotification}
               error={error}
               isPageLoaded={isPageLoaded}
+              tableError={tableError}
             />
           </div>
           {/* -------------------------------------------- LOCATION -------------------------------------------- */}
           <div className="col-span-1 flex justify-center mt-0 md:mt-2 animate-move-up">
-            <Location />
+            <Location
+              setIframeLoaded={setIframeLoaded}
+              iframeLoaded={iframeLoaded}
+            />
           </div>
           {/* ------------------------------------------ PHONE COLLOR ------------------------------------------ */}
           <div className="col-span-1 flex justify-center items-center mt-2 md:mt-4 animate-move-up delay-1">

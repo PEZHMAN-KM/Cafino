@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fa">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📋 نسخه سبک منو</title>
+    <style>
+      @font-face {
+        font-family: "Vazir";
+        src: url("./font/Vazir.woff2") format("woff2");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        color-scheme: light dark;
+      }
+
+      body {
+        font-family: "Vazir", system-ui, Tahoma, sans-serif;
+        background: #fefefe;
+        color: #222;
+        padding: 1rem;
+        direction: rtl;
+        line-height: 1.8;
+        max-width: 600px;
+        margin: 0 auto;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      .description {
+        color: #666;
+        margin: 0.3rem 0;
+      }
+
+      .food-item {
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.75rem;
+        background-color: #fff;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        color: #c67c4e;
+      }
+
+      summary {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #c67c4e;
+        cursor: pointer;
+        margin-top: 1.5rem;
+      }
+
+      .food-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .upper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .price {
+        font-weight: bold;
+        font-size: 0.95rem;
+        white-space: nowrap;
+      }
+
+      .sale {
+        color: green;
+        font-weight: bold;
+        font-size: 0.95rem;
+      }
+
+      del {
+        color: #999;
+        margin-left: 0.5rem;
+      }
+
+      p.loading {
+        text-align: center;
+        font-size: 1rem;
+        margin-top: 2rem;
+        color: #555;
+      }
+
+      .error {
+        text-align: center;
+        color: red;
+        margin-top: 2rem;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #111;
+          color: #eee;
+        }
+
+        .food-item {
+          background-color: #1a1a1a;
+          border-color: #444;
+        }
+
+        del {
+          color: #777;
+        }
+
+        .description {
+          color: #bbb;
+        }
+
+        summary {
+          color: #ffa94d;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📋 منوی سبک کافه ☕</h1>
+    <p class="loading">⏳ در حال دریافت اطلاعات...</p>
+    <div id="menu-container"></div>
+
+    <script>
+      async function checkAndRedirectIfFastNet() {
+        const connection =
+          navigator.connection ||
+          navigator.mozConnection ||
+          navigator.webkitConnection;
+        const netType = connection?.effectiveType || "unknown";
+
+        const fileUrl = "/TEST_SPEED_PEZHMAN.jpg";
+        const fileSizeInBytes = 50335;
+
+        let speed = 1000;
+        try {
+          const startTime = performance.now();
+          const response = await fetch(fileUrl, { cache: "no-store" });
+          await response.blob();
+          const endTime = performance.now();
+          const duration = (endTime - startTime) / 1000;
+          speed = fileSizeInBytes / duration / 1024;
+        } catch (e) {
+          console.warn("خطا در تست سرعت:", e);
+        }
+
+        if (
+          netType !== "2g" &&
+          netType !== "slow-2g" &&
+          !(netType === "unknown" && speed < 100) &&
+          speed >= 100
+        ) {
+          window.location.href = "/";
+          return;
+        }
+
+        loadMenu();
+      }
+
+      function loadMenu() {
+        fetch("http://192.168.100.7:8000/food/get_all_foods")
+          .then((r) => r.json())
+          .then((data) => {
+            document.querySelector(".loading").style.display = "none";
+            const container = document.getElementById("menu-container");
+
+            // جدا کردن آیتم‌های تخفیف‌دار
+            const discountedItems = data.filter((item) => item.in_sale);
+
+            // نمایش آیتم‌های تخفیف‌دار در بخش ویژه
+            if (discountedItems.length > 0) {
+              const details = document.createElement("details");
+              details.open = true; // این بخش باز باشد
+
+              const summary = document.createElement("summary");
+              summary.textContent = "🔥 با تخفیف ویژه";
+              details.appendChild(summary);
+
+              const ul = document.createElement("ul");
+              ul.className = "food-list";
+
+              discountedItems.forEach((item) => {
+                const li = document.createElement("li");
+                li.className = "food-item";
+
+                const div = document.createElement("div");
+                div.className = "upper";
+
+                const name = `<strong>${item.name}</strong>`;
+                const price = `<span class="price"><del>${item.price.toLocaleString()}</del> <span class="sale">${item.sale_price.toLocaleString()} تومان</span></span>`;
+
+                div.innerHTML = `${name}<span>${price}</span>`;
+                const description = item.description
+                  ? `<div class="description">${item.description}</div>`
+                  : "";
+
+                li.appendChild(div);
+                li.innerHTML += description;
+                ul.appendChild(li);
+              });
+
+              details.appendChild(ul);
+              container.appendChild(details);
+            }
+
+            // دسته‌بندی همه غذاها بر اساس category_id
+            const grouped = {};
+            data.forEach((item) => {
+              const cat = item.category_id || "سایر";
+              if (!grouped[cat]) grouped[cat] = [];
+              grouped[cat].push(item);
+            });
+
+            const titleMap = {
+              1: "🧁 کافه",
+              2: "🍰 کیک و دسر",
+              3: "🥤 نوشیدنی سرد",
+              4: "☕ نوشیدنی گرم",
+              5: "🍽 غذا",
+            };
+
+            Object.keys(grouped).forEach((catId) => {
+              const foods = grouped[catId];
+              const title = titleMap[catId] || "📦 سایر";
+
+              const details = document.createElement("details");
+              const summary = document.createElement("summary");
+              summary.textContent = title;
+              details.appendChild(summary);
+
+              const ul = document.createElement("ul");
+              ul.className = "food-list";
+
+              foods.forEach((item) => {
+                const li = document.createElement("li");
+                li.className = "food-item";
+
+                const div = document.createElement("div");
+                div.className = "upper";
+
+                const name = `<strong>${item.name}</strong>`;
+                const price = item.in_sale
+                  ? `<span class="price"><del>${item.price.toLocaleString()}</del> <span class="sale">${item.sale_price.toLocaleString()} تومان</span></span>`
+                  : `<span class="price">${item.price.toLocaleString()} تومان</span>`;
+
+                div.innerHTML = `${name}<span>${price}</span>`;
+                const description = item.description
+                  ? `<div class="description">${item.description}</div>`
+                  : "";
+
+                li.appendChild(div);
+                li.innerHTML += description;
+                ul.appendChild(li);
+              });
+
+              details.appendChild(ul);
+              container.appendChild(details);
+            });
+          })
+          .catch(() => {
+            document.querySelector(".loading").style.display = "none";
+            document.body.innerHTML +=
+              "<p class='error'>⚠️ خطا در دریافت داده‌ها.</p>";
+          });
+      }
+
+      checkAndRedirectIfFastNet();
+    </script>
+  </body>
+</html>

@@ -39,7 +39,6 @@ const OrderTable = ({
   clickedButtonId,
   fetchItems,
   addNotification,
-  getNOtification,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -85,7 +84,7 @@ const OrderTable = ({
         damping: 20,
         mass: 0.5,
       }}
-      className={`relative overflow-hidden cursor-pointer select-none ${
+      className={`relative overflow-hidden cursor-pointer ${
         !is_accepted
           ? "border-2 border-adminPrimary dark:border-adminPrimaryDark"
           : "border-3 border-adminAction dark:border-adminActionDark"
@@ -143,7 +142,6 @@ const OrderTable = ({
                   await acceptOrder(id);
                   await addNotification(table_number);
                   await fetchItems();
-                  await getNOtification();
                   setClickedButtonId(null);
                 }, 300);
               }}
@@ -187,7 +185,7 @@ const OrderItem = ({
         pic_url ? `${BASE_PATH}/files/${pic_url.split("/").pop()}` : itemImage
       }
       alt={name}
-      className="w-12 h-12 lg:w-18 lg:h-18 rounded-xl object-cover"
+      className="w-12 h-12 lg:w-18 lg:h-18 rounded-xl object-cover pointer-events-none touch-none"
     />
     <div className="flex-1 max-xs:mx-0 max-xs:mr-3 mx-3">
       <h1 className="font-bold text-black lg:text-2xl dark:text-white text-start">
@@ -204,7 +202,7 @@ const OrderItem = ({
         </span>
       </div>
       {sale_price == null ? (
-        <h1 className="ftext-sm font-normal lg:text-xl lg:font-semibold text-slowgrayDark dark:text-slowgray transition-colors duration-300">
+        <h1 className="ftext-sm font-normal lg:text-xl lg:font-bold text-slowgrayDark dark:text-slowgray transition-colors duration-300">
           {formatPrice(price)} تومان
         </h1>
       ) : (
@@ -212,7 +210,7 @@ const OrderItem = ({
           <h1 className="text-sm decoration-1 line-through text-highgray dark:text-slowgray transition-colors duration-300 max-xs:truncate max-xs:max-w-12 max-xs:w-fit">
             {formatPrice(price)} <span className="hidden md:inline">تومان</span>
           </h1>
-          <h1 className="ftext-sm font-normal lg:text-xl lg:font-semibold text-slowgrayDark dark:text-slowgray transition-colors duration-300 whitespace-nowrap">
+          <h1 className="ftext-sm font-normal lg:text-xl lg:font-bold text-slowgrayDark dark:text-slowgray transition-colors duration-300 whitespace-nowrap">
             {formatPrice(sale_price)} تومان
           </h1>
         </div>
@@ -266,10 +264,11 @@ const WaiterRequest = ({
   waitress_name,
   progressNotification,
   unProgressNotification,
+  doneNotification,
   removingId,
   setClickedButtonId,
   clickedButtonId,
-  getNOtification,
+  deleteNotification,
 }) => (
   <div
     className={`flex flex-col justify-center items-center w-full ${
@@ -278,7 +277,7 @@ const WaiterRequest = ({
     <div
       className={` transition-all hover:scale-102 duration-300 w-full px-7 py-2 rounded-3xl ${
         message
-          ? "bg-adminBackgroundColor dark:bg-adminBackgroundColorDark"
+          ? "bg-blue-100 dark:bg-blue-950"
           : "bg-white dark:bg-darkpalleteDark"
       } ${
         !inProgress
@@ -291,40 +290,64 @@ const WaiterRequest = ({
       <div className="flex flex-col justify-center items-center">
         <WaiterTableNumber table_number={tableNumber} />
       </div>
-      <div className="flex justify-center items-center gap-2 py-2">
+      <div className="flex justify-center items-center py-2">
         {inProgress ? (
           <div className="flex flex-col justify-center items-center">
-            <div className="flex justify-center items-center py-2">
+            <div className="flex justify-center items-center pb-2">
               <h1 className="text-xs lg:text-lg text-center text-black dark:text-white transition-colors duration-300">
                 این درخواست به {waitress_name} واگذار شده
               </h1>
             </div>
+            <div className="flex justify-center items-center gap-2">
+              <button
+                onClick={() => {
+                  setClickedButtonId(id);
+                  setTimeout(async () => {
+                    await doneNotification(id);
+                    setClickedButtonId(null);
+                  }, 300);
+                }}
+                className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+                انجام شد
+              </button>
+              <button
+                onClick={() => {
+                  setClickedButtonId(id);
+                  setTimeout(async () => {
+                    await unProgressNotification(id);
+                    setClickedButtonId(null);
+                  }, 300);
+                }}
+                className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
+                لغو بررسی
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-between items-center gap-3">
             <button
               onClick={() => {
                 setClickedButtonId(id);
                 setTimeout(async () => {
-                  await unProgressNotification(id);
-                  await getNOtification();
+                  await progressNotification(id);
+                  setClickedButtonId(null);
+                }, 300);
+              }}
+              className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
+              انجام شد
+            </button>
+            <button
+              onClick={() => {
+                setClickedButtonId(id);
+                setTimeout(async () => {
+                  await deleteNotification(id);
                   setClickedButtonId(null);
                 }, 300);
               }}
               className="bg-white dark:bg-darkpalleteDark border-adminError dark:border-adminErrorDark border-2 px-3 py-2 rounded-xl text-xl text-adminError dark:text-adminErrorDark hover:bg-adminError hover:text-white dark:hover:bg-adminErrorDark transition-all">
-              لغو بررسی
+              حذف
             </button>
           </div>
-        ) : (
-          <button
-            onClick={() => {
-              setClickedButtonId(id);
-              setTimeout(async () => {
-                await progressNotification(id);
-                await getNOtification();
-                setClickedButtonId(null);
-              }, 300);
-            }}
-            className="bg-white dark:bg-darkpalleteDark border-adminAction dark:border-adminActionDark border-2 px-3 py-2 rounded-xl text-xl text-adminAction dark:text-adminActionDark hover:bg-adminAction hover:text-white dark:hover:bg-adminActionDark transition-all">
-            انجام شد
-          </button>
         )}
       </div>
     </div>
@@ -463,6 +486,7 @@ function AdminHome() {
           },
         }
       );
+      getNOtification();
     } catch (err) {
       console.log("خطا در ثبت تحویل سفارش مشتری");
     }
@@ -491,7 +515,7 @@ function AdminHome() {
     const token = JSON.parse(localStorage.getItem("user_data"));
     try {
       const response = await axios.put(
-        `${BASE_PATH}/waitress/notification/get_notif_in_progress`,
+        `${BASE_PATH}/admin/notification/admin_get_notif_in_progress`,
         {
           notif_id: notif_id,
         },
@@ -514,7 +538,7 @@ function AdminHome() {
     setTimeout(async () => {
       try {
         const response = await axios.put(
-          `${BASE_PATH}/waitress/notification/get_notif_done`,
+          `${BASE_PATH}/admin/notification/admin_get_notif_done`,
           {
             notif_id: notif_id,
           },
@@ -552,6 +576,25 @@ function AdminHome() {
       );
     } catch (error) {
       console.error("خطا در لغو بررسی نوتیف:", error);
+    }
+  }
+  async function deleteNotification(notif_id) {
+    try {
+      const response = await axios.put(
+        `${BASE_PATH}/notification/delete_notif`,
+        {
+          notif_id: notif_id,
+        },
+        {
+          headers: {
+            accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      getNOtification();
+    } catch (error) {
+      console.error("خطا در لغو حذف نوتیف:", error);
     }
   }
 
@@ -624,7 +667,6 @@ function AdminHome() {
                     clickedButtonId={clickedButtonId}
                     fetchItems={fetchItems}
                     addNotification={addNotification}
-                    getNOtification={getNOtification}
                   />
                 </div>
               ))
@@ -665,7 +707,7 @@ function AdminHome() {
                       removingId={removingId}
                       setClickedButtonId={setClickedButtonId}
                       clickedButtonId={clickedButtonId}
-                      getNOtification={getNOtification}
+                      deleteNotification={deleteNotification}
                     />
                   </div>
                 ))}

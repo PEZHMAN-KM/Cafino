@@ -8,7 +8,6 @@ function SubHeder({
   showMenu,
   setShowMenu,
   onSearchClick,
-  // setSearchActive,
   setCurrentPage,
 }) {
   const [onCategory, setOnCategory] = useState(1);
@@ -36,7 +35,7 @@ function SubHeder({
           }`}>
           {/* MENU BUTTON */}
           <div
-            className={`bg-darkpallete p-2 lg:p-3 hidden shrink-0 font-bold rounded-2xl cursor-pointer transition-all duration-300 lg:hover:scale-102 lg:hover:bg-highgray touch-manipulation ${
+            className={`bg-darkpallete p-2 lg:p-3 hidden shrink-0 font-bold rounded-full cursor-pointer transition-all duration-300 lg:hover:scale-102 lg:hover:bg-highgray touch-manipulation ${
               !hideIcons ? "hidden" : "md:block"
             }`}
             onClick={toggleMenu}>
@@ -75,9 +74,8 @@ function SubHeder({
                 navigator.vibrate(haptic);
               }
               onSearchClick();
-              // setSearchActive(true);
             }}
-            className={`bg-graypallete p-2 lg:p-3 shrink-0 font-bold rounded-2xl cursor-pointer transition-all duration-300 lg:hover:scale-102 lg:hover:bg-highgray touch-manipulation ${
+            className={`bg-graypallete p-2 lg:p-3 shrink-0 font-bold rounded-full cursor-pointer transition-all duration-300 lg:hover:scale-102 lg:hover:bg-highgray touch-manipulation ${
               !hideIcons ? "hidden" : "block"
             }`}>
             {hideIcons && (
@@ -90,7 +88,7 @@ function SubHeder({
               onCategory === 1
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
+            } shrink-0 font-bold rounded-2xl lg:rounded-3xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "lg:w-30 lg:h-30 w-20 h-25 flex justify-center items-center flex-col gap-3 text-xs lg:text-lg"
                 : "p-2 text-xs lg:p-3 lg:text-xl h-full text-center"
@@ -112,10 +110,10 @@ function SubHeder({
               onCategory === -1
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-slowprimary dark:bg-slowprimaryDark text-primary"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 md:hover:scale-102 lg:hover:bg-slowgrayDark lg:hover:dark:bg-slowgray flex justify-center items-center animate-scale-up touch-manipulation ${
+            } shrink-0 font-bold rounded-2xl lg:rounded-3xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-slowgrayDark lg:hover:dark:bg-slowgray flex justify-center items-center animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "lg:w-30 lg:h-30 w-20 h-25 flex-col text-xs lg:text-lg gap-3 p-0"
-                : "p-1.5 text-xs lg:p-2 lg:text-xl text-center gap-2"
+                : "p-1 pl-2 text-xs lg:p-2 lg:text-xl text-center gap-1"
             }`}
             onClick={() => changeCategory(-1)}>
             <Icons.Off
@@ -139,7 +137,7 @@ function SubHeder({
               onCategory === 2
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
+            } shrink-0 font-bold rounded-2xl lg:rounded-3xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "lg:w-30 lg:h-30 w-20 h-25 flex justify-center items-center flex-col gap-3 text-xs lg:text-lg"
                 : "p-2 text-xs lg:p-3 lg:text-xl h-full text-center"
@@ -163,7 +161,7 @@ function SubHeder({
               onCategory === 3
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
+            } shrink-0 font-bold rounded-2xl lg:rounded-3xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "lg:w-30 lg:h-30 w-20 h-25 flex justify-center items-center flex-col gap-3 text-xs lg:text-lg"
                 : "p-2 text-xs lg:p-3 lg:text-xl h-full text-center"
@@ -185,7 +183,7 @@ function SubHeder({
               onCategory === 4
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
+            } shrink-0 font-bold rounded-2xl lg:rounded-3xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "lg:w-30 lg:h-30 w-20 h-25 flex justify-center items-center flex-col gap-3 text-xs lg:text-lg"
                 : "p-2 text-xs lg:p-3 lg:text-xl h-full text-center"
@@ -204,7 +202,7 @@ function SubHeder({
               onCategory === 5
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
-            } shrink-0 font-bold rounded-2xl transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray cursor-pointer animate-scale-up touch-manipulation ${
+            } shrink-0 font-bold rounded-2xl lg:rounded-3xl transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray cursor-pointer animate-scale-up touch-manipulation ${
               !hideIcons
                 ? "lg:w-30 lg:h-30 w-20 h-25 flex justify-center items-center flex-col gap-3 text-xs lg:text-lg"
                 : "p-2 text-xs lg:p-3 lg:text-xl h-full text-center"

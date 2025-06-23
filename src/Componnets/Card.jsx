@@ -125,7 +125,7 @@ function Card({
             in_sale
               ? "bg-slowprimary dark:bg-slowprimaryDark"
               : "bg-white dark:bg-darkpalleteDark"
-          } rounded-3xl w-full h-fit p-3 m-auto text-start transition-colors select-none duration-300 animate-scale-up`}
+          } rounded-3xl w-full h-fit p-3 m-auto text-start transition-colors duration-300 animate-scale-up`}
           animate={isLongPressed ? { scale: 1.1 } : { scale: 1 }}
           transition={{
             type: "spring",
@@ -135,7 +135,7 @@ function Card({
           <img
             onContextMenu={(e) => e.preventDefault()}
             onDragStart={(e) => e.preventDefault()}
-            className="w-full h-full aspect-square object-cover rounded-2xl"
+            className="w-full h-full aspect-square object-cover rounded-2xl pointer-events-none touch-none"
             src={
               pic_url
                 ? `${BASE_PATH}/files/${pic_url.split("/").pop()}`

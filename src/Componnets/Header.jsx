@@ -24,6 +24,7 @@ const Header = forwardRef(
       setCurrentPage,
       headerShrink,
       setHeaderShrink,
+      goHome,
     },
     ref
   ) => {
@@ -206,9 +207,8 @@ const Header = forwardRef(
                   if ("vibrate" in navigator && typeof window !== "undefined") {
                     navigator.vibrate(10);
                   }
-                  setCurrentPage(1);
-                  setShowMenu(false);
-                  setHeaderShrink(false);
+                  setCurrentPage(0);
+                  goHome();
                 }}
                 className="text-lg lg:text-xl font-bold dark:text-white transition-colors duration-300">
                 کافـی نـو

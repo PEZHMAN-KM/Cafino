@@ -79,14 +79,52 @@
     0% {
       opacity: 0;
       filter: blur(5px);
+      visibility: hidden;
     }
     100% {
       opacity: 1;
       filter: blur(0px);
+      visibility: visible;
     }
   }
   .animate-opacity-up {
     animation: opacity-up 0.4s ease-in forwards;
+  }
+
+  @keyframes opacity-out {
+    0% {
+      opacity: 1;
+      filter: blur(0px);
+      visibility: visible;
+    }
+    100% {
+      opacity: 0;
+      filter: blur(5px);
+      visibility: hidden;
+      pointer-events: none;
+    }
+  }
+  .animate-opacity-out {
+    animation: opacity-out 0.4s ease-in forwards;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
   }
 }
 
@@ -95,6 +133,7 @@
   animation: none !important;
   transition: none !important;
 }
+/* FOR TURN OFF ALL BLUR EFFECT */
 .reduce-blur * {
   backdrop-filter: none !important;
 }
@@ -139,35 +178,30 @@
   font-family: "IranYekan";
   src: url("../font/IRANYekanXFaNum-Light.ttf") format("truetype");
   font-weight: 300;
-  font-style: light;
 }
 
 @font-face {
   font-family: "IranYekan";
   src: url("../font/IRANYekanXFaNum-Regular.ttf") format("truetype");
   font-weight: 400;
-  font-style: normal;
 }
 
 @font-face {
   font-family: "IranYekan";
   src: url("../font/IRANYekanXFaNum-Bold.ttf") format("truetype");
   font-weight: 700;
-  font-style: bold;
 }
 
 @font-face {
   font-family: "IranYekan";
   src: url("../font/IRANYekanXFaNum-Black.ttf") format("truetype");
   font-weight: 800;
-  font-style: ExtraBold;
 }
 
 @font-face {
   font-family: "IranYekan";
   src: url("../font/IRANYekanXFaNum-ExtraBlack.ttf") format("truetype");
   font-weight: 900;
-  font-style: Black;
 }
 
 * {

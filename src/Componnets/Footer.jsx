@@ -15,6 +15,7 @@ function Footer({
   // PAGE 01 ------------------------------
   setHideIcons,
   scrollContainerRef,
+  goHome,
 }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const reduceBlur = useBlur();
@@ -67,7 +68,7 @@ function Footer({
           {shrink ? (
             <button
               onClick={() => setFooterShrink(false)}
-              className="text-2xl text-black dark:text-white text-center select-none">
+              className="text-2xl text-black dark:text-white text-center">
               {PAGE_TITLES[page] || "صفحه ناشناس"}
             </button>
           ) : (
@@ -149,6 +150,7 @@ function Footer({
                   setHeaderShrink(false);
                   setHideIcons(false);
                   goToTop();
+                  goHome();
                 }}
                 className="transition-all duration-300"
                 href="Home">

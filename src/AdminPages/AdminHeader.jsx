@@ -246,7 +246,7 @@ function AdminHeader() {
             </div>
           )}
           <div
-            className={`text-xl font-semibold md:hidden text-darkpallete dark:text-white ${
+            className={`text-xl font-bold md:hidden text-darkpallete dark:text-white ${
               isPageLoaded
                 ? "transition-colors duration-300"
                 : "transition-none duration-0"
@@ -256,7 +256,7 @@ function AdminHeader() {
           <div className="cursor-pointer relative" onClick={toggleMenu}>
             <div className="flex justify-center items-center flex-row-reverse gap-2">
               <img
-                className={`w-15 h-15 rounded-full spect-square object-cover border-2 transition-all duration-300 ${
+                className={`w-15 h-15 rounded-full spect-square object-cover border-2 transition-all duration-300 pointer-events-none touch-none ${
                   showMenu
                     ? "border-adminPrimary dark:border-adminPrimaryDark"
                     : "border-transparent hover:border-adminPrimary dark:hover:border-adminPrimaryDark"

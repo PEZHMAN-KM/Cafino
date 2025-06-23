@@ -10,7 +10,13 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.ico", "apple-touch-icon.png"],
+      includeAssets: [
+        "lite.html",
+        "TEST_SPEED_PEZHMAN.jpg",
+        // "icon-192x192.png",
+        // "icon-512x512.png",
+        // "apple-touch-icon.png",
+      ],
       manifest: {
         name: "Cafino",
         short_name: "Cafino",

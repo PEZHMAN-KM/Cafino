@@ -67,7 +67,7 @@ const ItemTable = ({
       }`}>
       <div className="hidden lg:flex justify-center items-center">
         <img
-          className="hidden lg:inline w-20 h-20 p-2 aspect-square object-cover rounded-2xl"
+          className="hidden lg:inline w-20 h-20 p-2 aspect-square object-cover rounded-2xl pointer-events-none touch-none"
           src={
             pic_url
               ? `${BASE_PATH}/files/${pic_url.split("/").pop()}`
@@ -133,7 +133,7 @@ const WaiterItem = ({
       } ${clickedButtonId === id ? "animate-scale-out" : ""}`}>
       <div className="flex justify-center items-center">
         <img
-          className="size-16 md:size-20 p-2 aspect-square object-cover rounded-full"
+          className="size-16 md:size-20 p-2 aspect-square object-cover rounded-full pointer-events-none touch-none"
           src={
             pic_url
               ? `${BASE_PATH}/files/${pic_url.split("/").pop()}`
@@ -389,7 +389,7 @@ const ItemManager = () => {
                       isPageLoaded
                         ? "transition-colors duration-300"
                         : "transition-none duration-0"
-                    } text-center py-4 text-gray-500 dark:text-gray-400 font-semibold`}>
+                    } text-center py-4 text-gray-500 dark:text-gray-400 font-bold`}>
                     هیچ آیتمی وجود ندارد.
                   </div>
                 ) : (

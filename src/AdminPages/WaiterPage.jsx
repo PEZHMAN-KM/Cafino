@@ -34,7 +34,7 @@ const WaiterRequest = ({
   getNOtification,
 }) => (
   <div
-    className={`flex flex-col justify-center items-center w-full select-none ${
+    className={`flex flex-col justify-center items-center w-full ${
       removingId === id ? "animate-scale-out" : ""
     } ${clickedButtonId === id ? "animate-scale-out" : ""}`}>
     <div
@@ -52,7 +52,7 @@ const WaiterRequest = ({
         <TableNumber tableNumber={tableNumber} />
       </div>
       {!waitress_name || full_name === waitress_name ? (
-        <div className="flex justify-center items-center gap-2 py-2">
+        <div className="flex justify-center items-center py-2">
           {inProgress ? (
             <div className="flex justify-center items-center gap-3">
               <button
@@ -89,7 +89,7 @@ const WaiterRequest = ({
           )}
         </div>
       ) : (
-        <div className="flex justify-center items-center py-2">
+        <div className="flex justify-center items-center p-2">
           <h1 className="text-xs md:text-lg text-black dark:text-white transition-colors duration-300">
             این درخواست به {waitress_name} واگذار شده
           </h1>
@@ -315,7 +315,7 @@ function WaiterPage() {
                 isPageLoaded
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
-              } text-xl flex gap-5 font-semibold text-darkpallete dark:text-white`}>
+              } text-xl flex gap-5 font-bold text-darkpallete dark:text-white`}>
               <h1>کافـی نـو</h1>
               {/* DARK MODE BUTTON */}
               <button
@@ -335,7 +335,7 @@ function WaiterPage() {
             <div className="cursor-pointer relative" onClick={toggleMenu}>
               <div className="flex justify-center items-center flex-row-reverse cursor-pointer gap-2">
                 <img
-                  className={`w-15 h-15 rounded-full spect-square object-cover border-2 transition-all duration-300 ${
+                  className={`w-15 h-15 rounded-full spect-square object-cover border-2 transition-all duration-300 pointer-events-none touch-none ${
                     showMenu
                       ? "border-adminPrimary dark:border-adminPrimaryDark"
                       : "border-transparent hover:border-adminPrimary dark:hover:border-adminPrimaryDark"

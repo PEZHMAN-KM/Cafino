@@ -43,7 +43,7 @@ const NamePanel = ({ className, name, category, price, sale_price }) => (
       </div>
       {sale_price && (
         <div className="flex flex-col items-start px-2 py-2 w-30 rounded-xl bg-backgroundcolor dark:bg-backgroundcolorDark justify-center gap-1">
-          <h1 className="dark:text-white font-semibold w-full">قیمت اصلی :</h1>
+          <h1 className="dark:text-white font-bold w-full">قیمت اصلی :</h1>
           <h1 className="text-lg font-medium w-full text-end dark:text-white line-through transition-colors duration-300">
             {formatPrice(price)} تومان
           </h1>
@@ -232,7 +232,7 @@ function Item({ setCurrentPage, setHeaderShrink, setHideIcons }) {
           } overflow-auto scrollbar scrollbar-none lg:flex-1/2 xl:flex-1/3 lg:flex lg:justify-center lg:items-center bg-backgroundcolor dark:bg-backgroundcolorDark pb-25 lg:pb-0 h-screen overflow-x-hidden`}>
           <div className="lg:w-1/2 xl:w-1/3 w-full relative lg:absolute">
             <img
-              className="w-screen aspect-square object-cover p-2 rounded-3xl"
+              className="w-screen aspect-square object-cover p-2 rounded-3xl pointer-events-none touch-none"
               src={
                 item?.pic_url
                   ? `${BASE_PATH}/files/${item.pic_url.split("/").pop()}`

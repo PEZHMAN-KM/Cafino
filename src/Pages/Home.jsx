@@ -141,14 +141,13 @@ function Home({
         ...(shouldAnimate ? { behavior: "smooth" } : {}),
       });
 
-      // صبر کن تا اسکرول به بالا برسه
       setTimeout(
         () => {
           headerInputRef.current?.focus();
           setSearchActive(true);
         },
         shouldAnimate ? 400 : 0
-      ); // زمان باید با مدت انیمیشن تطابق داشته باشه
+      );
     }
   }
 
@@ -282,7 +281,6 @@ function Home({
               showMenu={headerMenuOpen}
               setShowMenu={setHeaderMenuOpen}
               onSearchClick={scrollToTopAndFocus}
-              // setSearchActive={setSearchActive}
               className={`${
                 isPageLoaded
                   ? "transition-all duration-300"
@@ -290,7 +288,7 @@ function Home({
               } sticky z-10 bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md border-white/20 dark:border-white/10 shadow-lg ${
                 !hideIcons
                   ? "top-16 h-29 lg:h-34 rounded-b-none w-screen m-0 border-b"
-                  : "top-2 h-11 lg:h-17 rounded-3xl w-[98vw] mx-auto border"
+                  : "top-2 h-10.5 lg:h-17 rounded-3xl w-[98vw] mx-auto border"
               }`}
             />
           )}

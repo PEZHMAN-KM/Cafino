@@ -6,6 +6,7 @@ import { BASE_PATH, LIMIT_DATA } from "../constants/paths.js";
 import OrderReceiptOverlay from "../Componnets/OrderReceiptOverlay.jsx";
 import { Icons } from "../Componnets/Icons.jsx";
 import { useBlur } from "../constants/BlurContext.jsx";
+import { useAnimation } from "../constants/AnimationContext.jsx";
 
 // heroicon
 // هیرو ایکون معروف واس ایکون ولی کامل نیست
@@ -24,7 +25,11 @@ const OrderBox = ({
   removingId,
   selectFood,
 }) => (
-  <div className="pt-2 mb-4 border-b-4 border-primary dark:border-primaryDark transition-colors duration-300">
+  <div
+    className={`pt-2 mb-2 lg:mb-4 ${
+      orderItems.length !== 0 &&
+      "border-b-4 border-primary dark:border-primaryDark transition-colors duration-300"
+    }`}>
     <h1 className="font-extrabold text-3xl px-8 dark:text-white transition-colors duration-300 pb-5">
       آیتم های خرید
     </h1>
@@ -32,10 +37,10 @@ const OrderBox = ({
       className={`${
         orderItems.length === 0
           ? "grid-cols-1"
-          : "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
-      } divide-highgray dark:divide-graypalleteDark grid lg:border-b-1 lg:border-highgray dark:border-graypalleteDark transition-colors duration-300`}>
+          : "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 pb-1"
+      } grid transition-colors duration-300`}>
       {orderItems.length === 0 ? (
-        <h1 className="text-center text-xl md:text-3xl font-black text-slowgrayDark dark:text-slowgray py-5 transition-colors duration-300 animate-opacity-up">
+        <h1 className="text-center text-xl md:text-3xl font-black text-slowgrayDark dark:text-slowgray pb-5 transition-colors duration-300 animate-opacity-up">
           سبد خرید خالی است
         </h1>
       ) : (
@@ -45,7 +50,7 @@ const OrderBox = ({
             key={item.id}
             className={` ${
               item.in_sale ? "bg-slowprimary dark:bg-slowprimaryDark" : ""
-            } hover:bg-slowgray border-b-1 border-t-1 lg:border-r-1 lg:border-l-1 lg:border-t-0 lg:border-b-0 hover:dark:bg-slowgrayDark transition-colors duration-300 rounded-2xl ${
+            } hover:bg-slowgray border-b-1 border-t-1 lg:border-r-1 lg:border-l-1 lg:border-t-0 lg:border-b-0 border-highgrayDark dark:border-highgray hover:dark:bg-slowgrayDark transition-colors duration-300 rounded-2xl ${
               removingId === item.id ? "animate-scale-out" : ""
             }`}>
             <OrderItem
@@ -73,10 +78,10 @@ const OrderItem = ({
   handleDecreaseCount,
   pic_url,
 }) => (
-  <div className=" flex items-center px-1 py-1 md:px-5 md:py-2 gap-3  animate-scale-up">
-    <div className="aspect-square size-18 md:size-25 shrink-0">
+  <div className=" flex items-center pr-3 xs:px-1 py-1 gap-3 animate-scale-up">
+    <div className="hidden xs:block aspect-square size-18 shrink-0">
       <img
-        className="p-2 rounded-3xl w-full h-full object-cover"
+        className="p-2 rounded-3xl w-full h-full object-cover pointer-events-none touch-none"
         src={
           pic_url ? `${BASE_PATH}/files/${pic_url.split("/").pop()}` : itemImage
         }
@@ -84,10 +89,10 @@ const OrderItem = ({
       />
     </div>
     <div className="flex flex-col justify-center flex-1 overflow-hidden">
-      <h1 className="text-2xl font-extrabold truncate dark:text-white transition-colors duration-300">
+      <h1 className="text-lg font-extrabold truncate dark:text-white transition-colors duration-300">
         {name}
       </h1>
-      <h3 className="text-lg font-normal truncate dark:text-slowgray transition-colors duration-300">
+      <h3 className="text-m font-normal truncate dark:text-slowgray transition-colors duration-300">
         {category_name}
       </h3>
     </div>
@@ -103,7 +108,7 @@ const OrderItem = ({
 );
 const CountController = ({ itemId, count, onIncrease, onDecrease }) => {
   return (
-    <div className="flex items-center gap-2 transition-all duration-300">
+    <div className="flex items-center gap-1 transition-all duration-300">
       <button
         onClick={(e) => {
           e.stopPropagation();
@@ -136,6 +141,7 @@ const UserNumber = ({
   setTableNumber,
   tableError,
   isPageLoaded,
+  orderItems,
 }) => (
   <div
     className={`${
@@ -146,19 +152,21 @@ const UserNumber = ({
       isPageLoaded
         ? "transition-colors duration-300"
         : "transition-none duration-0"
-    } bg-white dark:bg-darkpalleteDark w-screen p-5 mx-5 rounded-2xl border-1 flex justify-between items-center text-2xl font-bold animate-scale-up`}>
-    <div className="flex flex-col gap-2">
-      <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold dark:text-white transition-colors duration-300">
+    } bg-white dark:bg-darkpalleteDark w-screen p-3 mx-2 rounded-3xl border-2 flex justify-between items-center text-2xl font-bold ${
+      orderItems.length === 0 ? "animate-scale-out" : "animate-scale-up"
+    }`}>
+    <div className="flex flex-col lg:gap-2">
+      <h1 className="text-lg md:text-2xl font-extrabold dark:text-white transition-colors duration-300">
         سفارش برای میز :
       </h1>
-      <h3 className="text-xs md:text-lg font-semibold text-slowgrayDark dark:text-slowgray transition-colors duration-300">
-        از درست بودن شماره میز اطمینان حاصل کنید
+      <h3
+        className={`text-xs md:text-lg font-bold ${
+          tableError
+            ? "text-adminError"
+            : "text-slowgrayDark dark:text-slowgray"
+        } transition-colors duration-300`}>
+        {tableError ? tableError : "از درست بودن شماره میز اطمینان حاصل کنید"}
       </h3>
-      {tableError && (
-        <h3 className="text-xs md:text-sm text-Start text-primary">
-          {tableError}
-        </h3>
-      )}
     </div>
     <div>
       <input
@@ -170,7 +178,7 @@ const UserNumber = ({
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } w-13 h-13 text-3xl font-bold text-center border-2 bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl`}
+        } size-10 xs:size-13 text-3xl font-bold text-center border-2 bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl`}
         type="number"
         value={tableNumber || ""}
         onChange={(e) => setTableNumber(Number(e.target.value))}
@@ -180,8 +188,6 @@ const UserNumber = ({
 );
 
 const Checkout = ({ orderItems }) => {
-  if (orderItems.length === 0) return null;
-
   return (
     <div>
       <h1 className="font-extrabold text-2xl sm:text-3xl px-8 py-3 dark:text-white transition-colors duration-300">
@@ -283,7 +289,6 @@ function Order({
     };
   }, []);
   // ----------------------------------------------------------------
-
   const [orderItems, setOrderItems] = useState([]);
   const [tableNumber, setTableNumber] = useState(null);
   const [timeAdded, setTimeAdded] = useState(null);
@@ -294,7 +299,10 @@ function Order({
 
   const [removingId, setRemovingId] = useState(null);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [visible, setVisible] = useState(false);
+
   const reduceBlur = useBlur();
+  const shouldAnimate = useAnimation();
 
   const handleIncreaseCount = (id) => {
     if ("vibrate" in navigator && typeof window !== "undefined") {
@@ -309,7 +317,6 @@ function Order({
     setOrderItems(updatedItems);
     updateLocalStorage(updatedItems);
   };
-
   const handleDecreaseCount = (id) => {
     if ("vibrate" in navigator && typeof window !== "undefined") {
       navigator.vibrate(20);
@@ -320,14 +327,17 @@ function Order({
 
     if (item.count === 1) {
       setRemovingId(id);
-      setTimeout(() => {
-        setOrderItems((prev) => {
-          const updated = prev.filter((item) => item.id !== id);
-          updateLocalStorage(updated);
-          return updated;
-        });
-        setRemovingId(null);
-      }, 400);
+      setTimeout(
+        () => {
+          setOrderItems((prev) => {
+            const updated = prev.filter((item) => item.id !== id);
+            updateLocalStorage(updated);
+            return updated;
+          });
+          setRemovingId(null);
+        },
+        shouldAnimate ? 400 : 0
+      );
     } else {
       const updatedItems = orderItems.map((item) => {
         if (item.id === id) {
@@ -387,7 +397,6 @@ function Order({
           count: countItem ? countItem[1] : 0,
         };
       });
-
       setOrderItems(mergedItems);
     } catch (err) {
       console.log(err);
@@ -403,6 +412,19 @@ function Order({
   }, []);
 
   useEffect(() => {
+    if (orderItems.length === 0) {
+      if (visible) {
+        setTimeout(
+          () => {
+            setVisible(false);
+          },
+          shouldAnimate ? 400 : 0
+        );
+      }
+    } else {
+      setVisible(true);
+    }
+
     window.dispatchEvent(new Event("orderUpdated"));
   }, [orderItems]);
 
@@ -465,7 +487,6 @@ function Order({
   }
   const refreshAllData = () => {
     fetchItems();
-    setTableNumber(null);
     setShowReceipt(false);
     window.dispatchEvent(new Event("orderUpdated"));
   };
@@ -483,7 +504,9 @@ function Order({
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-60 md:pb-50 pt-16 md:pt-20`}>
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pt-18 ${
+          orderItems.length !== 0 && "pb-60 md:pb-50"
+        }`}>
         <div className="grid grid-cols-1">
           <div className="col-span-1">
             <OrderBox
@@ -494,54 +517,67 @@ function Order({
               selectFood={selectFood}
             />
           </div>
-          <div className="w-screen lg:w-2/3 mx-auto">
-            <div className="col-span-1 flex justify-center items-start">
-              <UserNumber
-                tableNumber={tableNumber}
-                setTableNumber={setTableNumber}
-                tableError={tableError}
-                isPageLoaded={isPageLoaded}
-              />
+          {visible && (
+            <div className="w-screen lg:w-2/3 mx-auto">
+              <div className="col-span-1 flex justify-center items-start">
+                <UserNumber
+                  tableNumber={tableNumber}
+                  setTableNumber={setTableNumber}
+                  tableError={tableError}
+                  isPageLoaded={isPageLoaded}
+                  orderItems={orderItems}
+                />
+              </div>
+              <div
+                className={`col-span-1 pt-2 lg:pt-4 ${
+                  orderItems.length === 0 && "animate-opacity-out"
+                }`}>
+                <Checkout orderItems={orderItems} />
+              </div>
             </div>
-            <div className="col-span-1 pt-4">
-              <Checkout orderItems={orderItems} />
-            </div>
-          </div>
+          )}
         </div>
-        <div
-          className={`w-screen fixed transition-all duration-30 ${
-            footerShrink ? "bottom-10 md:bottom-5" : "bottom-20 md:bottom-5"
-          }`}>
+        {/* ------------------------------------------- FOOTER PAY PANEL ------------------------------------------- */}
+        {visible && (
           <div
-            className={`${
-              isPageLoaded
-                ? "transition-colors duration-300"
-                : "transition-none duration-0"
-            } w-[98vw] mx-auto animate-move-up p-4 rounded-3xl ${
-              reduceBlur
-                ? "bg-backgroundcolor dark:bg-backgroundcolorDark"
-                : "bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 border-white/20 dark:border-white/10 border"
-            } backdrop-blur-md shadow-lg`}>
-            <div className="flex justify-center flex-col items-center w-full">
-              <div className="flex justify-between w-full items-center pb-3">
-                <div className="flex items-center gap-2">
-                  <Icons.wallet className={"w-10 stroke-primary"} />
-                  <h1 className="text-lg md:text-2xl lg:text-3xl font-bold dark:text-white transition-colors duration-300">
-                    مبلغ کل سفارشات
+            className={`w-screen fixed transition-all duration-30 ${
+              footerShrink ? "bottom-10 md:bottom-5" : "bottom-20 md:bottom-5"
+            }`}>
+            <div
+              className={`${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              } ${
+                orderItems.length === 0
+                  ? " animate-opacity-out"
+                  : " animate-opacity-up"
+              } w-[98vw] mx-auto lg:w-2/3 p-4 rounded-3xl ${
+                reduceBlur
+                  ? "bg-backgroundcolor dark:bg-backgroundcolorDark"
+                  : "bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 border-white/20 dark:border-white/10 border"
+              } backdrop-blur-md shadow-lg`}>
+              <div className="flex justify-center flex-col items-center w-full">
+                <div className="flex justify-between w-full items-center pb-3">
+                  <div className="flex items-center gap-2">
+                    <Icons.wallet className={"w-10 stroke-primary"} />
+                    <h1 className="text-lg md:text-2xl lg:text-3xl font-bold dark:text-white transition-colors duration-300">
+                      مبلغ کل سفارشات
+                    </h1>
+                  </div>
+                  <h1 className="text-lg md:text-2xl lg:text-3xl font-bold text-primary ransition-colors duration-300">
+                    {formatPrice(totalCost)} تومان
                   </h1>
                 </div>
-                <h1 className="text-lg md:text-2xl lg:text-3xl font-bold text-primary ransition-colors duration-300">
-                  {formatPrice(totalCost)} تومان
-                </h1>
+                <button
+                  onClick={() => addOrder()}
+                  className="w-full p-5 rounded-2xl bg-primary text-white text-2xl dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary cursor-pointer transition-colors duration-300">
+                  ثبت سفارش
+                </button>
               </div>
-              <button
-                onClick={() => addOrder()}
-                className="w-full p-5 rounded-2xl bg-primary text-white text-2xl dark:bg-primaryDark hover:bg-primaryDark dark:hover:bg-primary cursor-pointer transition-colors duration-300">
-                ثبت سفارش
-              </button>
             </div>
           </div>
-        </div>
+        )}
       </div>
       <OrderReceiptOverlay
         visible={showReceipt}
