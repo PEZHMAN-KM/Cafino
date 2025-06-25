@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import SubHeder from "../Componnets/SubHeder.jsx";
 import Card from "../Componnets/Card.jsx";
 
 import { BASE_PATH } from "../constants/paths.js";
@@ -16,17 +15,14 @@ function Home({
   setFooterShrink,
   setCurrentPage,
   setHeaderMenuOpen,
-  headerMenuOpen,
   // PAGE 01 ------------------------
   setHideIcons,
   hideIcons,
   searchActive,
-  setSearchActive,
   searchTerm,
   setHeaderShrink,
-  headerInputRef,
   setFetchItems,
-  scrollContainerRef,
+  selectedCategory,
 }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const shouldAnimate = useAnimation();
@@ -38,7 +34,6 @@ function Home({
 
   const lastScrollTop = useRef(0);
 
-  const [selectedCategory, setSelectedCategory] = useState(1);
   const [items, setItems] = useState([]);
   const [error, setError] = useState(null);
 
@@ -134,23 +129,6 @@ function Home({
     }
   };
 
-  function scrollToTopAndFocus() {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({
-        top: 0,
-        ...(shouldAnimate ? { behavior: "smooth" } : {}),
-      });
-
-      setTimeout(
-        () => {
-          headerInputRef.current?.focus();
-          setSearchActive(true);
-        },
-        shouldAnimate ? 400 : 0
-      );
-    }
-  }
-
   useEffect(() => {
     const storedOrder = JSON.parse(localStorage.getItem("order") || "[]");
     const counts = {};
@@ -164,16 +142,14 @@ function Home({
     // For flashing on LOADING PAGE
     setIsPageLoaded(true);
 
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
     let ticking = false;
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           // SCROLL FOR HIDEICONS ------------------------------------------------
-          const currentScrollTop = scrollContainer.scrollTop;
+          const currentScrollTop =
+            window.pageYOffset || document.documentElement.scrollTop;
 
           if (currentScrollTop < 30) {
             setHideIcons(false);
@@ -203,11 +179,8 @@ function Home({
       }
     };
 
-    scrollContainer.addEventListener("scroll", handleScroll);
-
-    return () => {
-      scrollContainer.removeEventListener("scroll", handleScroll);
-    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -264,34 +237,15 @@ function Home({
       </AnimatePresence>
       {/* FOR FIX COLAPSE UP DOWN | [ H(SUBHEADER) => !HIDE - HIDE = H(HIDE) HEADER ] */}
       <div
-        ref={scrollContainerRef}
+        style={{ WebkitOverflowScrolling: "touch" }}
         className={`${
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-15 md:pb-3 ${
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen min-h-screen overflow-x-hidden pb-15 md:pb-3 ${
           hideIcons && "" // pb-20 lg:pb-17
         }`}>
         <div className="animate-scale-up">
-          {!searchActive && (
-            <SubHeder
-              setCurrentPage={setCurrentPage}
-              onCategorySelect={setSelectedCategory}
-              hideIcons={hideIcons}
-              showMenu={headerMenuOpen}
-              setShowMenu={setHeaderMenuOpen}
-              onSearchClick={scrollToTopAndFocus}
-              className={`${
-                isPageLoaded
-                  ? "transition-all duration-300"
-                  : "transition-none duration-0"
-              } sticky z-10 bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md border-white/20 dark:border-white/10 shadow-lg ${
-                !hideIcons
-                  ? "top-16 h-29 lg:h-34 rounded-b-none w-screen m-0 border-b"
-                  : "top-2 h-10.5 lg:h-17 rounded-3xl w-[98vw] mx-auto border"
-              }`}
-            />
-          )}
           <div className="mt-20">
             {/* BANNER IMAGE */}
             {/* <div className="flex justify-center items-center w-screen">

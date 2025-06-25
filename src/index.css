@@ -208,6 +208,16 @@
   font-family: "IranYekan";
   direction: rtl;
 }
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
 
 /* حذف دستگیره‌ها در Chrome و Safari */
 input[type="number"]::-webkit-outer-spin-button,

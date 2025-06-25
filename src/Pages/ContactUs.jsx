@@ -28,7 +28,7 @@ const Waiter = ({
         تماس با سالندار
       </h1>
       <h3
-        className={`text-xs md:text-lg font-bold ${
+        className={`text-xs md:text-lg font-normal ${
           error
             ? tableError
               ? "text-adminError"
@@ -114,25 +114,18 @@ const InstagramPage = () => (
   </a>
 );
 
-function ContactUs({
-  setFooterShrink,
-  setHeaderMenuOpen,
-  setHeaderShrink,
-  scrollContainerRef,
-}) {
+function ContactUs({ setFooterShrink, setHeaderMenuOpen, setHeaderShrink }) {
   // SCROLL FOOTER -------------------------------------------------
   const lastScrollTop = useRef(0);
 
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
     let ticking = false;
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          const currentScrollTop = scrollContainer.scrollTop;
+          const currentScrollTop =
+            window.pageYOffset || document.documentElement.scrollTop;
 
           const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
           const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
@@ -151,17 +144,15 @@ function ContactUs({
             setHeaderMenuOpen(false);
           }
 
-          lastScrollTop.current = currentScrollTop <= 0 ? 0 : currentScrollTop;
+          lastScrollTop.current = Math.max(0, currentScrollTop);
           ticking = false;
         });
         ticking = true;
       }
     };
 
-    scrollContainer.addEventListener("scroll", handleScroll);
-    return () => {
-      scrollContainer.removeEventListener("scroll", handleScroll);
-    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   // ----------------------------------------------------------------
 
@@ -178,8 +169,7 @@ function ContactUs({
   }, []);
 
   async function addNotification(tableNumber) {
-    if ((tableNumber < 1 || tableNumber > LIMIT_DATA, LOCA)) {
-      LOCATION;
+    if (tableNumber < 1 || tableNumber > LIMIT_DATA) {
       setError("لطفا شماره میز را درست وارد کنید!");
       setTableError(true);
       if ("vibrate" in navigator && typeof window !== "undefined") {
@@ -226,12 +216,12 @@ function ContactUs({
   return (
     <>
       <div
-        ref={scrollContainerRef}
+        style={{ WebkitOverflowScrolling: "touch" }}
         className={`${
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark h-full pb-22 w-screen overflow-y-auto scrollbar scrollbar-none pt-18 md:pt-20`}>
+        } bg-backgroundcolor dark:bg-backgroundcolorDark h-full pb-22 w-screen min-h-screen pt-18 md:pt-20`}>
         <div className="grid grid-cols-1">
           {/* ------------------------------------------ CALL WAITER ------------------------------------------ */}
           <div className="col-span-1 flex justify-center items-start w-screen lg:w-2/3 mx-auto animate-scale-up">

@@ -64,7 +64,7 @@ export default function OrderReceiptOverlay({
               </div>
             </button>
           </div>
-          <div className="divide-y mt-2 max-h-[42vh] md:max-h-[55vh] overflow-y-auto scrollbar scrollbar-none">
+          <div className="divide-y mt-2 max-h-[42vh] md:max-h-[55vh] overflow-y-auto">
             {items.map((item, index) => (
               <div
                 key={index}

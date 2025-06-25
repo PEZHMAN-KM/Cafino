@@ -1,57 +1,21 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import "./index.css";
 import RouteProgress from "./Componnets/RouteProgress.jsx";
 import { BlurProvider } from "./constants/BlurContext.jsx";
 
 import { registerSW } from "virtual:pwa-register";
 registerSW({ immediate: true });
 
-import App from "./App.jsx";
-// import Home from "./Pages/Home.jsx";
-// import Landing from "./Pages/Landing.jsx";
-// import Item from "./Pages/Item.jsx";
-// import Order from "./Pages/Order.jsx";
-// import ContactUs from "./Pages/ContactUs.jsx";
-// import FavoritePage from "./Pages/FavoritePage.jsx";
-// import EasyPage from "./Pages/EasyPage.jsx";
+import AdminLogin from "./AdminPages/AdminLogin.jsx";
+import AdminHome from "./AdminPages/AdminHome.jsx";
+import AddItem from "./AdminPages/AddItem.jsx";
+import EditItem from "./AdminPages/EditItem.jsx";
+import ItemManager from "./AdminPages/ItemManager.jsx";
+import ChangeUserInfo from "./AdminPages/ChangeUserInfo.jsx";
+import AddWaiter from "./AdminPages/AddWaiter.jsx";
+import WaiterPage from "./AdminPages/WaiterPage.jsx";
 
-// const connection =
-//   navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-// const netType = connection?.effectiveType || "unknown";
-// if (netType === "slow-2g") {
-//   console.log("اینترنت خیلی ضعیف است، نسخه بسیار سبک اجرا شود.");
-// } else if (netType === "2g") {
-//   console.log("اینترنت ضعیف است، ویدئوها حذف شود.");
-// } else if (netType === "3g") {
-//   console.log("اینترنت متوسط است، عکس‌ها با کیفیت متوسط لود شوند.");
-// } else if (netType === "4g") {
-//   console.log("اینترنت خوب است، همه امکانات فعال باشند.");
-// } else {
-//   console.log("نوع اتصال مشخص نیست، حالت پیش‌فرض اجرا شود.");
-// }
-
-const PowerSaving_LowBattery = async () => {
-  if (!navigator.getBattery) return false;
-
-  try {
-    const battery = await navigator.getBattery();
-    const level = battery.level;
-    const time = battery.dischargingTime;
-    const charging = battery.charging;
-
-    const likelySaving = time < 1800 && !charging;
-    const lowBattery = level <= 0.1;
-
-    return (likelySaving || lowBattery) && !charging;
-  } catch (err) {
-    console.warn("Battery API not available", err);
-    return false;
-  }
-};
-
-// NETWORK SPEED diagnosis (Show The Speed Of Intenet)
 const testNetworkSpeed = async () => {
   const fileUrl = "/TEST_SPEED_PEZHMAN.jpg";
   const fileSizeInBytes = 50335;
@@ -112,13 +76,6 @@ const lacksModernFeatures = () => {
 };
 
 const startApp = async () => {
-  navigator.getBattery().then((battery) => {
-    const level = battery.level; // مقدار بین 0 تا 1
-    const percentage = Math.round(level * 100); // تبدیل به درصد
-
-    console.log("🔋 درصد باتری:", percentage + "%");
-  });
-  
   // NETWORK SPEED CONTROL ----------------------------
   const connection =
     navigator.connection ||
@@ -133,35 +90,34 @@ const startApp = async () => {
     (speed < 80 && netType === "unknown") ||
     speed < 50
   ) {
-    window.location.replace("/lite.html");
+    // window.location.replace("/lite.html");
     return;
   } else {
-    // CHECK BY BATTERY ------------------------------------------
-    const PowerSaving_LOW_BATTERY = await PowerSaving_LowBattery();
     // APPLIED VISION CHANGES ( ANIMATION AND ... ) ---------------------------------------
-    if (detectShouldDisableAnimations() || PowerSaving_LOW_BATTERY) {
+    if (detectShouldDisableAnimations()) {
       document.body.classList.add("no-anim");
     }
     applyTheme();
-    // CHECK FOR OLD PHONE ------------------------------------------
-    const REDUCE_BLUR_FEATURE = lacksModernFeatures();
-    const REDUCE_BLUR = PowerSaving_LOW_BATTERY || REDUCE_BLUR_FEATURE;
+    const REDUCE_BLUR = lacksModernFeatures();
     // const REDUCE_BLUR = true;
 
-    createRoot(document.getElementById("root")).render(
+    createRoot(document.getElementById("admin-root")).render(
       <StrictMode>
         <BlurProvider reduceBlur={REDUCE_BLUR}>
           <BrowserRouter>
             <RouteProgress />
             <Routes>
-              <Route path="/" element={<App />} />
-              {/* <Route path="/home" element={<Home />} />
-              <Route path="/Landing" element={<Landing />}></Route>
-              <Route path="/Item" element={<Item />}></Route>
-              <Route path="/Order" element={<Order />}></Route>
-              <Route path="/ContactUs" element={<ContactUs />}></Route>
-              <Route path="/FavoritePage" element={<FavoritePage />}></Route>
-              <Route path="/EasyPage" element={<EasyPage />}></Route> */}
+              <Route path="/admin" element={<AdminLogin />} />
+              {/* <Route path="/AdminLogin" element={<AdminLogin />}></Route> */}
+              <Route path="/AdminHome" element={<AdminHome />}></Route>
+              <Route path="/AddItem" element={<AddItem />}></Route>
+              <Route path="/EditItem" element={<EditItem />}></Route>
+              <Route path="/ItemManager" element={<ItemManager />}></Route>
+              <Route
+                path="/ChangeUserInfo"
+                element={<ChangeUserInfo />}></Route>
+              <Route path="/AddWaiter" element={<AddWaiter />}></Route>
+              <Route path="/WaiterPage" element={<WaiterPage />}></Route>
             </Routes>
           </BrowserRouter>
         </BlurProvider>

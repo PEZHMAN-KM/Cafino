@@ -1,13 +1,13 @@
-import React, { useRef, useState, lazy, Suspense } from "react";
+import React, { useRef, useState, lazy, Suspense, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AnimationContext } from "./constants/AnimationContext.jsx";
 
 import Header from "./Componnets/Header.jsx";
 import Footer from "./Componnets/Footer.jsx";
+const SubHeder = lazy(() => import("./Componnets/SubHeder.jsx"));
 
 import ContactUs from "./Pages/ContactUs.jsx";
 import Landing from "./Pages/Landing.jsx";
-
 const Home = lazy(() => import("./Pages/Home.jsx"));
 const FavoritePage = lazy(() => import("./Pages/FavoritePage.jsx"));
 const Order = lazy(() => import("./Pages/Order.jsx"));
@@ -21,6 +21,8 @@ const App = () => {
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
 
   // PAGE 01 -----------------------------------------------------------------------------
+  const [selectedCategory, setSelectedCategory] = useState(1);
+
   const [hideIcons, setHideIcons] = useState(false);
 
   const [searchActive, setSearchActive] = useState(false);
@@ -28,7 +30,6 @@ const App = () => {
   const [fetchItems, setFetchItems] = useState(null);
   const headerRef = useRef(null);
   const headerInputRef = useRef(null);
-  const scrollContainerRef = useRef(null);
 
   const shouldAnimate = !document.body.classList.contains("no-anim");
   const MotionOrDiv = shouldAnimate ? motion.div : "div";
@@ -63,6 +64,14 @@ const App = () => {
   //   SetNetSpeed(4)
   // }
 
+  useEffect(() => {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isSafari) {
+      document.body.style.overflow = "auto";
+      document.body.style.webkitOverflowScrolling = "touch";
+    }
+  }, []);
+
   const renderPage = () => {
     switch (currentPage) {
       case 0:
@@ -90,7 +99,7 @@ const App = () => {
             setSearchTerm={setSearchTerm}
             headerInputRef={headerInputRef}
             setHeaderShrink={setHeaderShrink}
-            scrollContainerRef={scrollContainerRef}
+            selectedCategory={selectedCategory}
           />
         );
       case 2:
@@ -100,7 +109,6 @@ const App = () => {
             setCurrentPage={setCurrentPage}
             setHeaderMenuOpen={setHeaderMenuOpen}
             setHeaderShrink={setHeaderShrink}
-            scrollContainerRef={scrollContainerRef}
           />
         );
       case 3:
@@ -111,7 +119,6 @@ const App = () => {
             setCurrentPage={setCurrentPage}
             setHeaderMenuOpen={setHeaderMenuOpen}
             setHeaderShrink={setHeaderShrink}
-            scrollContainerRef={scrollContainerRef}
           />
         );
       case 4:
@@ -120,7 +127,6 @@ const App = () => {
             setFooterShrink={setFooterShrink}
             setHeaderMenuOpen={setHeaderMenuOpen}
             setHeaderShrink={setHeaderShrink}
-            scrollContainerRef={scrollContainerRef}
           />
         );
       case 5:
@@ -146,7 +152,7 @@ const App = () => {
 
   return (
     <AnimationContext.Provider value={shouldAnimate}>
-      <div className="relative w-full h-screen overflow-hidden">
+      <div className="relative w-full min-h-screen">
         {currentPage != 0 && currentPage != 5 && currentPage != 6 && (
           <Header
             setCurrentPage={setCurrentPage}
@@ -166,7 +172,23 @@ const App = () => {
             goHome={goHome}
           />
         )}
-
+        {/* ------------------------------------------ FOR PAGE 01 ---------------------------------------- */}
+        {!searchActive && currentPage == 1 && (
+          <SubHeder
+            setCurrentPage={setCurrentPage}
+            onCategorySelect={setSelectedCategory}
+            hideIcons={hideIcons}
+            showMenu={headerMenuOpen}
+            setShowMenu={setHeaderMenuOpen}
+            setSearchActive={setSearchActive}
+            headerInputRef={headerInputRef}
+            className={`transition-all duration-300 sticky z-10 bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30 backdrop-blur-md border-white/20 dark:border-white/10 shadow-lg ${
+              !hideIcons
+                ? "top-16 h-29 lg:h-34 rounded-b-none w-screen m-0 border-b"
+                : "top-2 h-10.5 lg:h-17 rounded-3xl w-[98vw] mx-auto border"
+            }`}
+          />
+        )}
         <Suspense
           fallback={<div className="p-5 text-center">در حال بارگذاری...</div>}>
           <AnimatePresence mode="wait">
@@ -176,12 +198,11 @@ const App = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.2 }}
-              className="absolute w-full h-full">
+              className="relative w-full min-h-screen">
               {renderPage()}
             </MotionOrDiv>
           </AnimatePresence>
         </Suspense>
-
         {currentPage != 0 && currentPage != 5 && currentPage != 6 && (
           <Footer
             shouldAnimate={shouldAnimate}
@@ -192,7 +213,6 @@ const App = () => {
             setHeaderShrink={setHeaderShrink}
             // PAGE 01 -------------------------------------
             setHideIcons={setHideIcons}
-            scrollContainerRef={scrollContainerRef}
             goHome={goHome}
           />
         )}

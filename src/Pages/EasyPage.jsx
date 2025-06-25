@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { BASE_PATH } from "../constants/paths.js";
+import { BASE_PATH, LIMIT_DATA } from "../constants/paths.js";
 import itemImage from "../../public/No_Item.png";
 import { Icons } from "../Componnets/Icons.jsx";
 import { useBlur } from "../constants/BlurContext.jsx";
@@ -51,9 +51,8 @@ function EasyPage({ setCurrentPage }) {
   const reduceBlur = useBlur();
   const shouldAnimate = useAnimation();
 
-  const scrollContainerRef = useRef(null);
   function goToTop() {
-    scrollContainerRef.current.scrollTo({
+    window.scrollTo({
       top: 0,
       ...(shouldAnimate ? { behavior: "smooth" } : {}),
     });
@@ -161,9 +160,7 @@ function EasyPage({ setCurrentPage }) {
 
   return (
     <>
-      <div
-        ref={scrollContainerRef}
-        className="py-4 px-2 bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300 scrollbar scrollbar-none overflow-y-auto max-h-screen w-screen pb-15">
+      <div className="py-4 px-2 bg-backgroundcolor dark:bg-backgroundcolorDark transition-colors duration-300 min-h-screen w-screen pb-15">
         <div className="flex justify-center mb-6">
           <button
             onClick={() => {
@@ -234,7 +231,10 @@ function EasyPage({ setCurrentPage }) {
           </div>
         ))}
       </div>
-      <div className="fixed bottom-4 w-full flex justify-center items-center gap-1 px-2">
+      {/* --------------------------------------- FOTTER -------------------------------------------------- */}
+      <div
+        className="fixed w-full flex justify-center items-center gap-1 px-2"
+        style={{ bottom: "max(1rem, env(safe-area-inset-bottom))" }}>
         <div className="hidden lg:flex">
           <button
             className={`animate-move-up ${

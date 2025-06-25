@@ -225,11 +225,12 @@ function Item({ setCurrentPage, setHeaderShrink, setHideIcons }) {
     <>
       <div className="flex flex-col lg:flex-row">
         <div
+        style={{ WebkitOverflowScrolling: "touch" }}
           className={`${
             isPageLoaded
               ? "transition-colors duration-300"
               : "transition-none duration-0"
-          } overflow-auto scrollbar scrollbar-none lg:flex-1/2 xl:flex-1/3 lg:flex lg:justify-center lg:items-center bg-backgroundcolor dark:bg-backgroundcolorDark pb-25 lg:pb-0 h-screen overflow-x-hidden`}>
+          } lg:flex-1/2 xl:flex-1/3 lg:flex lg:justify-center lg:items-center bg-backgroundcolor dark:bg-backgroundcolorDark pb-25 lg:pb-0 min-h-screen overflow-x-hidden`}>
           <div className="lg:w-1/2 xl:w-1/3 w-full relative lg:absolute">
             <img
               className="w-screen aspect-square object-cover p-2 rounded-3xl pointer-events-none touch-none"

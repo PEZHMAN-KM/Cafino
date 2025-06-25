@@ -12,7 +12,6 @@ function FavoritePage({
   setCurrentPage,
   setHeaderMenuOpen,
   setHeaderShrink,
-  scrollContainerRef,
 }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const shouldAnimate = useAnimation();
@@ -30,15 +29,13 @@ function FavoritePage({
   const lastScrollTop = useRef(0);
 
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
     let ticking = false;
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          const currentScrollTop = scrollContainer.scrollTop;
+          const currentScrollTop =
+            window.pageYOffset || document.documentElement.scrollTop;
 
           const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
           const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
@@ -57,17 +54,15 @@ function FavoritePage({
             setHeaderMenuOpen(false);
           }
 
-          lastScrollTop.current = currentScrollTop <= 0 ? 0 : currentScrollTop;
+          lastScrollTop.current = Math.max(0, currentScrollTop);
           ticking = false;
         });
         ticking = true;
       }
     };
 
-    scrollContainer.addEventListener("scroll", handleScroll);
-    return () => {
-      scrollContainer.removeEventListener("scroll", handleScroll);
-    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   // ----------------------------------------------------------------
 
@@ -163,12 +158,12 @@ function FavoritePage({
       </AnimatePresence>
 
       <div
-        ref={scrollContainerRef}
+        style={{ WebkitOverflowScrolling: "touch" }}
         className={`${
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pb-18 md:pb-3 pt-18 md:pt-20`}>
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen min-h-screen overflow-x-hidden pb-18 md:pb-3 pt-18 md:pt-20`}>
         {error && <p className="text-center my-4 text-primary">{error}</p>}
         {!error && (
           <div className="grid max-xs:grid-cols-1 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 3xl:grid-cols-10 4xl:grid-cols-12 gap-y-4 gap-x-2 mt-2 justify-center items-center">

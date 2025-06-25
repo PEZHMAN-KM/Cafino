@@ -243,21 +243,18 @@ function Order({
   setCurrentPage,
   setHeaderShrink,
   setHeaderMenuOpen,
-  scrollContainerRef,
 }) {
   // SCROLL FOOTER -------------------------------------------------
   const lastScrollTop = useRef(0);
 
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
     let ticking = false;
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          const currentScrollTop = scrollContainer.scrollTop;
+          const currentScrollTop =
+            window.pageYOffset || document.documentElement.scrollTop;
 
           const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
           const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
@@ -276,19 +273,16 @@ function Order({
             setHeaderMenuOpen(false);
           }
 
-          lastScrollTop.current = currentScrollTop <= 0 ? 0 : currentScrollTop;
+          lastScrollTop.current = Math.max(0, currentScrollTop);
           ticking = false;
         });
         ticking = true;
       }
     };
 
-    scrollContainer.addEventListener("scroll", handleScroll);
-    return () => {
-      scrollContainer.removeEventListener("scroll", handleScroll);
-    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  // ----------------------------------------------------------------
   const [orderItems, setOrderItems] = useState([]);
   const [tableNumber, setTableNumber] = useState(null);
   const [timeAdded, setTimeAdded] = useState(null);
@@ -499,12 +493,12 @@ function Order({
   return (
     <>
       <div
-        ref={scrollContainerRef}
+        style={{ WebkitOverflowScrolling: "touch" }}
         className={`${
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden pt-18 ${
+        } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen min-h-screen overflow-x-hidden pt-18 ${
           orderItems.length !== 0 && "pb-60 md:pb-50"
         }`}>
         <div className="grid grid-cols-1">
@@ -541,7 +535,7 @@ function Order({
         {visible && (
           <div
             className={`w-screen fixed transition-all duration-30 ${
-              footerShrink ? "bottom-10 md:bottom-5" : "bottom-20 md:bottom-5"
+              footerShrink ? "bottom-12 md:bottom-5" : "bottom-20 md:bottom-5"
             }`}>
             <div
               className={`${

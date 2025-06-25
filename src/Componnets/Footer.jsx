@@ -14,7 +14,6 @@ function Footer({
   shouldAnimate,
   // PAGE 01 ------------------------------
   setHideIcons,
-  scrollContainerRef,
   goHome,
 }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
@@ -46,7 +45,7 @@ function Footer({
   }, []);
 
   function goToTop() {
-    scrollContainerRef.current.scrollTo({
+    window.scrollTo({
       top: 0,
       ...(shouldAnimate ? { behavior: "smooth" } : {}),
     });

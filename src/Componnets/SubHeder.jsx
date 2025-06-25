@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Icons } from "./Icons";
+import { useAnimation } from "../constants/AnimationContext.jsx";
 
 function SubHeder({
   hideIcons,
@@ -7,9 +8,12 @@ function SubHeder({
   onCategorySelect,
   showMenu,
   setShowMenu,
-  onSearchClick,
+  // onSearchClick,
   setCurrentPage,
+  setSearchActive,
+  headerInputRef,
 }) {
+  const shouldAnimate = useAnimation();
   const [onCategory, setOnCategory] = useState(1);
   const haptic = 10;
 
@@ -22,6 +26,21 @@ function SubHeder({
     setOnCategory(index);
   }
 
+  function onSearchClick() {
+    window.scrollTo({
+      top: 0,
+      ...(shouldAnimate ? { behavior: "smooth" } : {}),
+    });
+
+    setTimeout(
+      () => {
+        headerInputRef.current?.focus();
+        setSearchActive(true);
+      },
+      shouldAnimate ? 400 : 0
+    );
+  }
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -30,6 +49,7 @@ function SubHeder({
     <>
       <div className={className}>
         <div
+          style={{ WebkitOverflowScrolling: "touch" }}
           className={`z-10 flex justify-baseline lg:justify-center items-center py-1 lg:py-2 scrollbar scrollbar-none overflow-x-auto px-2 ${
             !hideIcons ? "gap-2 lg:gap-3" : "gap-1 lg:gap-3 rounded-3xl"
           }`}>
