@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RouteProgress from "./Componnets/RouteProgress.jsx";
 import { BlurProvider } from "./constants/BlurContext.jsx";
 
-import { registerSW } from "virtual:pwa-register";
+import { registerSW } from "virtual:pwa-register:admin-sw";
 registerSW({ immediate: true });
 
 import AdminLogin from "./AdminPages/AdminLogin.jsx";

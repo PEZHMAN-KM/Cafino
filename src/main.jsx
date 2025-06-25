@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RouteProgress from "./Componnets/RouteProgress.jsx";
 import { BlurProvider } from "./constants/BlurContext.jsx";
 
-import { registerSW } from "virtual:pwa-register";
+import { registerSW } from "virtual:pwa-register:user-sw";
 registerSW({ immediate: true });
 
 import App from "./App.jsx";
@@ -32,6 +32,7 @@ import App from "./App.jsx";
 //   console.log("نوع اتصال مشخص نیست، حالت پیش‌فرض اجرا شود.");
 // }
 
+// BATTERY SERVER - LOW BATTERT DETECTION
 const PowerSaving_LowBattery = async () => {
   if (!navigator.getBattery) return false;
 
@@ -51,7 +52,7 @@ const PowerSaving_LowBattery = async () => {
   }
 };
 
-// NETWORK SPEED diagnosis (Show The Speed Of Intenet)
+// NETWORK SPEED DETECTION (Show The Speed Of Intenet)
 const testNetworkSpeed = async () => {
   const fileUrl = "/TEST_SPEED_PEZHMAN.jpg";
   const fileSizeInBytes = 50335;
@@ -112,13 +113,6 @@ const lacksModernFeatures = () => {
 };
 
 const startApp = async () => {
-  navigator.getBattery().then((battery) => {
-    const level = battery.level; // مقدار بین 0 تا 1
-    const percentage = Math.round(level * 100); // تبدیل به درصد
-
-    console.log("🔋 درصد باتری:", percentage + "%");
-  });
-  
   // NETWORK SPEED CONTROL ----------------------------
   const connection =
     navigator.connection ||
