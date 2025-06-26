@@ -1,138 +1,16 @@
 import { useEffect, useState } from "react";
 import ProfileImage from "../../public/Profile.png";
-import { useNavigate } from "react-router-dom";
 import { BASE_PATH } from "../constants/paths";
 import axios from "axios";
+import { Icons } from "../Componnets/Icons";
+import { useBlur } from "../constants/BlurContext";
 
-const TopMenu = ({ className, stroke }) => {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      xmlnsXlink="http://www.w3.org/1999/xlink"
-      fill="black">
-      <g id="SVGRepo_bgCarrier" strokeWidth={0} />
-      <g
-        id="SVGRepo_tracerCarrier"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <g id="SVGRepo_iconCarrier">
-        <title>{"Menu"}</title>
-        <g
-          id="Page-1"
-          stroke="none"
-          strokeWidth={1}
-          fill="none"
-          fillRule="evenodd">
-          <g id="Menu">
-            <rect
-              id="Rectangle"
-              fillRule="nonzero"
-              x={0}
-              y={0}
-              width={40}
-              height={40}
-            />
-            <line
-              x1={5}
-              y1={7}
-              x2={19}
-              y2={7}
-              id="Path"
-              className="dark:stroke-white transition-colors duration-300"
-              stroke={stroke}
-              strokeWidth={2}
-              strokeLinecap="round"
-            />
-            <line
-              x1={5}
-              y1={17}
-              x2={19}
-              y2={17}
-              id="Path"
-              className="dark:stroke-white transition-colors duration-300"
-              stroke={stroke}
-              strokeWidth={2}
-              strokeLinecap="round"
-            />
-            <line
-              x1={5}
-              y1={12}
-              x2={19}
-              y2={12}
-              id="Path"
-              className="dark:stroke-white transition-colors duration-300"
-              stroke={stroke}
-              strokeWidth={2}
-              strokeLinecap="round"
-            />
-          </g>
-        </g>
-      </g>
-    </svg>
-  );
-};
-
-function AdminHeader() {
+function AdminHeader({ setCurrentPage }) {
+  // DARK MODE | IS LOADING MODE -------------------------------------
   const [isPageLoaded, setIsPageLoaded] = useState(false);
-
   const [isDark, setIsDark] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-  const [showMenuLeft, setShowMenuLeft] = useState(false);
-  const [userData, setUserData] = useState(Object);
-  const [profilePic, setProfilePic] = useState(null);
+  const reduceBlur = useBlur();
 
-  const navigate = useNavigate();
-
-  async function getUserInfo() {
-    try {
-      const token = JSON.parse(localStorage.getItem("user_data"));
-      const response = await fetch(`${BASE_PATH}/user/get_self_info`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        setUserData(data);
-        if (data.is_admin != true) {
-          logOut();
-        }
-      } else {
-        console.error("مشکل در دریافت اطلاعات کاربر");
-        localStorage.removeItem("user_data");
-        navigate("/adminlogin");
-      }
-    } catch (error) {
-      console.error("مشکل در دریافت اطلاعات کاربر. مشکل :", error);
-      localStorage.removeItem("user_data");
-      navigate("/adminlogin");
-    }
-  }
-  async function getProfilePic() {
-    try {
-      const token = JSON.parse(localStorage.getItem("user_data"));
-      const response = await axios.post(
-        `${BASE_PATH}/userget_user_picture`,
-        { user_id: token.userID },
-        {
-          headers: { "Content-Type": "application/json" },
-          responseType: "blob",
-        }
-      );
-
-      const imageBlob = response.data;
-      const imageUrl = URL.createObjectURL(imageBlob);
-      setProfilePic(imageUrl);
-    } catch (error) {
-      console.error("Error fetching profile picture:", error);
-    }
-  }
   useEffect(() => {
     // For flashing on LOADING PAGE
     setIsPageLoaded(true);
@@ -156,17 +34,71 @@ function AdminHeader() {
     }
   };
 
+  // USER INFORMATION ------------------------------------------------
+  const [userData, setUserData] = useState(Object);
+  const [profilePic, setProfilePic] = useState(null);
+  async function getUserInfo() {
+    try {
+      const token = JSON.parse(localStorage.getItem("user_data"));
+      const response = await fetch(`${BASE_PATH}/user/get_self_info`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        setUserData(data);
+        if (data.is_admin != true) {
+          logOut();
+        }
+      } else {
+        console.error("مشکل در دریافت اطلاعات کاربر");
+        localStorage.removeItem("user_data");
+        setCurrentPage(0);
+      }
+    } catch (error) {
+      console.error("مشکل در دریافت اطلاعات کاربر. مشکل :", error);
+      localStorage.removeItem("user_data");
+      setCurrentPage(0);
+    }
+  }
+  async function getProfilePic() {
+    try {
+      const token = JSON.parse(localStorage.getItem("user_data"));
+      const response = await axios.post(
+        `${BASE_PATH}/userget_user_picture`,
+        { user_id: token.userID },
+        {
+          headers: { "Content-Type": "application/json" },
+          responseType: "blob",
+        }
+      );
+
+      const imageBlob = response.data;
+      const imageUrl = URL.createObjectURL(imageBlob);
+      setProfilePic(imageUrl);
+    } catch (error) {
+      console.error("Error fetching profile picture:", error);
+    }
+  }
+
+  // MENU CONTROLL -------------------------------------------------
+  const [showMenu, setShowMenu] = useState(false);
+  const [showMenuLeft, setShowMenuLeft] = useState(false);
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
-
   const toggleMenuLeft = () => {
     setShowMenuLeft(!showMenuLeft);
   };
 
+  // BACK TO LOGIN -------------------------------------------------
   const logOut = () => {
     localStorage.removeItem("user_data");
-    navigate("/adminlogin");
+    setCurrentPage(0);
   };
 
   return (
@@ -176,83 +108,97 @@ function AdminHeader() {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } p-2 sticky top-0 z-10 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark rounded-b-3xl`}>
+        } p-2 sticky top-0 z-10`}>
         <div
           className={`${
             isPageLoaded
               ? "transition-colors duration-300"
               : "transition-none duration-0"
-          } bg-white dark:bg-darkpalleteDark w-full rounded-3xl py-3 px-4 flex justify-between items-center`}>
+          } ${
+            reduceBlur
+              ? "bg-white dark:bg-darkpalleteDark"
+              : "bg-white/30 dark:bg-darkpalleteDark/30"
+          } w-full backdrop-blur-md border border-white/20 dark:border-white/10 shadow-lg rounded-3xl py-3 px-4 flex justify-between items-center`}>
+          {/* ------------------------------------------------------- TOP RIGHT HEADER PANEL ------------------------------------------------------- */}
           <div className="hidden md:flex gap-4 text-xl font-bold">
-            <a
-              href="/adminhome"
+            <button
+              onClick={() => {
+                setCurrentPage(1);
+              }}
               className={`text-darkpallete dark:text-white hover:text-adminPrimary dark:hover:text-adminPrimaryDark ${
                 isPageLoaded
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
               }`}>
               خانه
-            </a>
-            <a
-              href="/itemmanager"
+            </button>
+            <button
+              onClick={() => {
+                setCurrentPage(2);
+              }}
               className={`text-darkpallete dark:text-white hover:text-adminPrimary dark:hover:text-adminPrimaryDark ${
                 isPageLoaded
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
               }`}>
               آیتم ها
-            </a>
-            <a
-              href=""
+            </button>
+            <button
               className={`text-darkpallete dark:text-white hover:text-adminPrimary dark:hover:text-adminPrimaryDark ${
                 isPageLoaded
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
               }`}>
               گزارش گیری
-            </a>
+            </button>
           </div>
           <div
             onClick={toggleMenuLeft}
             className="flex md:hidden cursor-pointer relative">
-            <TopMenu
+            <Icons.topMenu
               className={`w-15 bg-adminBackgroundColor dark:bg-darkpalleteDark rounded-2xl ${
                 isPageLoaded
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
               }`}
-              stroke={isDark ? "#fff" : "#809FB8"}
             />
           </div>
           {showMenuLeft && (
             <div className="absolute md:hidden right-5 top-20 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300">
               <div className="py-1">
-                <a
-                  href="/adminhome"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                <button
+                  onClick={() => {
+                    setCurrentPage(1);
+                  }}
+                  className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
                   خانه
-                </a>
-                <a
-                  href="/itemmanager"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                </button>
+                <button
+                  onClick={() => {
+                    setCurrentPage(2);
+                  }}
+                  className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
                   آیتم
-                </a>
-                <a
-                  href=""
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                </button>
+                <button className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
                   گزارش گیری
-                </a>
+                </button>
               </div>
             </div>
           )}
-          <div
+          {/* --------------------------------------------------------- CENTER HEADER PANEL --------------------------------------------------------- */}
+          <button
+            onClick={() => {
+              setCurrentPage(1);
+            }}
             className={`text-xl font-bold md:hidden text-darkpallete dark:text-white ${
               isPageLoaded
                 ? "transition-colors duration-300"
                 : "transition-none duration-0"
             }`}>
             کافـی نـو
-          </div>
+          </button>
+          {/* -------------------------------------------------------- TOP LEFT HEADER PANEL -------------------------------------------------------- */}
           <div className="cursor-pointer relative" onClick={toggleMenu}>
             <div className="flex justify-center items-center flex-row-reverse gap-2">
               <img
@@ -285,11 +231,13 @@ function AdminHeader() {
                       <p className="w-full">حالت تاریک</p>
                     )}
                   </button>
-                  <a
-                    href="/changeuserinfo"
-                    className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                  <button
+                    onClick={() => {
+                      setCurrentPage(5);
+                    }}
+                    className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
                     تنظیمات
-                  </a>
+                  </button>
                   <button
                     onClick={logOut}
                     className="block w-full text-right px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">

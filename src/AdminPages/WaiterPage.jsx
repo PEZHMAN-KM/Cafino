@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ProfileImage from "../../public/Profile.png";
-import { useNavigate } from "react-router-dom";
 import { BASE_PATH } from "../constants/paths";
 import axios from "axios";
 import { Icons } from "../Componnets/Icons";
@@ -99,7 +98,7 @@ const WaiterRequest = ({
   </div>
 );
 
-function WaiterPage() {
+function WaiterPage({ setCurrentPage }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const reduceBlur = useBlur();
 
@@ -111,8 +110,6 @@ function WaiterPage() {
 
   const [removingId, setRemovingId] = useState(null);
   const [clickedButtonId, setClickedButtonId] = useState(null);
-
-  const navigate = useNavigate();
 
   async function getUserInfo() {
     try {
@@ -133,12 +130,12 @@ function WaiterPage() {
       } else {
         console.error("مشکل در دریافت اطلاعات کاربر");
         localStorage.removeItem("user_data");
-        navigate("/adminlogin");
+        setCurrentPage(0);
       }
     } catch (error) {
       console.error("مشکل در دریافت اطلاعات کاربر. مشکل :", error);
       localStorage.removeItem("user_data");
-      navigate("/adminlogin");
+      setCurrentPage(0);
     }
   }
   async function getProfilePic() {
@@ -282,7 +279,7 @@ function WaiterPage() {
   };
   const logOut = () => {
     localStorage.removeItem("user_data");
-    navigate("/adminlogin");
+    setCurrentPage(0);
   };
 
   return (
@@ -293,7 +290,7 @@ function WaiterPage() {
             ? "transition-colors duration-300"
             : "transition-none duration-0"
         } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden`}>
-        {/* HEADER */}
+        {/* --------------------------------------------- HEADER ---------------------------------------------------------------- */}
         <div
           className={`${
             isPageLoaded
@@ -355,11 +352,13 @@ function WaiterPage() {
               {showMenu && (
                 <div className="absolute left-0 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300">
                   <div className="py-1">
-                    <a
-                      href="/changeuserinfo"
-                      className="cursor-pointer block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
+                    <button
+                      onClick={() => {
+                        setCurrentPage(5);
+                      }}
+                      className="cursor-pointer w-full text-start block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
                       تنظیمات
-                    </a>
+                    </button>
                     <button
                       onClick={logOut}
                       className="cursor-pointer block w-full text-right px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
@@ -371,7 +370,7 @@ function WaiterPage() {
             </div>
           </div>
         </div>
-        {/* BODY - REQUEST PANEL */}
+        {/* -------------------------------------- BODY | REQUEST PANEL --------------------------------------------------------- */}
         <div
           className={`${
             isPageLoaded

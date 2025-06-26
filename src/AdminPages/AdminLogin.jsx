@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import UseAuth from "../UseAuth";
 import { BASE_PATH } from "../constants/paths";
 
-function AdminLogin() {
-  const navigate = useNavigate();
+function AdminLogin({ setCurrentPage }) {
+  // const navigate = useNavigate();
   const [textError, setTextError] = useState(null);
   const { isAuthenticated } = UseAuth();
 
@@ -16,9 +16,11 @@ function AdminLogin() {
     if (isAuthenticated) {
       const data = JSON.parse(localStorage.getItem("user_data"));
       if (data.is_admin == true) {
-        navigate("/adminhome");
+        // navigate("/adminhome");
+        setCurrentPage(1);
       } else if (data.is_waitress == true) {
-        navigate("/waiterpage");
+        // navigate("/waiterpage");
+        setCurrentPage(7);
       }
     }
   });
@@ -59,9 +61,11 @@ function AdminLogin() {
       if (response.status === 200) {
         localStorage.setItem("user_data", JSON.stringify(response.data));
         if (response.data.is_admin == true) {
-          navigate("/adminhome");
+          // navigate("/adminhome");
+          setCurrentPage(1);
         } else if (response.data.is_waitress == true) {
-          navigate("/waiterpage");
+          // navigate("/waiterpage");
+          setCurrentPage(7);
         }
       }
     } catch (error) {

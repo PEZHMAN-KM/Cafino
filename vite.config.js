@@ -177,8 +177,8 @@ export default defineConfig({
       workbox: {
         runtimeCaching,
       },
-      injectRegister: false,
-      // injectRegister: "auto",
+      // injectRegister: false,
+      injectRegister: "auto",
     }),
 
     // ✅ PWA ادمین (در صورت نیاز)

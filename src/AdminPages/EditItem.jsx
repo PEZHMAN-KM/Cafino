@@ -1,8 +1,7 @@
-import AdminHeader from "./AdminHeader";
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { BASE_PATH } from "../constants/paths";
 import axios from "axios";
+import { Icons } from "../Componnets/Icons";
 
 const ArrowIcon = ({ className }) => {
   return (
@@ -22,7 +21,7 @@ const ArrowIcon = ({ className }) => {
   );
 };
 
-function EditItem() {
+function EditItem({ setCurrentPage }) {
   const id = Number(localStorage.getItem("edit_food"));
   const [showOffValue, setShowOffValue] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -39,8 +38,6 @@ function EditItem() {
   const [price, setPrice] = useState("");
   const [inSale, setInSale] = useState(false);
   const [salePrice, setSalePrice] = useState("");
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchItem() {
@@ -111,7 +108,7 @@ function EditItem() {
 
   function exit() {
     localStorage.removeItem("edit_food");
-    navigate("/itemmanager");
+    setCurrentPage(2);
   }
 
   // Update handleImageChange function
@@ -156,7 +153,6 @@ function EditItem() {
     <>
       <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-full transition-colors duration-300">
         <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden transition-colors duration-300">
-          <AdminHeader />
           <div className="grid grid-cols-1 md:flex justify-center w-screen">
             <div className="bg-white dark:bg-darkpalleteDark m-2 rounded-2xl transition-colors duration-300">
               <div className="flex justify-between items-center pl-4 pt-3">
@@ -214,18 +210,7 @@ function EditItem() {
                     </div>
                   ) : (
                     <div className="text-gray-500 dark:text-gray-400 py-8">
-                      <svg
-                        className="mx-auto h-12 w-12 mb-4"
-                        stroke="currentColor"
-                        fill="none"
-                        viewBox="0 0 48 48">
-                        <path
-                          d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      <Icons.addImage className="mx-auto h-12 w-12 mb-4" />
                       <p className="text-sm">برای آپلود تصویر کلیک کنید</p>
                       <p className="text-xs text-gray-400 dark:text-gray-500">
                         یا تصویر را اینجا رها کنید

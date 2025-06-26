@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import AdminHeader from "./AdminHeader";
 import axios from "axios";
 import { BASE_PATH } from "../constants/paths";
 
@@ -22,7 +21,7 @@ const ArrowIcon = ({ className }) => {
   );
 };
 
-function ChangeUserInfo() {
+function ChangeUserInfo({ setCurrentPage }) {
   const [userInfo, setUserInfo] = useState({
     username: "",
     password: "",
@@ -126,7 +125,7 @@ function ChangeUserInfo() {
 
         if (response.ok) {
           localStorage.removeItem("user_data");
-          navigate("/adminlogin");
+          setCurrentPage(0);
         }
       } catch (error) {
         console.error("مشکل در استعفا دادن کاربر:", error);
@@ -181,8 +180,7 @@ function ChangeUserInfo() {
           }
         );
         if (response.status === 200) {
-          // alert("اطلاعات با موفقیت بروزرسانی شد");
-          navigate("/adminLogin");
+          setCurrentPage(0);
         }
       } catch (error) {
         console.error(
@@ -203,8 +201,7 @@ function ChangeUserInfo() {
           }
         );
         if (response.status === 200) {
-          // alert("اطلاعات با موفقیت بروزرسانی شد");
-          navigate("/adminLogin");
+          setCurrentPage(0);
         }
       } catch (error) {
         console.error(
@@ -226,14 +223,6 @@ function ChangeUserInfo() {
     }
   };
 
-  const goBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate("/adminhome"); // fallback
-    }
-  };
-
   return (
     <div className="min-h-screen bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300">
       <div className="container mx-auto px-4 py-8">
@@ -242,7 +231,10 @@ function ChangeUserInfo() {
             <h1 className="text-3xl font-extrabold text-center dark:text-white transition-colors duration-300">
               تنظیمات
             </h1>
-            <button onClick={goBack}>
+            <button
+              onClick={() => {
+                setCurrentPage(0);
+              }}>
               <div className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
                 <ArrowIcon className="w-8 rotate-180 stroke-3 stroke-black dark:stroke-white" />
               </div>

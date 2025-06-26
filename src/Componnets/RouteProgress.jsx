@@ -74,16 +74,7 @@ const RouteProgress = () => {
   const location = useLocation();
 
   // مسیرهای ادمین
-  const adminRoutes = [
-    "/AddWaiter",
-    "/ChangeUserInfo",
-    "/AdminLogin",
-    "/WaiterPage",
-    "/ItemManager",
-    "/EditItem",
-    "/AddItem",
-    "/AdminHome",
-  ];
+  const adminRoutes = ["/Admin"];
 
   const isAdmin = adminRoutes.some((route) =>
     location.pathname.toLowerCase().includes(route.toLowerCase())

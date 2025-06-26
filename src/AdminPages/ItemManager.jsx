@@ -1,8 +1,6 @@
 import axios, { Axios } from "axios";
-import AdminHeader from "./AdminHeader";
 import { useEffect, useState } from "react";
 import { BASE_PATH } from "../constants/paths";
-import { Navigate, useNavigate } from "react-router-dom";
 import itemImage from "../../public/No_Item.png";
 
 import UseAuth from "../UseAuth";
@@ -162,19 +160,18 @@ const WaiterItem = ({
   );
 };
 
-const ItemManager = () => {
+const ItemManager = ({ setCurrentPage }) => {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const [removingId, setRemovingId] = useState(null);
   const [clickedButtonId, setClickedButtonId] = useState(null);
 
   const { isAuthenticated } = UseAuth();
-  const navigate = useNavigate();
 
   async function checktoken() {
     if (isAuthenticated) {
       const data = JSON.parse(localStorage.getItem("user_data"));
       if (data.is_admin == false) {
-        navigate("/adminhome");
+        setCurrentPage(0);
         localStorage.removeItem("user_data");
       }
     }
@@ -242,7 +239,7 @@ const ItemManager = () => {
   function editFood(food_id) {
     checktoken();
     localStorage.setItem("edit_food", food_id);
-    navigate("/EditItem");
+    setCurrentPage(4);
   }
 
   // WAITER CONTROL -------------------------------------------------
@@ -319,7 +316,6 @@ const ItemManager = () => {
               ? "transition-colors duration-300"
               : "transition-none duration-0"
           } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden`}>
-          <AdminHeader />
           <div
             className={`${
               isPageLoaded
@@ -350,7 +346,10 @@ const ItemManager = () => {
                     </div>
                   </a>
                 </div> */}
-                <a href="/AddItem">
+                <button
+                  onClick={() => {
+                    setCurrentPage(3);
+                  }}>
                   <div className="bg-white dark:bg-black flex items-center justify-center gap-1 border-3 border-black dark:border-white p-2 rounded-2xl font-bold transition-all duration-300">
                     <Icons.add
                       className={
@@ -361,7 +360,7 @@ const ItemManager = () => {
                       اضافه کردن
                     </h1>
                   </div>
-                </a>
+                </button>
               </div>
               <div className="px-2">
                 <div
@@ -432,7 +431,10 @@ const ItemManager = () => {
                   } text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white`}>
                   لیست سالن‌دار ها
                 </h1>
-                <a href="/AddWaiter">
+                <button
+                  onClick={() => {
+                    setCurrentPage(6);
+                  }}>
                   <div className="bg-white dark:bg-black flex items-center justify-center gap-1 border-3 border-black dark:border-white p-2 rounded-2xl font-bold transition-all duration-300">
                     <Icons.add
                       className={
@@ -443,7 +445,7 @@ const ItemManager = () => {
                       استخدام سالن‌دار
                     </h1>
                   </div>
-                </a>
+                </button>
               </div>
               {allWaiter.length === 0 ? (
                 <p className="text-xl text-center pb-4 text-slowgrayDark dark:text-slowgray">

@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from "react";
-import AdminHeader from "./AdminHeader";
 import itemImage from "../../public/No_Item.png";
 import axios from "axios";
 import { BASE_PATH } from "../constants/paths";
@@ -623,7 +622,7 @@ function AdminHome() {
             ? "transition-colors duration-300"
             : "transition-none duration-0"
         } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
-        <AdminHeader />
+        {/* <AdminHeader /> */}
         <div
           className={`${
             isPageLoaded

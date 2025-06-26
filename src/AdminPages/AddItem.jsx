@@ -1,17 +1,13 @@
-import AdminHeader from "./AdminHeader";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { BASE_PATH } from "../constants/paths";
 import { Icons } from "../Componnets/Icons";
 
-function AddItem() {
+function AddItem({ setCurrentPage }) {
   const [textError, setTextError] = useState(null);
   const [nameError, setNameError] = useState(false);
   const [priceError, setPriceError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
-
-  const navigate = useNavigate();
 
   const addFood = async (e) => {
     e.preventDefault();
@@ -80,7 +76,7 @@ function AddItem() {
         console.log("Uploaded Image URL:", uploadedImageUrl);
 
         // Optionally navigate or reset form here
-        navigate("/ItemManager");
+        setCurrentPage(2);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -149,14 +145,16 @@ function AddItem() {
     <>
       <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-full transition-colors duration-300">
         <div className="bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden transition-colors duration-300">
-          <AdminHeader />
           <div className="grid grid-cols-1 md:flex justify-center w-screen">
             <div className="bg-white dark:bg-darkpalleteDark m-2 rounded-2xl transition-colors duration-300">
               <div className="flex justify-between items-center pl-4 pt-3">
                 <h1 className="text-3xl font-extrabold pr-8 py-4 dark:text-white transition-colors duration-300">
                   اضافه کردن آیتم
                 </h1>
-                <a href="/Itemmanager">
+                <button
+                  onClick={() => {
+                    setCurrentPage(2);
+                  }}>
                   <div className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
                     <Icons.arrow
                       className={
@@ -164,7 +162,7 @@ function AddItem() {
                       }
                     />
                   </div>
-                </a>
+                </button>
               </div>
               <form
                 className="flex flex-col gap-4 px-8 py-4"

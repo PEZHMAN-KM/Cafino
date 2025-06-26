@@ -28,21 +28,9 @@ const Header = forwardRef(
     },
     ref
   ) => {
+    // DARK MODE | IS LOADING MODE -------------------------------------
     const [isPageLoaded, setIsPageLoaded] = useState(false);
     const [isDark, setIsDark] = useState(false);
-    const inputRef = useRef(null);
-    const reduceBlur = useBlur();
-
-    useImperativeHandle(ref, () => ({
-      focusSearchInput: () => {
-        inputRef.current?.focus();
-      },
-    }));
-
-    const toggleMenu = () => {
-      setShowMenu(!showMenu);
-    };
-
     useEffect(() => {
       // For flashing on LOADING PAGE
       setIsPageLoaded(true);
@@ -50,7 +38,6 @@ const Header = forwardRef(
       const isDarkNow = document.documentElement.classList.contains("dark");
       setIsDark(isDarkNow);
     }, []);
-
     const toggleDarkMode = () => {
       const root = document.documentElement;
       if (root.classList.contains("dark")) {
@@ -62,6 +49,18 @@ const Header = forwardRef(
         localStorage.setItem("theme", "dark");
         setIsDark(true);
       }
+    };
+    // SEARCH FOCOS ----------------------------------------------------
+    const inputRef = useRef(null);
+    useImperativeHandle(ref, () => ({
+      focusSearchInput: () => {
+        inputRef.current?.focus();
+      },
+    }));
+    // MOTION AND MENU CONTROLL ---------------------------------------------
+    const reduceBlur = useBlur();
+    const toggleMenu = () => {
+      setShowMenu(!showMenu);
     };
 
     return (

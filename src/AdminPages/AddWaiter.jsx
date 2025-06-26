@@ -1,14 +1,10 @@
 import React, { useRef, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { BASE_PATH } from "../constants/paths";
 
-import AdminHeader from "./AdminHeader.jsx";
 import { Icons } from "../Componnets/Icons.jsx";
 
-export default function AddWaiter() {
-  const navigate = useNavigate();
-
+export default function AddWaiter({ setCurrentPage }) {
   const [nameError, setNameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [fullNameError, setFullNameError] = useState(false);
@@ -60,7 +56,7 @@ export default function AddWaiter() {
           },
         }
       );
-      navigate(-1);
+      setCurrentPage(2);
     } catch (err) {
       setError("خطا در ثبت گارسون جدید");
     }
@@ -111,15 +107,16 @@ export default function AddWaiter() {
 
   return (
     <div className="min-h-screen bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300">
-      <AdminHeader />
-
       <div className="flex-1 flex items-center justify-center px-2">
         <div className="w-full max-w-md bg-white dark:bg-darkpalleteDark rounded-2xl shadow-lg p-5 transition-colors duration-300 animate-scale-up">
           <div className="flex justify-between items-center pb-4">
             <h1 className="text-xl md:text-3xl font-extrabold dark:text-white transition-colors duration-300">
               افزودن گارسون جدید
             </h1>
-            <a href="/itemmanager">
+            <button
+              onClick={() => {
+                setCurrentPage(2);
+              }}>
               <div className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
                 <Icons.arrow
                   className={
@@ -127,7 +124,7 @@ export default function AddWaiter() {
                   }
                 />
               </div>
-            </a>
+            </button>
           </div>
           <div
             className="border-2 border-dashed border-gray-300 dark:border-graypalleteDark rounded-lg p-4 text-center cursor-pointer hover:border-adminAction dark:hover:border-adminActionDark transition-colors w-full max-w-md"
