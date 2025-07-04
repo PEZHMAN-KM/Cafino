@@ -177,8 +177,8 @@ export default defineConfig({
       workbox: {
         runtimeCaching,
       },
-      // injectRegister: false,
-      injectRegister: "auto",
+      injectRegister: false,
+      // injectRegister: "auto",
     }),
 
     // ✅ PWA ادمین (در صورت نیاز)
@@ -230,11 +230,11 @@ export default defineConfig({
   // 🔐 تنظیمات HTTPS با گواهی local
   // server: {
   //   https: {
-  //     key: fs.readFileSync(path.resolve(__dirname, "localhost-key.pem")),
-  //     cert: fs.readFileSync(path.resolve(__dirname, "localhost.pem")),
+  //     key: fs.readFileSync(path.resolve(__dirname, "192.168.100.7-key.pem")),
+  //     cert: fs.readFileSync(path.resolve(__dirname, "192.168.100.7.pem")),
   //   },
   //   port: 3000,
-  //   host: "localhost",
+  //   host: "192.168.100.7",
   // },
 
   server: {

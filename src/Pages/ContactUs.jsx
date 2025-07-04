@@ -67,11 +67,11 @@ const Location = ({ setIframeLoaded, iframeLoaded }) => (
       }
     }}
     href="https://nshn.ir/_bfkwn5FLuBe"
-    className="bg-darkpallete dark:bg-darkpalleteDark hover:bg-darkpalleteDark dark:hover:bg-darkpallete p-5 pb-3 rounded-3xl transition-colors duration-300 cursor-pointer">
+    className="relative bg-darkpallete dark:bg-darkpalleteDark hover:bg-darkpalleteDark dark:hover:bg-darkpallete p-5 pb-3 rounded-3xl transition-colors duration-300 cursor-pointer">
     {!iframeLoaded && (
-      <div className="fixed flex flex-col items-center justify-center gap-5 size-50! rounded-2xl w-full h-full animate-shimmer">
-        <Icons.location className={"w-12 stroke-gray-300"} />
-        <span className="text-gray-300">در حال بارگذاری نقشه...</span>
+      <div className="absolute bg-neutral-300 dark:bg-neutral-700 flex flex-col items-center justify-center gap-5 size-50! rounded-2xl w-full h-full animate-pulse">
+        <Icons.location className={"w-12 stroke-red-600"} />
+        <span className="text-black dark:text-white">در حال بارگذاری نقشه...</span>
       </div>
     )}
     <iframe

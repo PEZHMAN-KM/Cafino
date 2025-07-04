@@ -24,10 +24,12 @@ const OrderBox = ({
   handleDecreaseCount,
   removingId,
   selectFood,
+  isLoadingItems,
+  hasInitialOrder,
 }) => (
   <div
     className={`pt-2 mb-2 lg:mb-4 ${
-      orderItems.length !== 0 &&
+      hasInitialOrder &&
       "border-b-4 border-primary dark:border-primaryDark transition-colors duration-300"
     }`}>
     <h1 className="font-extrabold text-3xl px-8 dark:text-white transition-colors duration-300 pb-5">
@@ -35,11 +37,17 @@ const OrderBox = ({
     </h1>
     <div
       className={`${
-        orderItems.length === 0
+        !hasInitialOrder
           ? "grid-cols-1"
           : "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 pb-1"
       } grid transition-colors duration-300`}>
-      {orderItems.length === 0 ? (
+      {isLoadingItems && hasInitialOrder ? (
+        <>
+          {Array.from({ length: hasInitialOrder }).map((_, index) => (
+            <SkeletonOrderItem key={index} />
+          ))}
+        </>
+      ) : !hasInitialOrder ? (
         <h1 className="text-center text-xl md:text-3xl font-black text-slowgrayDark dark:text-slowgray pb-5 transition-colors duration-300 animate-opacity-up">
           سبد خرید خالی است
         </h1>
@@ -106,6 +114,18 @@ const OrderItem = ({
     </div>
   </div>
 );
+// Skeleton For ORFER ITEM ---------------------------------------
+const SkeletonOrderItem = () => (
+  <div className="animate-pulse flex items-center gap-3 px-3 py-2 bg-slowgray/20 dark:bg-slowgrayDark/20 rounded-3xl m-2">
+    <div className="w-16 h-16 bg-neutral-300 dark:bg-neutral-700 rounded-3xl" />
+    <div className="flex flex-col gap-2 flex-1">
+      <div className="w-3/4 h-4 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
+      <div className="w-1/2 h-3 bg-neutral-200 dark:bg-neutral-600 rounded-full" />
+    </div>
+    <div className="w-16 h-7 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
+  </div>
+);
+
 const CountController = ({ itemId, count, onIncrease, onDecrease }) => {
   return (
     <div className="flex items-center gap-1 transition-all duration-300">
@@ -141,7 +161,7 @@ const UserNumber = ({
   setTableNumber,
   tableError,
   isPageLoaded,
-  orderItems,
+  hasInitialOrder,
 }) => (
   <div
     className={`${
@@ -153,7 +173,7 @@ const UserNumber = ({
         ? "transition-colors duration-300"
         : "transition-none duration-0"
     } bg-white dark:bg-darkpalleteDark w-screen p-3 mx-2 rounded-3xl border-2 flex justify-between items-center text-2xl font-bold ${
-      orderItems.length === 0 ? "animate-scale-out" : "animate-scale-up"
+      !hasInitialOrder ? "animate-scale-out" : "animate-scale-up"
     }`}>
     <div className="flex flex-col lg:gap-2">
       <h1 className="text-lg md:text-2xl font-extrabold dark:text-white transition-colors duration-300">
@@ -187,22 +207,30 @@ const UserNumber = ({
   </div>
 );
 
-const Checkout = ({ orderItems }) => {
+const Checkout = ({ orderItems, isLoadingItems, hasInitialOrder }) => {
   return (
     <div>
       <h1 className="font-extrabold text-2xl sm:text-3xl px-8 py-3 dark:text-white transition-colors duration-300">
         فاکتور سفارشات شما
       </h1>
-      {orderItems.map((item) => (
-        <div key={item.id}>
-          <CheckOutItem
-            name={item.name}
-            count={item.count}
-            price={item.price}
-            sale_price={item.sale_price}
-          />
-        </div>
-      ))}
+      {isLoadingItems && hasInitialOrder ? (
+        <>
+          {Array.from({ length: hasInitialOrder }).map((_, index) => (
+            <SkeletonCheckOutItem key={index} />
+          ))}
+        </>
+      ) : (
+        orderItems.map((item) => (
+          <div key={item.id}>
+            <CheckOutItem
+              name={item.name}
+              count={item.count}
+              price={item.price}
+              sale_price={item.sale_price}
+            />
+          </div>
+        ))
+      )}
     </div>
   );
 };
@@ -234,6 +262,15 @@ const CheckOutItem = ({ name, count, price, sale_price }) => (
         </div>
       )}
     </div>
+  </div>
+);
+// Skeleton For CHECKOUT ITEM ---------------------------------------
+const SkeletonCheckOutItem = () => (
+  <div className="flex justify-between px-5 sm:px-10 py-3 animate-pulse">
+    <div className="flex gap-3 flex-col w-1/2">
+      <div className="w-32 h-5 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
+    </div>
+    <div className="w-20 h-6 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
   </div>
 );
 
@@ -291,8 +328,11 @@ function Order({
 
   const [tableError, setTableError] = useState(null);
 
-  const [removingId, setRemovingId] = useState(null);
+  const [isLoadingItems, setIsLoadingItems] = useState(false);
+  const [hasInitialOrder, setHasInitialOrder] = useState(false);
+
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [removingId, setRemovingId] = useState(null);
   const [visible, setVisible] = useState(false);
 
   const reduceBlur = useBlur();
@@ -347,6 +387,9 @@ function Order({
   const updateLocalStorage = (items) => {
     const simplified = items.map((item) => [item.id, item.count]);
     localStorage.setItem("order", JSON.stringify(simplified));
+    const foodIds = items.map((item) => item.count);
+    setHasInitialOrder(foodIds.length);
+    console.log(foodIds.length);
   };
 
   function selectFood(food_id) {
@@ -359,6 +402,7 @@ function Order({
 
   async function fetchItems() {
     const loaded_food_raw = localStorage.getItem("order");
+    setIsLoadingItems(true);
     try {
       let orderArray = [];
       if (loaded_food_raw) {
@@ -366,9 +410,11 @@ function Order({
       }
 
       const foodIds = orderArray.map(([id, count]) => id);
+      setHasInitialOrder(foodIds.length);
 
       if (foodIds.length === 0) {
         setOrderItems([]);
+        setIsLoadingItems(false);
         return;
       }
 
@@ -396,6 +442,7 @@ function Order({
       console.log(err);
       setOrderItems([]);
     }
+    setIsLoadingItems(false);
   }
 
   useEffect(() => {
@@ -406,7 +453,7 @@ function Order({
   }, []);
 
   useEffect(() => {
-    if (orderItems.length === 0) {
+    if (!hasInitialOrder) {
       if (visible) {
         setTimeout(
           () => {
@@ -420,7 +467,7 @@ function Order({
     }
 
     window.dispatchEvent(new Event("orderUpdated"));
-  }, [orderItems]);
+  }, [hasInitialOrder]);
 
   async function addOrder() {
     const rawOrder = localStorage.getItem("order");
@@ -499,7 +546,7 @@ function Order({
             ? "transition-colors duration-300"
             : "transition-none duration-0"
         } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen min-h-screen overflow-x-hidden pt-18 ${
-          orderItems.length !== 0 && "pb-60 md:pb-50"
+          hasInitialOrder && "pb-60 md:pb-50"
         }`}>
         <div className="grid grid-cols-1">
           <div className="col-span-1">
@@ -509,6 +556,8 @@ function Order({
               handleDecreaseCount={handleDecreaseCount}
               removingId={removingId}
               selectFood={selectFood}
+              isLoadingItems={isLoadingItems}
+              hasInitialOrder={hasInitialOrder}
             />
           </div>
           {visible && (
@@ -519,14 +568,18 @@ function Order({
                   setTableNumber={setTableNumber}
                   tableError={tableError}
                   isPageLoaded={isPageLoaded}
-                  orderItems={orderItems}
+                  hasInitialOrder={hasInitialOrder}
                 />
               </div>
               <div
                 className={`col-span-1 pt-2 lg:pt-4 ${
-                  orderItems.length === 0 && "animate-opacity-out"
+                  !hasInitialOrder && "animate-opacity-out"
                 }`}>
-                <Checkout orderItems={orderItems} />
+                <Checkout
+                  orderItems={orderItems}
+                  isLoadingItems={isLoadingItems}
+                  hasInitialOrder={hasInitialOrder}
+                />
               </div>
             </div>
           )}
@@ -543,7 +596,7 @@ function Order({
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
               } ${
-                orderItems.length === 0
+                !hasInitialOrder
                   ? " animate-opacity-out"
                   : " animate-opacity-up"
               } w-[98vw] mx-auto lg:w-2/3 p-4 rounded-3xl ${

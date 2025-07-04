@@ -47,6 +47,22 @@ const Waiter = ({
   </div>
 );
 
+// Skeleton For ITEMS ---------------------------------------
+const SkeletonItems = () => (
+  <div className="animate-pulse flex items-center gap-3 px-3 py-2 bg-slowgray/20 dark:bg-slowgrayDark/20 rounded-3xl m-2">
+    <div className="size-12 bg-neutral-300 dark:bg-neutral-700 rounded-2xl" />
+    <div className="flex flex-col gap-2 flex-1">
+      <div className="w-3/4 h-4 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
+      <div className="w-1/2 h-3 bg-neutral-200 dark:bg-neutral-600 rounded-full" />
+    </div>
+    <div className="flex flex-col justify-end items-end gap-2 w-1/4">
+      <div className="h-2 w-2/3 bg-neutral-300 dark:bg-neutral-700 rounded-3xl"></div>
+      <div className="h-4 w-full bg-neutral-300 dark:bg-neutral-700 rounded-full"></div>
+    </div>
+    {/* <div className="w-16 h-7 bg-neutral-300 dark:bg-neutral-700 rounded-full" /> */}
+  </div>
+);
+
 function EasyPage({ setCurrentPage }) {
   const reduceBlur = useBlur();
   const shouldAnimate = useAnimation();
@@ -57,6 +73,8 @@ function EasyPage({ setCurrentPage }) {
       ...(shouldAnimate ? { behavior: "smooth" } : {}),
     });
   }
+  // ITEM CONTROL ----------------------------------------------
+  const [isLoadingItems, setIsLoadingItems] = useState(false);
 
   const [foodsByCategory, setFoodsByCategory] = useState({});
   const [error, setError] = useState(null);
@@ -69,6 +87,7 @@ function EasyPage({ setCurrentPage }) {
     "-1": "تخفیفات ویژه",
   };
   async function fetchData() {
+    setIsLoadingItems(true);
     const result = {};
     try {
       const ids = [-1, 1, 2, 3, 4, 5];
@@ -93,6 +112,7 @@ function EasyPage({ setCurrentPage }) {
     } catch (err) {
       setError("خطا در دریافت داده‌ها");
     }
+    setIsLoadingItems(false);
   }
 
   useEffect(() => {
@@ -102,6 +122,7 @@ function EasyPage({ setCurrentPage }) {
     fetchData();
   }, []);
 
+  // WAITER CALLER CONTROL ---------------------------------------
   const [tableNumber, setTableNumber] = useState(null);
   const [TableError, setTableError] = useState(null);
   async function addNotification(tableNumber) {
@@ -144,6 +165,7 @@ function EasyPage({ setCurrentPage }) {
     }
   }
 
+  // DARK MODE CONTROL -------------------------------------------
   const [isDark, setIsDark] = useState(false);
   const toggleDarkMode = () => {
     const root = document.documentElement;
@@ -173,63 +195,75 @@ function EasyPage({ setCurrentPage }) {
             لیست ساده غذاها
           </button>
         </div>
-        {error && <p className="text-primary text-center">{error}</p>}
-
-        {Object.entries(foodsByCategory).map(([category, foods]) => (
-          <div key={category} className="mb-5">
-            <h2
-              className={`text-2xl text-center transition-colors duration-300 md:text-start font-bold mb-4 border-b pb-2 ${
-                category == "تخفیفات ویژه"
-                  ? "text-primary"
-                  : "text-black dark:text-white"
-              }`}>
-              {category}
-            </h2>
-            <ul className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-y-2 gap-x-2 justify-center items-center">
-              {foods.map((food) => (
-                <li
-                  key={food.id}
-                  className="flex justify-start items-center gap-2 md:gap-4 shadow-lg p-2 max-h-19 overflow-hidden transition-colors duration-300 bg-white dark:bg-darkpallete rounded-3xl">
-                  <img
-                    src={
-                      food.pic_url
-                        ? `${BASE_PATH}/files/${food.pic_url?.split("/").pop()}`
-                        : itemImage
-                    }
-                    alt={food.name}
-                    className="size-10 md:size-15 aspect-square object-cover rounded-xl md:rounded-2xl pointer-events-none touch-none"
-                  />
-                  <div className="flex justify-between items-center gap-2 w-full">
-                    <div className="text-start">
-                      <h3 className="text-lg md:text-xl font-bold dark:text-white">
-                        {food.name}
-                      </h3>
-                      <p className="text-xs md:text-sm max-h-8 overflow-hidden text-slowgrayDark dark:text-slowgray">
-                        {food.description}
-                      </p>
-                    </div>
-                    <div className="text-end">
-                      {food.sale_price ? (
-                        <>
-                          <span className="line-through text-highgrayDark dark:text-highgray text-xs md:text-sm">
-                            {Number(food.price).toLocaleString()} تومان
-                          </span>
-                          <br />
-                        </>
-                      ) : null}
-                      <span className="text-primary font-bold text-md md:text-lg">
-                        {food.sale_price
-                          ? Number(food.sale_price).toLocaleString()
-                          : Number(food.price).toLocaleString()}
-                        تومان
-                      </span>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+        {isLoadingItems ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-y-2 gap-x-2 justify-center items-center">
+            {Array.from({ length: 100 }).map((_, index) => (
+              <div key={index}>
+                <SkeletonItems />
+              </div>
+            ))}
           </div>
-        ))}
+        ) : error ? (
+          <p className="text-primary text-center">{error}</p>
+        ) : (
+          Object.entries(foodsByCategory).map(([category, foods]) => (
+            <div key={category} className="mb-5">
+              <h2
+                className={`text-2xl text-center transition-colors duration-300 md:text-start font-bold mb-4 border-b pb-2 ${
+                  category == "تخفیفات ویژه"
+                    ? "text-primary"
+                    : "text-black dark:text-white"
+                }`}>
+                {category}
+              </h2>
+              <ul className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-y-2 gap-x-2 justify-center items-center">
+                {foods.map((food) => (
+                  <li
+                    key={food.id}
+                    className="flex justify-start items-center gap-2 md:gap-4 shadow-lg p-2 max-h-19 overflow-hidden transition-colors duration-300 bg-white dark:bg-darkpallete rounded-3xl">
+                    <img
+                      src={
+                        food.pic_url
+                          ? `${BASE_PATH}/files/${food.pic_url
+                              ?.split("/")
+                              .pop()}`
+                          : itemImage
+                      }
+                      alt={food.name}
+                      className="size-10 md:size-15 aspect-square object-cover rounded-xl md:rounded-2xl pointer-events-none touch-none"
+                    />
+                    <div className="flex justify-between items-center gap-2 w-full">
+                      <div className="text-start">
+                        <h3 className="text-lg md:text-xl font-bold dark:text-white">
+                          {food.name}
+                        </h3>
+                        <p className="text-xs md:text-sm max-h-8 overflow-hidden text-slowgrayDark dark:text-slowgray">
+                          {food.description}
+                        </p>
+                      </div>
+                      <div className="text-end">
+                        {food.sale_price ? (
+                          <>
+                            <span className="line-through text-highgrayDark dark:text-highgray text-xs md:text-sm">
+                              {Number(food.price).toLocaleString()} تومان
+                            </span>
+                            <br />
+                          </>
+                        ) : null}
+                        <span className="text-primary font-bold text-md md:text-lg">
+                          {food.sale_price
+                            ? Number(food.sale_price).toLocaleString()
+                            : Number(food.price).toLocaleString()}
+                          تومان
+                        </span>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        )}
       </div>
       {/* --------------------------------------- FOTTER -------------------------------------------------- */}
       <div

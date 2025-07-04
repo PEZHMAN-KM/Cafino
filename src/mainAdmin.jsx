@@ -5,7 +5,11 @@ import RouteProgress from "./Componnets/RouteProgress.jsx";
 import { BlurProvider } from "./constants/BlurContext.jsx";
 
 import { registerSW } from "virtual:pwa-register";
-registerSW({ immediate: true });
+
+const swFile = location.pathname.startsWith("/admin")
+  ? "admin-sw.js"
+  : "user-sw.js";
+registerSW({ immediate: true, swUrl: `/${swFile}` });
 
 import Admin from "./AdminPages/admin.jsx";
 

@@ -108,7 +108,7 @@
     animation: opacity-out 0.4s ease-in forwards;
   }
 
-  @keyframes shimmer {
+  /* @keyframes shimmer {
     0% {
       background-position: 200% 0;
     }
@@ -125,7 +125,7 @@
     );
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite linear;
-  }
+  } */
 }
 
 /* FOR TURN OFF ALL ANIMATION */
@@ -176,31 +176,31 @@
 
 @font-face {
   font-family: "IranYekan";
-  src: url("../font/IRANYekanXFaNum-Light.ttf") format("truetype");
+  src: url("../font/IRANYekanXFaNum-Light.woff2") format("truetype");
   font-weight: 300;
 }
 
 @font-face {
   font-family: "IranYekan";
-  src: url("../font/IRANYekanXFaNum-Regular.ttf") format("truetype");
+  src: url("../font/IRANYekanXFaNum-Regular.woff2") format("truetype");
   font-weight: 400;
 }
 
 @font-face {
   font-family: "IranYekan";
-  src: url("../font/IRANYekanXFaNum-Bold.ttf") format("truetype");
+  src: url("../font/IRANYekanXFaNum-Bold.woff2") format("truetype");
   font-weight: 700;
 }
 
 @font-face {
   font-family: "IranYekan";
-  src: url("../font/IRANYekanXFaNum-Black.ttf") format("truetype");
+  src: url("../font/IRANYekanXFaNum-Black.woff2") format("truetype");
   font-weight: 800;
 }
 
 @font-face {
   font-family: "IranYekan";
-  src: url("../font/IRANYekanXFaNum-ExtraBlack.ttf") format("truetype");
+  src: url("../font/IRANYekanXFaNum-ExtraBlack.woff2") format("truetype");
   font-weight: 900;
 }
 

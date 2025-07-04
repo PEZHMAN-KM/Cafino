@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import Card from "../Componnets/Card.jsx";
+import SkeletonCard from "../Componnets/SkeletonCard.jsx";
 
 import { BASE_PATH } from "../constants/paths.js";
 import axios from "axios";
@@ -28,6 +29,8 @@ function Home({
   const shouldAnimate = useAnimation();
   const MotionOrDiv = shouldAnimate ? motion.div : "div";
   const reduceBlur = useBlur();
+
+  const [isLoadingItems, setIsLoadingItems] = useState(false);
 
   const [blurActive, setBlurActive] = useState(false);
   const [activeCardData, setActiveCardData] = useState(null);
@@ -58,6 +61,7 @@ function Home({
   };
 
   async function fetchItems() {
+    setIsLoadingItems(true);
     setError(null);
     if (selectedCategory === -1) {
       try {
@@ -104,6 +108,7 @@ function Home({
         setError("خطا در دریافت داده‌ها");
       }
     }
+    setIsLoadingItems(false);
   }
 
   const fetchSearchResults = async () => {
@@ -255,10 +260,17 @@ function Home({
                 alt=""
               />
             </div> */}
-
-            {error && <p className="text-center my-4 text-primary">{error}</p>}
-
-            {!error && (
+            {isLoadingItems ? (
+              <div className="grid max-xs:grid-cols-1 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 3xl:grid-cols-10 4xl:grid-cols-12 gap-y-4 gap-x-2 mt-2 justify-center items-center">
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <div key={index}>
+                    <SkeletonCard />
+                  </div>
+                ))}
+              </div>
+            ) : error ? (
+              <p className="text-center my-4 text-primary">{error}</p>
+            ) : (
               <div className="grid max-xs:grid-cols-1 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 3xl:grid-cols-10 4xl:grid-cols-12 gap-y-4 gap-x-2 mt-2 justify-center items-center">
                 {items.map((item) => (
                   <Card

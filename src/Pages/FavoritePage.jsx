@@ -3,6 +3,7 @@ import axios from "axios";
 
 import { BASE_PATH } from "../constants/paths.js";
 import Card from "../Componnets/Card.jsx";
+import SkeletonCard from "../Componnets/SkeletonCard.jsx";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useAnimation } from "../constants/AnimationContext";
@@ -16,6 +17,9 @@ function FavoritePage({
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const shouldAnimate = useAnimation();
   const MotionOrDiv = shouldAnimate ? motion.div : "div";
+
+  const [skeletonCounter, setSkeletonCounter] = useState(0);
+  const [isLoadingItems, setIsLoadingItems] = useState(false);
 
   const [blurActive, setBlurActive] = useState(false);
   const [activeCardData, setActiveCardData] = useState(null);
@@ -94,19 +98,22 @@ function FavoritePage({
   }, []);
 
   useEffect(() => {
-    // For flashing on LOADING PAGE
+    // For flashing on LOADING P1AGE
     setIsPageLoaded(true);
   }, []);
 
   useEffect(() => {
-    const lided_food = localStorage.getItem("liked_items");
+    const liked_food = localStorage.getItem("liked_items");
+    const likedFoodArray = JSON.parse(liked_food);
+    setIsLoadingItems(true);
+    setSkeletonCounter(likedFoodArray?.length || 0);
 
     async function fetchItems() {
       setError(null);
       try {
         const response = await axios.post(
           `${BASE_PATH}/food/get_food_list_by_id`,
-          lided_food,
+          liked_food,
           {
             headers: {
               "Content-Type": "application/json",
@@ -121,6 +128,7 @@ function FavoritePage({
       } catch (err) {
         setError("آیتمی یافت نشد!");
       }
+      setIsLoadingItems(false);
     }
 
     fetchItems();
@@ -164,8 +172,17 @@ function FavoritePage({
             ? "transition-colors duration-300"
             : "transition-none duration-0"
         } bg-backgroundcolor dark:bg-backgroundcolorDark w-screen min-h-screen overflow-x-hidden pb-18 md:pb-3 pt-18 md:pt-20`}>
-        {error && <p className="text-center my-4 text-primary">{error}</p>}
-        {!error && (
+        {isLoadingItems ? (
+          <div className="grid max-xs:grid-cols-1 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 3xl:grid-cols-10 4xl:grid-cols-12 gap-y-4 gap-x-2 mt-2 justify-center items-center">
+            {Array.from({ length: skeletonCounter }).map((_, index) => (
+              <div key={index}>
+                <SkeletonCard />
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <p className="text-center my-4 text-primary">{error}</p>
+        ) : (
           <div className="grid max-xs:grid-cols-1 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 3xl:grid-cols-10 4xl:grid-cols-12 gap-y-4 gap-x-2 mt-2 justify-center items-center">
             {items.map((item) => (
               <Card

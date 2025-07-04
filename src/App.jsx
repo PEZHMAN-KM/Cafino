@@ -1,6 +1,7 @@
 import React, { useRef, useState, lazy, Suspense, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AnimationContext } from "./constants/AnimationContext.jsx";
+import LoadingIcon from "../public/Icon.svg";
 
 import Header from "./Componnets/Header.jsx";
 import Footer from "./Componnets/Footer.jsx";
@@ -8,9 +9,10 @@ const SubHeder = lazy(() => import("./Componnets/SubHeder.jsx"));
 
 import ContactUs from "./Pages/ContactUs.jsx";
 import Landing from "./Pages/Landing.jsx";
+
+const Order = lazy(() => import("./Pages/Order.jsx"));
 const Home = lazy(() => import("./Pages/Home.jsx"));
 const FavoritePage = lazy(() => import("./Pages/FavoritePage.jsx"));
-const Order = lazy(() => import("./Pages/Order.jsx"));
 const Item = lazy(() => import("./Pages/Item.jsx"));
 const EasyPage = lazy(() => import("./Pages/EasyPage.jsx"));
 
@@ -190,7 +192,16 @@ const App = () => {
           />
         )}
         <Suspense
-          fallback={<div className="p-5 text-center">در حال بارگذاری...</div>}>
+          // {/* fallback={<div className="p-5 text-center">در حال بارگذاری...</div>} */}
+          fallback={
+            <div className="relative w-full min-h-screen flex justify-center items-center">
+              <img
+                className="size-40"
+                src={LoadingIcon}
+                alt="App Logo For Loading"
+              />
+            </div>
+          }>
           <AnimatePresence mode="wait">
             <MotionOrDiv
               key={currentPage}

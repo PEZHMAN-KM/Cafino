@@ -1,36 +1,17 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import "./index.css";
 import RouteProgress from "./Componnets/RouteProgress.jsx";
 import { BlurProvider } from "./constants/BlurContext.jsx";
 
 import { registerSW } from "virtual:pwa-register";
-registerSW({ immediate: true });
+
+const swFile = location.pathname.startsWith("/admin")
+  ? "admin-sw.js"
+  : "user-sw.js";
+registerSW({ immediate: true, swUrl: `/${swFile}` });
 
 import App from "./App.jsx";
-// import Home from "./Pages/Home.jsx";
-// import Landing from "./Pages/Landing.jsx";
-// import Item from "./Pages/Item.jsx";
-// import Order from "./Pages/Order.jsx";
-// import ContactUs from "./Pages/ContactUs.jsx";
-// import FavoritePage from "./Pages/FavoritePage.jsx";
-// import EasyPage from "./Pages/EasyPage.jsx";
-
-// const connection =
-//   navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-// const netType = connection?.effectiveType || "unknown";
-// if (netType === "slow-2g") {
-//   console.log("اینترنت خیلی ضعیف است، نسخه بسیار سبک اجرا شود.");
-// } else if (netType === "2g") {
-//   console.log("اینترنت ضعیف است، ویدئوها حذف شود.");
-// } else if (netType === "3g") {
-//   console.log("اینترنت متوسط است، عکس‌ها با کیفیت متوسط لود شوند.");
-// } else if (netType === "4g") {
-//   console.log("اینترنت خوب است، همه امکانات فعال باشند.");
-// } else {
-//   console.log("نوع اتصال مشخص نیست، حالت پیش‌فرض اجرا شود.");
-// }
 
 // BATTERY SERVER - LOW BATTERT DETECTION
 const PowerSaving_LowBattery = async () => {
@@ -76,6 +57,69 @@ const testNetworkSpeed = async () => {
 };
 
 // LOW END SYSTEM ----------------------------------------------------------
+// SUPER LOW END MOBILE DEVICE (OLD) ---------------------
+const OldDeviceCheck = () => {
+  if (!navigator.userAgent) return false;
+
+  try {
+    const userAgent = navigator.userAgent;
+
+    // بررسی سیستم عامل اندروید
+    const androidVersionMatch = userAgent.match(/Android (\d+)/);
+    const isOldAndroid =
+      androidVersionMatch && parseInt(androidVersionMatch[1], 10) <= 5; // نسخه‌های اندروید 1 تا 5
+
+    // بررسی سیستم عامل iOS
+    const iosVersionMatch = userAgent.match(/iPhone OS (\d+)_/);
+    const isOldiOS = iosVersionMatch && parseInt(iosVersionMatch[1], 10) <= 10; // نسخه‌های iOS 7 و پایین‌تر
+
+    // بررسی سیستم عامل Windows Phone
+    const isOldWindowsPhone = /Windows Phone ([0-9.]+)/.test(userAgent); // نسخه‌های قدیمی ویندوز فون
+
+    // بررسی سیستم عامل Windows (نسخه‌های قدیمی ویندوز)
+    const isOldWindows = /Windows NT [6-7]\./.test(userAgent); // نسخه‌های قدیمی ویندوز (Windows 7 و پایین‌تر)
+
+    // بررسی سیستم عامل MacOS (نسخه‌های قدیمی مک)
+    const isOldMac = /Mac OS X [10_4_9|10_4|10_5|10_6|10_7|10_8|10_9]/.test(
+      userAgent
+    ); // نسخه‌های قدیمی مک
+
+    // بررسی تبلت‌ها (شناسایی تبلت‌های اندروید و iOS)
+    const isTablet = /iPad|Android.*Tablet/.test(userAgent); // شناسایی تبلت‌ها
+
+    // بررسی مرورگر و ویژگی‌های قدیمی
+    const isOldBrowser = !("fetch" in window) || !("Promise" in window); // بررسی پشتیبانی از fetch و Promise
+
+    // چاپ مقادیر برای تشخیص بهتر
+    console.log("UserAgent:", userAgent);
+    console.log("isOldAndroid:", isOldAndroid);
+    console.log("isOldiOS:", isOldiOS);
+    console.log("isOldWindowsPhone:", isOldWindowsPhone);
+    console.log("isOldWindows:", isOldWindows);
+    console.log("isOldMac:", isOldMac);
+    console.log("isTablet:", isTablet);
+    console.log("isOldBrowser:", isOldBrowser);
+
+    // بررسی دستگاه‌های قدیمی
+    if (
+      isOldAndroid ||
+      isOldiOS ||
+      isOldWindowsPhone ||
+      isOldWindows ||
+      isOldMac ||
+      isTablet ||
+      isOldBrowser
+    ) {
+      return true;
+    }
+
+    return false;
+  } catch (err) {
+    console.warn("OLD DEVICE FINDER API not available", err);
+    return true;
+  }
+};
+
 // TURN OFF ALL ANIMATIONS --------------------------
 function detectShouldDisableAnimations() {
   const prefersReducedMotion = window.matchMedia(
@@ -113,6 +157,8 @@ const lacksModernFeatures = () => {
 };
 
 const startApp = async () => {
+  // SUPPER LOW END MOBILE DEVICE (OLD) ---------------------
+  const isOldDevice = OldDeviceCheck();
   // NETWORK SPEED CONTROL ----------------------------
   const connection =
     navigator.connection ||
@@ -125,7 +171,8 @@ const startApp = async () => {
     netType === "2g" ||
     netType === "slow-2g" ||
     (speed < 80 && netType === "unknown") ||
-    speed < 50
+    speed < 50 ||
+    isOldDevice
   ) {
     window.location.replace("/lite.html");
     return;
