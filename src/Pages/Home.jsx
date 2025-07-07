@@ -207,6 +207,19 @@ function Home({
     }
   }, [selectedCategory]);
 
+  // Scroll For NOT HOLD CARD ------------------------------------------
+  useEffect(() => {
+    if (blurActive) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [blurActive]);
+
   return (
     <>
       <AnimatePresence>

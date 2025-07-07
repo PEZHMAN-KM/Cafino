@@ -102,6 +102,19 @@ function FavoritePage({
     setIsPageLoaded(true);
   }, []);
 
+  // Scroll For NOT HOLD CARD ------------------------------------------
+  useEffect(() => {
+    if (blurActive) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [blurActive]);
+
   useEffect(() => {
     const liked_food = localStorage.getItem("liked_items");
     const likedFoodArray = JSON.parse(liked_food);
@@ -155,6 +168,7 @@ function FavoritePage({
                 animate={{ scale: 1.07, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}>
                 <Card
+                  expanded={true}
                   {...activeCardData}
                   setBlurActive={setBlurActive}
                   setActiveCardData={setActiveCardData}

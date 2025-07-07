@@ -15,6 +15,7 @@ const Home = lazy(() => import("./Pages/Home.jsx"));
 const FavoritePage = lazy(() => import("./Pages/FavoritePage.jsx"));
 const Item = lazy(() => import("./Pages/Item.jsx"));
 const EasyPage = lazy(() => import("./Pages/EasyPage.jsx"));
+const Setting = lazy(() => import("./Pages/Setting.jsx"));
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -24,7 +25,6 @@ const App = () => {
 
   // PAGE 01 -----------------------------------------------------------------------------
   const [selectedCategory, setSelectedCategory] = useState(1);
-
   const [hideIcons, setHideIcons] = useState(false);
 
   const [searchActive, setSearchActive] = useState(false);
@@ -32,6 +32,8 @@ const App = () => {
   const [fetchItems, setFetchItems] = useState(null);
   const headerRef = useRef(null);
   const headerInputRef = useRef(null);
+  // -------------------------------------------------------------------------------------
+  const [isDark, setIsDark] = useState(false);
 
   const shouldAnimate = !document.body.classList.contains("no-anim");
   const MotionOrDiv = shouldAnimate ? motion.div : "div";
@@ -67,6 +69,9 @@ const App = () => {
   // }
 
   useEffect(() => {
+    const isDarkNow = document.documentElement.classList.contains("dark");
+    setIsDark(isDarkNow);
+
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     if (isSafari) {
       document.body.style.overflow = "auto";
@@ -133,13 +138,22 @@ const App = () => {
         );
       case 5:
         return (
+          <Setting
+            setFooterShrink={setFooterShrink}
+            setHeaderMenuOpen={setHeaderMenuOpen}
+            setHeaderShrink={setHeaderShrink}
+            setIsDark={setIsDark}
+          />
+        );
+      case 6:
+        return (
           <Item
             setCurrentPage={setCurrentPage}
             setHeaderShrink={setHeaderShrink}
             setHideIcons={setHideIcons}
           />
         );
-      case 6:
+      case 7:
         return <EasyPage setCurrentPage={setCurrentPage} />;
       default:
         return (
@@ -155,7 +169,7 @@ const App = () => {
   return (
     <AnimationContext.Provider value={shouldAnimate}>
       <div className="relative w-full min-h-screen">
-        {currentPage != 0 && currentPage != 5 && currentPage != 6 && (
+        {currentPage != 0 && currentPage != 6 && currentPage != 7 && (
           <Header
             setCurrentPage={setCurrentPage}
             page={currentPage}
@@ -163,6 +177,8 @@ const App = () => {
             setShowMenu={setHeaderMenuOpen}
             headerShrink={headerShrink}
             setHeaderShrink={setHeaderShrink}
+            setIsDark={setIsDark}
+            isDark={isDark}
             // PAGE 01 ----------------------------------------
             searchActive={searchActive}
             setSearchActive={setSearchActive}
@@ -179,6 +195,7 @@ const App = () => {
           <SubHeder
             setCurrentPage={setCurrentPage}
             onCategorySelect={setSelectedCategory}
+            selectedCategory={selectedCategory}
             hideIcons={hideIcons}
             showMenu={headerMenuOpen}
             setShowMenu={setHeaderMenuOpen}
@@ -214,7 +231,7 @@ const App = () => {
             </MotionOrDiv>
           </AnimatePresence>
         </Suspense>
-        {currentPage != 0 && currentPage != 5 && currentPage != 6 && (
+        {currentPage != 0 && currentPage != 6 && currentPage != 7 && (
           <Footer
             shouldAnimate={shouldAnimate}
             page={currentPage}

@@ -225,7 +225,7 @@ function Item({ setCurrentPage, setHeaderShrink, setHideIcons }) {
     <>
       <div className="flex flex-col lg:flex-row">
         <div
-        style={{ WebkitOverflowScrolling: "touch" }}
+          style={{ WebkitOverflowScrolling: "touch" }}
           className={`${
             isPageLoaded
               ? "transition-colors duration-300"
@@ -340,18 +340,23 @@ function Item({ setCurrentPage, setHeaderShrink, setHideIcons }) {
                     type="number"
                     value={orderCount}
                     onChange={(e) => {
-                      if (e.target.value < 1) {
-                        setRemoving(true);
-                        setTimeout(() => {
-                          setOrderCount(0);
-                          updateLocalStorage(0);
-                          setRemoving(false);
-                        }, 300);
-                      } else if (e.target.value <= LIMIT_DATA) {
-                        setOrderCount(Number(e.target.value));
-                        updateLocalStorage(Number(e.target.value));
+                      const value = e.target.value;
+                      if (!value.includes(".")) {
+                        if (value < 1) {
+                          setRemoving(true);
+                          setTimeout(() => {
+                            setOrderCount(0);
+                            updateLocalStorage(0);
+                            setRemoving(false);
+                          }, 300);
+                        } else if (value <= LIMIT_DATA) {
+                          setOrderCount(Number(value));
+                          updateLocalStorage(Number(value));
+                        }
                       }
                     }}
+                    step="1"
+                    pattern="^[0-9]+$"
                   />
 
                   <button

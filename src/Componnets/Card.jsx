@@ -5,6 +5,7 @@ import { BASE_PATH, LIMIT_DATA } from "../constants/paths";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useAnimation } from "../constants/AnimationContext";
+import { useBlur } from "../constants/BlurContext.jsx";
 
 const formatPrice = (num) => {
   if (num == null || isNaN(num)) return "";
@@ -36,6 +37,7 @@ function Card({
   const MotionOrDiv = shouldAnimate ? motion.div : "div";
 
   const longPressTimer = useRef(null);
+  const reduceBlur = useBlur();
 
   const startYRef = useRef(0);
 
@@ -78,7 +80,7 @@ function Card({
     }
     localStorage.setItem("show_food", food_id);
     // navigate("/item");
-    setCurrentPage(5);
+    setCurrentPage(6);
   }
 
   const increaseCount = () => {
@@ -125,139 +127,170 @@ function Card({
             in_sale
               ? "bg-slowprimary dark:bg-slowprimaryDark"
               : "bg-white dark:bg-darkpalleteDark"
-          } rounded-3xl w-full h-fit p-3 m-auto text-start transition-colors duration-300 animate-scale-up`}
+          } rounded-3xl w-full h-fit ${
+            expanded ? "p-1" : "p-3"
+          } m-auto text-start transition-colors duration-300 animate-scale-up`}
+          style={{
+            ...(expanded && {
+              backgroundImage: `url(${
+                pic_url
+                  ? `${BASE_PATH}/files/${pic_url.split("/").pop()}`
+                  : itemImage
+              })`,
+              backgroundSize: "cover",
+              backgroundPosition: "center top",
+              backgroundRepeat: "no-repeat",
+            }),
+          }}
           animate={isLongPressed ? { scale: 1.1 } : { scale: 1 }}
           transition={{
             type: "spring",
             stiffness: 300,
             damping: 20,
           }}>
-          <img
-            onContextMenu={(e) => e.preventDefault()}
-            onDragStart={(e) => e.preventDefault()}
-            className="w-full h-full aspect-square object-cover rounded-2xl pointer-events-none touch-none"
-            src={
-              pic_url
-                ? `${BASE_PATH}/files/${pic_url.split("/").pop()}`
-                : itemImage
-            }
-            alt={name}
-          />
-          <div className="flex justify-between items-center">
-            <div className="overflow-hidden w-fit">
-              <h1 className="text-2xl font-bold mt-2 dark:text-white truncate transition-colors duration-300">
-                {name}
-              </h1>
-              <h3
-                className={`mt-1 dark:text-slowgray transition-colors duration-300 min-h-[1.5rem] ${
-                  expanded
-                    ? "line-clamp-3 text-sm leading-relaxed"
-                    : "truncate whitespace-nowrap overflow-hidden text-ellipsis"
-                }`}>
-                {description}
-              </h3>
-            </div>
-            {count > 0 ? (
-              <div>
-                <h1
-                  className={`bg-primary w-6 h-6 rounded-full flex justify-center items-center font-bold text-white ${
-                    newlyAddedId === id
-                      ? "animate-scale-up"
-                      : removingId === id
-                      ? "animate-scale-out"
-                      : ""
-                  }`}>
-                  {count}
-                </h1>
-              </div>
-            ) : null}
-          </div>
+          {expanded ? (
+            <div className="w-full h-full aspect-square"></div>
+          ) : (
+            <img
+              onContextMenu={(e) => e.preventDefault()}
+              onDragStart={(e) => e.preventDefault()}
+              className="w-full h-full aspect-square object-cover rounded-2xl pointer-events-none touch-none"
+              src={
+                pic_url
+                  ? `${BASE_PATH}/files/${pic_url.split("/").pop()}`
+                  : itemImage
+              }
+              alt={name}
+            />
+          )}
 
           <div
-            className={`flex mt-3 h-20 items-center ${
-              !expanded ? "justify-between" : "justify-center"
+            className={`${
+              expanded
+                ? `${
+                    reduceBlur
+                      ? "bg-backgroundcolor/50 dark:bg-backgroundcolorDark/50"
+                      : "bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30"
+                  } backdrop-blur-md border border-white/20 dark:border-white/10 shadow-lg p-2 rounded-3xl`
+                : "null"
             }`}>
-            {!expanded &&
-              (count > 0 ? (
-                <div
-                  className={`flex items-center gap-2 transition-all duration-300 ${
-                    newlyAddedId === id
-                      ? "animate-scale-up"
-                      : removingId === id
-                      ? "animate-scale-out"
-                      : ""
+            <div className="flex justify-between items-center">
+              <div className="overflow-hidden w-fit">
+                <h1 className="text-xl font-bold mt-2 dark:text-white truncate transition-colors duration-300">
+                  {name}
+                </h1>
+                <h3
+                  className={`mt-1 dark:text-slowgray transition-colors duration-300 min-h-[1.5rem] ${
+                    expanded
+                      ? "line-clamp-3 text-sm leading-relaxed"
+                      : "truncate whitespace-nowrap overflow-hidden text-ellipsis"
                   }`}>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      increaseCount(id);
-                    }}
-                    className="w-7 h-7 cursor-pointer flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full md:hover:bg-primaryDark md:dark:hover:bg-primary transition-colors duration-300 touch-manipulation">
-                    <Icons.plus className={"w-7 stroke-white"} />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      decreaseCount(id);
-                    }}
-                    className="w-7 h-7 cursor-pointer border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center md:hover:bg-primary md:dark:hover:bg-primaryDark transition-colors duration-300 touch-manipulation">
-                    <Icons.mines
-                      className={
-                        "w-3 fill-black dark:fill-white md:hover:fill-white transition-colors duration-300 touch-manipulation"
-                      }
-                    />
-                  </button>
+                  {description}
+                </h3>
+              </div>
+              {count > 0 ? (
+                <div>
+                  <h1
+                    className={`bg-primary w-6 h-6 rounded-full flex justify-center items-center font-bold text-white ${
+                      newlyAddedId === id
+                        ? "animate-scale-up"
+                        : removingId === id
+                        ? "animate-scale-out"
+                        : ""
+                    }`}>
+                    {count}
+                  </h1>
                 </div>
-              ) : (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddToOrder(id);
-                  }}
-                  className="flex justify-center items-center cursor-pointer rounded-2xl bg-primary dark:bg-primaryDark md:hover:bg-primaryDark md:dark:hover:bg-primary w-13 h-13 transition-colors duration-300 touch-manipulation">
-                  <Icons.plus className={"w-10 stroke-white"} />
-                </button>
-              ))}
-            <div className={`text-end ${expanded && "w-full"}`}>
-              {sale_price && (
+              ) : null}
+            </div>
+
+            <div
+              className={`flex mt-3 h-20 items-center ${
+                !expanded ? "justify-between" : "justify-center"
+              }`}>
+              {!expanded &&
+                (count > 0 ? (
+                  <div
+                    className={`flex items-center gap-2 transition-all duration-300 ${
+                      newlyAddedId === id
+                        ? "animate-scale-up"
+                        : removingId === id
+                        ? "animate-scale-out"
+                        : ""
+                    }`}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        increaseCount(id);
+                      }}
+                      className="w-7 h-7 cursor-pointer flex items-center justify-center bg-primary dark:bg-primaryDark rounded-full md:hover:bg-primaryDark md:dark:hover:bg-primary transition-colors duration-300 touch-manipulation">
+                      <Icons.plus className={"w-7 stroke-white"} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        decreaseCount(id);
+                      }}
+                      className="w-7 h-7 cursor-pointer border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center md:hover:bg-primary md:dark:hover:bg-primaryDark transition-colors duration-300 touch-manipulation">
+                      <Icons.mines
+                        className={
+                          "w-3 fill-black dark:fill-white md:hover:fill-white transition-colors duration-300 touch-manipulation"
+                        }
+                      />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToOrder(id);
+                    }}
+                    className="flex justify-center items-center cursor-pointer rounded-2xl bg-primary dark:bg-primaryDark md:hover:bg-primaryDark md:dark:hover:bg-primary w-13 h-13 transition-colors duration-300 touch-manipulation">
+                    <Icons.plus className={"w-10 stroke-white"} />
+                  </button>
+                ))}
+              <div className={`text-end ${expanded && "w-full"}`}>
+                {sale_price && (
+                  <div
+                    className={`${
+                      expanded && "flex justify-between w-full items-center"
+                    }`}>
+                    {expanded && (
+                      <h1 className="text-md font-medium dark:text-white transition-colors duration-300">
+                        قیمت اصلی:
+                      </h1>
+                    )}
+
+                    <h1 className="text-sm font-medium dark:text-white transition-colors duration-300 line-through">
+                      {formatPrice(price)} تومان
+                    </h1>
+                  </div>
+                )}
                 <div
                   className={`${
                     expanded && "flex justify-between w-full items-center"
                   }`}>
                   {expanded && (
                     <h1 className="text-md font-medium dark:text-white transition-colors duration-300">
-                      قیمت اصلی:
+                      {sale_price ? "با تخفیف:" : "قیمت اصلی:"}
                     </h1>
                   )}
-
-                  <h1 className="text-sm font-medium dark:text-white transition-colors duration-300 line-through">
-                    {formatPrice(price)} تومان
-                  </h1>
-                </div>
-              )}
-              <div
-                className={`${
-                  expanded && "flex justify-between w-full items-center"
-                }`}>
-                {expanded && (
-                  <h1 className="text-md font-medium dark:text-white transition-colors duration-300">
-                    {sale_price ? "با تخفیف:" : "قیمت اصلی:"}
-                  </h1>
-                )}
-                <div className="flex justify-end items-center gap-1">
-                  <h1 className="text-xl font-bold dark:text-white transition-colors duration-300">
-                    {sale_price ? formatPrice(sale_price) : formatPrice(price)}
-                  </h1>
-                  <h3 className="text-sm dark:text-slowgray transition-colors duration-300">
-                    تومان
-                  </h3>
+                  <div className="flex justify-end items-center gap-1">
+                    <h1 className="text-xl font-bold dark:text-white transition-colors duration-300">
+                      {sale_price
+                        ? formatPrice(sale_price)
+                        : formatPrice(price)}
+                    </h1>
+                    <h3 className="text-sm dark:text-slowgray transition-colors duration-300">
+                      تومان
+                    </h3>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </MotionOrDiv>
       </div>
-      {/* </div> */}
     </>
   );
 }

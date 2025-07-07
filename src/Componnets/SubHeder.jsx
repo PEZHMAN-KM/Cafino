@@ -1,29 +1,27 @@
 import React, { useState } from "react";
 import { Icons } from "./Icons";
 import { useAnimation } from "../constants/AnimationContext.jsx";
+import { PAGE_TITLES } from "../constants/paths";
 
 function SubHeder({
   hideIcons,
   className,
   onCategorySelect,
+  selectedCategory,
   showMenu,
   setShowMenu,
-  // onSearchClick,
   setCurrentPage,
   setSearchActive,
   headerInputRef,
 }) {
   const shouldAnimate = useAnimation();
-  const [onCategory, setOnCategory] = useState(1);
   const haptic = 10;
 
   function changeCategory(index) {
     if ("vibrate" in navigator && typeof window !== "undefined") {
       navigator.vibrate(haptic);
     }
-
     onCategorySelect(index);
-    setOnCategory(index);
   }
 
   function onSearchClick() {
@@ -53,7 +51,7 @@ function SubHeder({
           className={`z-10 flex justify-baseline lg:justify-center items-center py-1 lg:py-2 scrollbar scrollbar-none overflow-x-auto px-2 ${
             !hideIcons ? "gap-2 lg:gap-3" : "gap-1 lg:gap-3 rounded-3xl"
           }`}>
-          {/* MENU BUTTON */}
+          {/* ------------------------------------------ MENU BUTTON ------------------------------------------ */}
           <div
             className={`bg-darkpallete p-2 lg:p-3 hidden shrink-0 font-bold rounded-full cursor-pointer transition-all duration-300 lg:hover:scale-102 lg:hover:bg-highgray touch-manipulation ${
               !hideIcons ? "hidden" : "md:block"
@@ -67,27 +65,32 @@ function SubHeder({
                 <button
                   onClick={() => setCurrentPage(1)}
                   className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
-                  خانه
+                  {PAGE_TITLES[1]}
                 </button>
                 <button
                   onClick={() => setCurrentPage(2)}
                   className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
-                  علاقه مندی ها
+                  {PAGE_TITLES[2]}
                 </button>
                 <button
                   onClick={() => setCurrentPage(3)}
                   className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
-                  سفارشات
+                  {PAGE_TITLES[3]}
                 </button>
                 <button
                   onClick={() => setCurrentPage(4)}
                   className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
-                  تماس با ما
+                  {PAGE_TITLES[4]}
+                </button>
+                <button
+                  onClick={() => setCurrentPage(5)}
+                  className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
+                  {PAGE_TITLES[5]}
                 </button>
               </div>
             </div>
           )}
-          {/* SEARCH ICON */}
+          {/* ------------------------------------------ SEARCH ICON ------------------------------------------ */}
           <div
             onClick={() => {
               if ("vibrate" in navigator && typeof window !== "undefined") {
@@ -102,10 +105,10 @@ function SubHeder({
               <Icons.search className={"w-4 lg:w-7 stroke-black"} />
             )}
           </div>
-          {/* COFFE */}
+          {/* ------------------------------------------ COFFE ------------------------------------------ */}
           <div
             className={`${
-              onCategory === 1
+              selectedCategory === 1
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
             } shrink-0 font-bold rounded-2xl lg:rounded-3xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
@@ -116,7 +119,9 @@ function SubHeder({
             onClick={() => changeCategory(1)}>
             <Icons.Coffee
               fill={`transition-colors duration-300 ${
-                onCategory === 1 ? "fill-white" : "fill-black dark:fill-white"
+                selectedCategory === 1
+                  ? "fill-white"
+                  : "fill-black dark:fill-white"
               }`}
               className={`w-12 h-12 lg:w-15 lg:h-15 transition-all duration-300 ${
                 !hideIcons ? "scale-100" : "scale-0 !max-h-0"
@@ -124,10 +129,10 @@ function SubHeder({
             />
             <h1>کافه</h1>
           </div>
-          {/* OFF - SALE */}
+          {/* ------------------------------------------ OFF - SALE ------------------------------------------ */}
           <div
             className={`${
-              onCategory === -1
+              selectedCategory === -1
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-slowprimary dark:bg-slowprimaryDark text-primary"
             } shrink-0 font-bold rounded-2xl lg:rounded-3xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-slowgrayDark lg:hover:dark:bg-slowgray flex justify-center items-center animate-scale-up touch-manipulation ${
@@ -138,10 +143,10 @@ function SubHeder({
             onClick={() => changeCategory(-1)}>
             <Icons.Off
               fill={`transition-colors duration-300 ${
-                onCategory === -1 ? "fill-white" : "fill-primary"
+                selectedCategory === -1 ? "fill-white" : "fill-primary"
               }`}
               stroke={`transition-colors duration-300 ${
-                onCategory === -1 ? "stroke-white" : "stroke-primary"
+                selectedCategory === -1 ? "stroke-white" : "stroke-primary"
               }`}
               className={`transition-all duration-300 ${
                 !hideIcons
@@ -151,10 +156,10 @@ function SubHeder({
             />
             <h1>تخفیفات ویژه</h1>
           </div>
-          {/* Cake */}
+          {/* ------------------------------------------ Cake ------------------------------------------ */}
           <div
             className={`${
-              onCategory === 2
+              selectedCategory === 2
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
             } shrink-0 font-bold rounded-2xl lg:rounded-3xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
@@ -165,7 +170,7 @@ function SubHeder({
             onClick={() => changeCategory(2)}>
             <Icons.Cake
               stroke={`transition-colors duration-300 ${
-                onCategory === 2
+                selectedCategory === 2
                   ? "stroke-white"
                   : "stroke-black dark:stroke-white"
               }`}
@@ -175,10 +180,10 @@ function SubHeder({
             />
             <h1>کیک و دسر</h1>
           </div>
-          {/* Warm Drink */}
+          {/* ------------------------------------------ Warm Drink ------------------------------------------ */}
           <div
             className={`${
-              onCategory === 3
+              selectedCategory === 3
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
             } shrink-0 font-bold rounded-2xl lg:rounded-3xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
@@ -189,7 +194,9 @@ function SubHeder({
             onClick={() => changeCategory(3)}>
             <Icons.WarmDrink
               fill={`transition-colors duration-300 ${
-                onCategory === 3 ? "fill-white" : "fill-black dark:fill-white"
+                selectedCategory === 3
+                  ? "fill-white"
+                  : "fill-black dark:fill-white"
               }`}
               className={`w-12 h-12 lg:w-15 lg:h-15 transition-all duration-300 ${
                 !hideIcons ? "scale-100" : "scale-0 !max-h-0"
@@ -197,10 +204,10 @@ function SubHeder({
             />
             <h1>نوشیدنی گرم</h1>
           </div>
-          {/* Cold Drink */}
+          {/* ------------------------------------------ Cold Drink ------------------------------------------ */}
           <div
             className={`${
-              onCategory === 4
+              selectedCategory === 4
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
             } shrink-0 font-bold rounded-2xl lg:rounded-3xl cursor-pointer transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray animate-scale-up touch-manipulation ${
@@ -211,15 +218,17 @@ function SubHeder({
             onClick={() => changeCategory(4)}>
             <Icons.ColdDrink
               className={`w-12 h-12 lg:w-15 lg:h-15 duration-300 transition-all ${
-                onCategory === 4 ? "fill-white" : "fill-black dark:fill-white"
+                selectedCategory === 4
+                  ? "fill-white"
+                  : "fill-black dark:fill-white"
               } ${!hideIcons ? "scale-100" : "scale-0 !max-h-0"}`}
             />
             <h1>نوشیدنی سرد</h1>
           </div>
-          {/* Food */}
+          {/* ------------------------------------------ Food ------------------------------------------ */}
           <div
             className={`${
-              onCategory === 5
+              selectedCategory === 5
                 ? "bg-primary dark:bg-primaryDark text-white"
                 : "bg-graypallete dark:bg-graypalleteDark text-black dark:text-white"
             } shrink-0 font-bold rounded-2xl lg:rounded-3xl transition-colors duration-300 lg:hover:scale-102 lg:hover:bg-highgray cursor-pointer animate-scale-up touch-manipulation ${
@@ -230,7 +239,9 @@ function SubHeder({
             onClick={() => changeCategory(5)}>
             <Icons.Food
               fill={`transition-colors duration-300 ${
-                onCategory === 5 ? "fill-white" : "fill-black dark:fill-white"
+                selectedCategory === 5
+                  ? "fill-white"
+                  : "fill-black dark:fill-white"
               }`}
               className={`w-12 h-12 lg:w-15 lg:h-15 transition-all duration-300 ${
                 !hideIcons ? "scale-100" : "scale-0 !max-h-0"

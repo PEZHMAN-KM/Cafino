@@ -201,7 +201,14 @@ const UserNumber = ({
         } size-10 xs:size-13 text-3xl font-bold text-center border-2 bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl`}
         type="number"
         value={tableNumber || ""}
-        onChange={(e) => setTableNumber(Number(e.target.value))}
+        step="1"
+        onChange={(e) => {
+          const value = e.target.value;
+          if (!value.includes(".")) {
+            setTableNumber(Number(value));
+          }
+        }}
+        pattern="^[0-9]+$"
       />
     </div>
   </div>
@@ -397,7 +404,7 @@ function Order({
       navigator.vibrate(20);
     }
     localStorage.setItem("show_food", food_id);
-    setCurrentPage(5);
+    setCurrentPage(6);
   }
 
   async function fetchItems() {

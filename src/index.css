@@ -64,6 +64,7 @@
   }
   .animate-move-up {
     animation: move-up 0.4s ease-out forwards;
+    visibility: hidden;
   }
   .delay-0 {
     animation-delay: 0s;
@@ -73,6 +74,14 @@
   }
   .delay-2 {
     animation-delay: 0.2s;
+  }
+
+  /* زمانی که انیمیشن غیرفعال است */
+  .no-anim .animate-move-up {
+    animation: none;
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
   }
 
   @keyframes opacity-up {

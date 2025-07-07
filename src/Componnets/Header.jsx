@@ -25,18 +25,16 @@ const Header = forwardRef(
       headerShrink,
       setHeaderShrink,
       goHome,
+      setIsDark,
+      isDark,
     },
     ref
   ) => {
     // DARK MODE | IS LOADING MODE -------------------------------------
     const [isPageLoaded, setIsPageLoaded] = useState(false);
-    const [isDark, setIsDark] = useState(false);
     useEffect(() => {
       // For flashing on LOADING PAGE
       setIsPageLoaded(true);
-
-      const isDarkNow = document.documentElement.classList.contains("dark");
-      setIsDark(isDarkNow);
     }, []);
     const toggleDarkMode = () => {
       const root = document.documentElement;
@@ -115,7 +113,7 @@ const Header = forwardRef(
                       setHeaderShrink(false);
                     }}
                     className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
-                    خانه
+                    {PAGE_TITLES[1]}
                   </button>
                   <button
                     onClick={() => {
@@ -124,7 +122,7 @@ const Header = forwardRef(
                       setHeaderShrink(false);
                     }}
                     className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
-                    علاقه مندی ها
+                    {PAGE_TITLES[2]}
                   </button>
                   <button
                     onClick={() => {
@@ -133,7 +131,7 @@ const Header = forwardRef(
                       setHeaderShrink(false);
                     }}
                     className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
-                    سفارشات
+                    {PAGE_TITLES[3]}
                   </button>
                   <button
                     onClick={() => {
@@ -142,7 +140,16 @@ const Header = forwardRef(
                       setHeaderShrink(false);
                     }}
                     className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
-                    تماس با ما
+                    {PAGE_TITLES[4]}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentPage(5);
+                      setShowMenu(false);
+                      setHeaderShrink(false);
+                    }}
+                    className="block w-full text-start px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-slowprimary dark:hover:bg-slowprimaryDark transition-colors duration-300">
+                    {PAGE_TITLES[5]}
                   </button>
                 </div>
               </div>

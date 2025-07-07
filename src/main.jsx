@@ -128,6 +128,24 @@ function detectShouldDisableAnimations() {
 
   return prefersReducedMotion;
 }
+const applyAnimationSettings = (PowerSaving_LOW_BATTERY) => {
+  const animationControl = localStorage.getItem("animationControl");
+
+  // By Local Storage ----------------------------------------
+  if (animationControl == "True") {
+    document.body.classList.remove("no-anim");
+  } else if (animationControl == "False") {
+    document.body.classList.add("no-anim");
+  } else {
+    // By System Setting & Low Battery ----------------------------------------
+    if (detectShouldDisableAnimations() || PowerSaving_LOW_BATTERY) {
+      document.body.classList.add("no-anim");
+    } else {
+      document.body.classList.remove("no-anim");
+    }
+  }
+};
+
 // CHECK DARK MODE SYSTEM ------------------------------------------------
 const applyTheme = () => {
   const savedTheme = localStorage.getItem("theme");
@@ -177,17 +195,23 @@ const startApp = async () => {
     window.location.replace("/lite.html");
     return;
   } else {
-    // CHECK BY BATTERY ------------------------------------------
-    const PowerSaving_LOW_BATTERY = await PowerSaving_LowBattery();
-    // APPLIED VISION CHANGES ( ANIMATION AND ... ) ---------------------------------------
-    if (detectShouldDisableAnimations() || PowerSaving_LOW_BATTERY) {
-      document.body.classList.add("no-anim");
-    }
-    applyTheme();
     // CHECK FOR OLD PHONE ------------------------------------------
-    const REDUCE_BLUR_FEATURE = lacksModernFeatures();
-    const REDUCE_BLUR = PowerSaving_LOW_BATTERY || REDUCE_BLUR_FEATURE;
-    // const REDUCE_BLUR = true;
+    const PowerSaving_LOW_BATTERY = await PowerSaving_LowBattery();
+
+    let REDUCE_BLUR = false;
+    const blurControl = localStorage.getItem("blurControl");
+    if (blurControl == "True") {
+      REDUCE_BLUR = false;
+    } else if (blurControl == "False") {
+      REDUCE_BLUR = true;
+    } else {
+      const REDUCE_BLUR_FEATURE = lacksModernFeatures();
+      REDUCE_BLUR = PowerSaving_LOW_BATTERY || REDUCE_BLUR_FEATURE;
+    }
+
+    // APPLIED VISION CHANGES ( ANIMATION AND ... ) ---------------------------------------
+    applyAnimationSettings(PowerSaving_LOW_BATTERY);
+    applyTheme();
 
     createRoot(document.getElementById("root")).render(
       <StrictMode>

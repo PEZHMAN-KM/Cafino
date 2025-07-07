@@ -35,7 +35,14 @@ const Waiter = ({
           className="transition-colors duration-300 w-10 h-10 text-2xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl"
           type="number"
           value={tableNumber}
-          onChange={(e) => setTableNumber(Number(e.target.value))}
+          step="1"
+          onChange={(e) => {
+            const value = e.target.value;
+            if (!value.includes(".")) {
+              setTableNumber(Number(value));
+            }
+          }}
+          pattern="^[0-9]+$"
         />
       </div>
       <button

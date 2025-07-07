@@ -48,7 +48,7 @@ function Landing({ setCurrentPage, setHeaderMenuOpen, goHome }) {
                 if ("vibrate" in navigator && typeof window !== "undefined") {
                   navigator.vibrate(10);
                 }
-                setCurrentPage(6);
+                setCurrentPage(7);
               }}
               className="mt-2 text-base font-normal bg-darkpallete hover:bg-darkpalleteDark px-3 py-1 rounded-3xl hover:scale-105 transition-all duration-300">
               لیست ساده غذاها

@@ -48,7 +48,14 @@ const Waiter = ({
           } size-10 xs:size-13 text-3xl font-bold text-center border-2 border-slowgray dark:border-graypalleteDark bg-white dark:bg-darkpalleteDark text-highgray dark:text-slowgray rounded-2xl`}
           type="number"
           value={tableNumber}
-          onChange={(e) => setTableNumber(Number(e.target.value))}
+          step="1"
+          onChange={(e) => {
+            const value = e.target.value;
+            if (!value.includes(".")) {
+              setTableNumber(Number(value));
+            }
+          }}
+          pattern="^[0-9]+$"
         />
       </div>
       <button
@@ -71,7 +78,9 @@ const Location = ({ setIframeLoaded, iframeLoaded }) => (
     {!iframeLoaded && (
       <div className="absolute bg-neutral-300 dark:bg-neutral-700 flex flex-col items-center justify-center gap-5 size-50! rounded-2xl w-full h-full animate-pulse">
         <Icons.location className={"w-12 stroke-red-600"} />
-        <span className="text-black dark:text-white">در حال بارگذاری نقشه...</span>
+        <span className="text-black dark:text-white">
+          در حال بارگذاری نقشه...
+        </span>
       </div>
     )}
     <iframe

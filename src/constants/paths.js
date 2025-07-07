@@ -1,4 +1,4 @@
-export const BASE_PATH = "http://192.168.144.232:8000";
+export const BASE_PATH = "http://192.168.100.7:8000";
 // FOR TESTING MOBILE ON LOCAL HOST | http://192.168.100.7:8000
 // ORGINALY http://127.0.0.1:8000
 
@@ -9,6 +9,7 @@ export const PAGE_TITLES = {
   2: "علاقه‌مندی",
   3: "سبد خرید",
   4: "تماس با ما",
+  5: "تنظیمات",
 };
 
 export const LOCATION =
