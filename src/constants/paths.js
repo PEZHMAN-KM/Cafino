@@ -12,5 +12,16 @@ export const PAGE_TITLES = {
   5: "تنظیمات",
 };
 
+export const ADMIN_PAGE_TITLES = {
+  1: "",
+  2: "",
+  3: "",
+  4: "",
+  5: "",
+  6: "",
+  7: "سالن‌دار",
+  8: "سفارش‌گیری",
+};
+
 export const LOCATION =
   "https://neshan.org/maps/iframe/places/_bfkwn5FLuBe#c36.561-52.682-19z-0p/36.56149031045909/52.6821188915234";

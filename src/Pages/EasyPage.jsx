@@ -70,7 +70,7 @@ const SkeletonItems = () => (
   </div>
 );
 
-function EasyPage({ setCurrentPage }) {
+function EasyPage({ setCurrentPage, setIsDark, isDark }) {
   const reduceBlur = useBlur();
   const shouldAnimate = useAnimation();
 
@@ -123,9 +123,6 @@ function EasyPage({ setCurrentPage }) {
   }
 
   useEffect(() => {
-    const isDarkNow = document.documentElement.classList.contains("dark");
-    setIsDark(isDarkNow);
-
     fetchData();
   }, []);
 
@@ -173,7 +170,6 @@ function EasyPage({ setCurrentPage }) {
   }
 
   // DARK MODE CONTROL -------------------------------------------
-  const [isDark, setIsDark] = useState(false);
   const toggleDarkMode = () => {
     const root = document.documentElement;
     if (root.classList.contains("dark")) {

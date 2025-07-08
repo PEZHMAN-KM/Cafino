@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
-import ProfileImage from "../../public/Profile.png";
+import { useEffect, useRef, useState } from "react";
 import { BASE_PATH } from "../constants/paths";
 import axios from "axios";
 import { Icons } from "../Componnets/Icons";
-import { useBlur } from "../constants/BlurContext.jsx";
 
 const TableNumber = ({ tableNumber }) => (
   <div className="bg-white dark:bg-black text-black dark:text-white px-4 py-1 w-fit rounded-3xl border-2 border-adminBackgroundColor dark:border-adminBackgroundColorDark flex justify-center items-center gap-5 transition-colors duration-300">
@@ -98,65 +96,60 @@ const WaiterRequest = ({
   </div>
 );
 
-function WaiterPage({ setCurrentPage }) {
-  const [isPageLoaded, setIsPageLoaded] = useState(false);
-  const reduceBlur = useBlur();
+function WaiterPage({
+  setFooterShrink,
+  setHeaderMenuOpen,
+  setHeaderShrink,
+  userData,
+}) {
+  // SCROLL FOOTER -------------------------------------------------
+  const lastScrollTop = useRef(0);
 
-  const [isDark, setIsDark] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-  const [userData, setUserData] = useState(Object);
-  const [profilePic, setProfilePic] = useState(null);
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollTop =
+            window.pageYOffset || document.documentElement.scrollTop;
+
+          const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
+          const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
+
+          if (currentScrollTop <= 20) {
+            setHeaderShrink(false);
+          } else {
+            setHeaderShrink(true);
+          }
+
+          if (scrollingDown) {
+            setFooterShrink(true);
+            setHeaderMenuOpen(false);
+          } else if (scrollingUp) {
+            setFooterShrink(false);
+            setHeaderMenuOpen(false);
+          }
+
+          lastScrollTop.current = Math.max(0, currentScrollTop);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // --------------------------------------------------------------------
+
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+
   const [allNotifications, setAllNotifications] = useState([]);
 
   const [removingId, setRemovingId] = useState(null);
   const [clickedButtonId, setClickedButtonId] = useState(null);
-
-  async function getUserInfo() {
-    try {
-      const token = JSON.parse(localStorage.getItem("user_data"));
-      const response = await fetch(`${BASE_PATH}/user/get_self_info`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUserData(data);
-        if (data.is_waitress != true) {
-          logOut();
-        }
-      } else {
-        console.error("مشکل در دریافت اطلاعات کاربر");
-        localStorage.removeItem("user_data");
-        setCurrentPage(0);
-      }
-    } catch (error) {
-      console.error("مشکل در دریافت اطلاعات کاربر. مشکل :", error);
-      localStorage.removeItem("user_data");
-      setCurrentPage(0);
-    }
-  }
-  async function getProfilePic() {
-    try {
-      const token = JSON.parse(localStorage.getItem("user_data"));
-      const response = await axios.post(
-        `${BASE_PATH}/userget_user_picture`,
-        { user_id: token.userID },
-        {
-          headers: { "Content-Type": "application/json" },
-          responseType: "blob",
-        }
-      );
-
-      const imageBlob = response.data;
-      const imageUrl = URL.createObjectURL(imageBlob);
-      setProfilePic(imageUrl);
-    } catch (error) {
-      console.error("Error fetching profile picture:", error);
-    }
-  }
 
   async function getNOtification() {
     try {
@@ -246,25 +239,8 @@ function WaiterPage({ setCurrentPage }) {
     // For flashing on LOADING PAGE
     setIsPageLoaded(true);
 
-    getUserInfo();
-    getProfilePic();
     getNOtification();
-
-    const isDarkNow = document.documentElement.classList.contains("dark");
-    setIsDark(isDarkNow);
   }, []);
-  const toggleDarkMode = () => {
-    const root = document.documentElement;
-    if (root.classList.contains("dark")) {
-      root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-      setIsDark(false);
-    } else {
-      root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-      setIsDark(true);
-    }
-  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -274,14 +250,6 @@ function WaiterPage({ setCurrentPage }) {
     return () => clearInterval(intervalId);
   }, []);
 
-  const toggleMenu = () => {
-    setShowMenu(!showMenu);
-  };
-  const logOut = () => {
-    localStorage.removeItem("user_data");
-    setCurrentPage(0);
-  };
-
   return (
     <>
       <div
@@ -289,87 +257,9 @@ function WaiterPage({ setCurrentPage }) {
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark w-screen h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden`}>
+        } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark w-screen min-h-screen pt-25 pb-17 md:pb-0`}>
         {/* --------------------------------------------- HEADER ---------------------------------------------------------------- */}
-        <div
-          className={`${
-            isPageLoaded
-              ? "transition-colors duration-300"
-              : "transition-none duration-0"
-          } p-2 sticky top-0 z-10`}>
-          <div
-            className={`${
-              isPageLoaded
-                ? "transition-colors duration-300"
-                : "transition-none duration-0"
-            } ${
-              reduceBlur
-                ? "bg-white dark:bg-darkpalleteDark"
-                : "bg-white/30 dark:bg-darkpalleteDark/30 border-white/20 dark:border-white/10 border"
-            }  w-full rounded-3xl py-2 px-4 flex justify-between items-center backdrop-blur-md shadow-lg`}>
-            <div
-              className={`${
-                isPageLoaded
-                  ? "transition-colors duration-300"
-                  : "transition-none duration-0"
-              } text-xl flex gap-5 font-bold text-darkpallete dark:text-white`}>
-              <h1>کافـی نـو</h1>
-              {/* DARK MODE BUTTON */}
-              <button
-                className="hidden md:block cursor-pointer"
-                onClick={toggleDarkMode}>
-                <Icons.darkMode
-                  className={`${
-                    isDark ? "rotate-0 fill-white" : "rotate-180 fill-black"
-                  } w-8 transition-all duration-300 ease-out`}
-                />
-              </button>
-            </div>
 
-            <h1 className="md:hidden text-xl text-black dark:text-white font-extrabold text-center p-2 rounded-3xl">
-              سالن‌دار
-            </h1>
-            <div className="cursor-pointer relative" onClick={toggleMenu}>
-              <div className="flex justify-center items-center flex-row-reverse cursor-pointer gap-2">
-                <img
-                  className={`w-15 h-15 rounded-full spect-square object-cover border-2 transition-all duration-300 pointer-events-none touch-none ${
-                    showMenu
-                      ? "border-adminPrimary dark:border-adminPrimaryDark"
-                      : "border-transparent hover:border-adminPrimary dark:hover:border-adminPrimaryDark"
-                  }`}
-                  src={userData.pic_url ? profilePic : ProfileImage}
-                  alt="Profile"
-                />
-                <p
-                  className={`${
-                    isPageLoaded
-                      ? "transition-colors duration-300"
-                      : "transition-none duration-0"
-                  } text-black dark:text-white font-bold md:block hidden`}>
-                  {userData.full_name}
-                </p>
-              </div>
-              {showMenu && (
-                <div className="absolute left-0 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300">
-                  <div className="py-1">
-                    <button
-                      onClick={() => {
-                        setCurrentPage(5);
-                      }}
-                      className="cursor-pointer w-full text-start block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
-                      تنظیمات
-                    </button>
-                    <button
-                      onClick={logOut}
-                      className="cursor-pointer block w-full text-right px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
-                      خروج
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
         {/* -------------------------------------- BODY | REQUEST PANEL --------------------------------------------------------- */}
         <div
           className={`${

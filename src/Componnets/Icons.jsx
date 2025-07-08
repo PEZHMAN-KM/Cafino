@@ -77,7 +77,6 @@ export const Icons = {
       </g>
     </svg>
   ),
-  // ---------------------------------------------------------------
   Profile: (props) => (
     <svg
       viewBox="0 0 24 24"
@@ -118,8 +117,6 @@ export const Icons = {
       </g>
     </svg>
   ),
-
-  // ---------------------------------------------------------------
   instagram: (props) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

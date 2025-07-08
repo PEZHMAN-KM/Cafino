@@ -161,6 +161,7 @@
   --color-adminPrimary: #809fb8;
   --color-adminAction: #217efd;
   --color-adminError: #ea3a3d;
+  --color-slowAdminPrimary: #e6f0ff;
 
   /* Dark mode colors */
   --color-primaryDark: #8b5636;
@@ -176,6 +177,7 @@
   --color-adminPrimaryDark: #4a6b82;
   --color-adminActionDark: #1659b7;
   --color-adminErrorDark: #a82729;
+  --color-slowAdminPrimaryDark: #2c3e50;
 
   /* Extra Small Screen */
   --breakpoint-xs: 22rem;

@@ -104,7 +104,7 @@ const Header = forwardRef(
               </button>
             </div>
             {showMenu && (
-              <div className="absolute right-5 top-12 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50">
+              <div className="absolute hidden md:block right-5 top-12 mt-5 w-48 rounded-xl shadow-lg bg-white dark:bg-darkpalleteDark transition-colors duration-300 z-50">
                 <div className="py-1">
                   <button
                     onClick={() => {

@@ -1,25 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_PATH } from "../constants/paths";
-
-const ArrowIcon = ({ className }) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className={className}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="m8.25 4.5 7.5 7.5-7.5 7.5"
-      />
-    </svg>
-  );
-};
+import { Icons } from "../Componnets/Icons";
 
 function ChangeUserInfo({ setCurrentPage }) {
   const [userInfo, setUserInfo] = useState({
@@ -59,7 +41,6 @@ function ChangeUserInfo({ setCurrentPage }) {
     }
   };
   const [preview, setPreview] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     getUserInfo();
@@ -227,17 +208,16 @@ function ChangeUserInfo({ setCurrentPage }) {
     <div className="min-h-screen bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto bg-white dark:bg-darkpalleteDark rounded-3xl shadow-lg p-6 transition-colors duration-300">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center my-6">
             <h1 className="text-3xl font-extrabold text-center dark:text-white transition-colors duration-300">
               تنظیمات
             </h1>
             <button
               onClick={() => {
                 setCurrentPage(0);
-              }}>
-              <div className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
-                <ArrowIcon className="w-8 rotate-180 stroke-3 stroke-black dark:stroke-white" />
-              </div>
+              }}
+              className="bg-white dark:bg-darkpalleteDark border-2 border-black dark:border-white p-2 rounded-2xl transition-colors duration-300">
+              <Icons.arrow className="w-8 rotate-180 stroke-3 stroke-black dark:stroke-white" />
             </button>
           </div>
           <form onSubmit={handleSubmit} className="space-y-3">

@@ -83,7 +83,7 @@ function Card({
     setCurrentPage(6);
   }
 
-  const increaseCount = () => {
+  const increaseCount = (id) => {
     if ("vibrate" in navigator && typeof window !== "undefined") {
       navigator.vibrate(haptic);
     }

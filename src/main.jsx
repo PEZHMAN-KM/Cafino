@@ -220,13 +220,7 @@ const startApp = async () => {
             <RouteProgress />
             <Routes>
               <Route path="/" element={<App />} />
-              {/* <Route path="/home" element={<Home />} />
-              <Route path="/Landing" element={<Landing />}></Route>
-              <Route path="/Item" element={<Item />}></Route>
-              <Route path="/Order" element={<Order />}></Route>
-              <Route path="/ContactUs" element={<ContactUs />}></Route>
-              <Route path="/FavoritePage" element={<FavoritePage />}></Route>
-              <Route path="/EasyPage" element={<EasyPage />}></Route> */}
+              {/* <Route path="/home" element={<Home />} /> */}
             </Routes>
           </BrowserRouter>
         </BlurProvider>

@@ -154,15 +154,15 @@ const App = () => {
           />
         );
       case 7:
-        return <EasyPage setCurrentPage={setCurrentPage} />;
-      default:
         return (
-          // <HomePage
-          //   setFooterShrink={setFooterShrink}
-          //   setCurrentPage={setCurrentPage}
-          // />
-          <div></div>
+          <EasyPage
+            setCurrentPage={setCurrentPage}
+            setIsDark={setIsDark}
+            isDark={isDark}
+          />
         );
+      default:
+        return <div></div>;
     }
   };
 
