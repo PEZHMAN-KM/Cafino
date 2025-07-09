@@ -219,6 +219,7 @@ const startApp = async () => {
           <BrowserRouter>
             <RouteProgress />
             <Routes>
+              <Route path="/:id" element={<App />} />
               <Route path="/" element={<App />} />
               {/* <Route path="/home" element={<Home />} /> */}
             </Routes>

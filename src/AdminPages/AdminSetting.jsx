@@ -276,7 +276,6 @@ export default function AdminSetting({
   return (
     <>
       <div
-        style={{ WebkitOverflowScrolling: "touch" }}
         className={`${
           isPageLoaded
             ? "transition-colors duration-300"

@@ -1,4 +1,10 @@
-import { BASE_PATH, LIMIT_DATA, LOCATION } from "../constants/paths";
+import {
+  BASE_PATH,
+  LIMIT_DATA,
+  LOCATION,
+  GET_TABLE_NUMBER,
+  SET_TABLE_NUMBER,
+} from "../constants/paths";
 import React, { useState, useEffect, useRef } from "react";
 import { Icons } from "../Componnets/Icons.jsx";
 import axios from "axios";
@@ -165,7 +171,11 @@ function ContactUs({ setFooterShrink, setHeaderMenuOpen, setHeaderShrink }) {
   }, []);
   // ----------------------------------------------------------------
 
-  const [tableNumber, setTableNumber] = useState(null);
+  const [tableNumber, setTableNumber] = useState(GET_TABLE_NUMBER());
+  useEffect(() => {
+    SET_TABLE_NUMBER(tableNumber);
+  }, [tableNumber]);
+
   const [error, setError] = useState(null);
   const [tableError, setTableError] = useState(null);
 

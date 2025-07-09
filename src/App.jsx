@@ -1,7 +1,9 @@
 import React, { useRef, useState, lazy, Suspense, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { AnimationContext } from "./constants/AnimationContext.jsx";
 import LoadingIcon from "../public/Icon.svg";
+import { SET_TABLE_NUMBER } from "./constants/paths.js";
 
 import Header from "./Componnets/Header.jsx";
 import Footer from "./Componnets/Footer.jsx";
@@ -18,6 +20,16 @@ const EasyPage = lazy(() => import("./Pages/EasyPage.jsx"));
 const Setting = lazy(() => import("./Pages/Setting.jsx"));
 
 const App = () => {
+  // TABLE NUMBER FROM LINK (QR CODE) USER SIDE -----------------------------------
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      SET_TABLE_NUMBER(id);
+    }
+  }, [id]);
+
+  // -----------------------------------------------------------------------------
   const [currentPage, setCurrentPage] = useState(0);
   const [footerShrink, setFooterShrink] = useState(false);
   const [headerShrink, setHeaderShrink] = useState(false);

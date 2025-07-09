@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { BASE_PATH, LIMIT_DATA } from "../constants/paths.js";
+import {
+  BASE_PATH,
+  LIMIT_DATA,
+  GET_TABLE_NUMBER,
+  SET_TABLE_NUMBER,
+} from "../constants/paths.js";
 import itemImage from "../../public/No_Item.png";
 import { Icons } from "../Componnets/Icons.jsx";
 import { useBlur } from "../constants/BlurContext.jsx";
@@ -127,7 +132,12 @@ function EasyPage({ setCurrentPage, setIsDark, isDark }) {
   }, []);
 
   // WAITER CALLER CONTROL ---------------------------------------
-  const [tableNumber, setTableNumber] = useState(null);
+  const [tableNumber, setTableNumber] = useState(GET_TABLE_NUMBER());
+
+  useEffect(() => {
+    SET_TABLE_NUMBER(tableNumber);
+  }, [tableNumber]);
+
   const [TableError, setTableError] = useState(null);
   async function addNotification(tableNumber) {
     if (tableNumber < 1 || tableNumber > LIMIT_DATA) {

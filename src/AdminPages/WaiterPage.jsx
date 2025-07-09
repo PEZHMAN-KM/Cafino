@@ -253,13 +253,12 @@ function WaiterPage({
   return (
     <>
       <div
+        style={{ WebkitOverflowScrolling: "touch" }}
         className={`${
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
         } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark w-screen min-h-screen pt-25 pb-17 md:pb-0`}>
-        {/* --------------------------------------------- HEADER ---------------------------------------------------------------- */}
-
         {/* -------------------------------------- BODY | REQUEST PANEL --------------------------------------------------------- */}
         <div
           className={`${

@@ -65,7 +65,7 @@ const Header = forwardRef(
       <>
         <div
           className={`flex justify-center origin-top items-center w-screen transition-all duration-100 ${
-            headerShrink && page !== 2
+            headerShrink && page !== 2 && !searchActive
               ? `${page !== 1 ? "md:max-h-full!" : "lg:opacity-0"} max-h-0!`
               : "max-h-full! opacity-100"
           }`}>
@@ -75,7 +75,7 @@ const Header = forwardRef(
                 ? "transition-all duration-300"
                 : "transition-none duration-0"
             } z-20 origin-top flex justify-center items-center gap-3 p-5 py-3 ${
-              headerShrink && page !== 2
+              headerShrink && page !== 2 && !searchActive
                 ? `scale-0! ${page !== 1 ? "md:scale-none!" : ""}`
                 : ""
             } ${
@@ -85,7 +85,14 @@ const Header = forwardRef(
                       ? "bg-backgroundcolor dark:bg-backgroundcolorDark"
                       : "bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30"
                   } backdrop-blur-md border border-white/20 dark:border-white/10 shadow-lg rounded-3xl`
-                : "fixed top-0 w-screen"
+                : `fixed top-0 w-screen ${
+                    searchActive &&
+                    `${
+                      reduceBlur
+                        ? "bg-backgroundcolor dark:bg-backgroundcolorDark"
+                        : "bg-backgroundcolor/30 dark:bg-backgroundcolorDark/30"
+                    } backdrop-blur-md shadow-lg`
+                  }`
             }`}>
             <div className="hidden md:flex-1/4 md:flex gap-2">
               <div

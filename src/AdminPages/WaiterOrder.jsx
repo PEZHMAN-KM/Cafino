@@ -531,7 +531,9 @@ function WaiterOrder({
         </div>
       )}
       {/* ---------------------------------------------------- MAIN PAGE ---------------------------------------------------- */}
-      <div className="py-4 px-2 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300 min-h-screen w-screen pt-25 pb-32 md:pb-15">
+      <div
+        style={{ WebkitOverflowScrolling: "touch" }}
+        className="py-4 px-2 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark transition-colors duration-300 min-h-screen w-screen pt-25 pb-32 md:pb-15">
         {/* <div className="flex justify-center mb-6">
           <button
             onClick={() => {

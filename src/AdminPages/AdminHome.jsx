@@ -39,28 +39,28 @@ const OrderTable = ({
   fetchItems,
   addNotification,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  // const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const hoverTimeoutRef = useRef(null);
 
-  const showItems = isClicked || (!isClicked && isHovered);
+  // const showItems = isClicked || (!isClicked && isHovered);
 
-  const handleMouseEnter = () => {
-    hoverTimeoutRef.current = setTimeout(() => {
-      setIsHovered(true);
-    }, 500);
-  };
+  // const handleMouseEnter = () => {
+  //   hoverTimeoutRef.current = setTimeout(() => {
+  //     setIsHovered(true);
+  //   }, 500);
+  // };
 
-  const handleMouseLeave = () => {
-    clearTimeout(hoverTimeoutRef.current);
-    if (!isClicked) setIsHovered(false);
-  };
+  // const handleMouseLeave = () => {
+  //   clearTimeout(hoverTimeoutRef.current);
+  //   if (!isClicked) setIsHovered(false);
+  // };
 
   const handleClick = () => {
     clearTimeout(hoverTimeoutRef.current);
     setIsClicked((prev) => {
       const next = !prev;
-      if (!next) setIsHovered(false);
+      // if (!next) setIsHovered(false);
       return next;
     });
   };
@@ -71,12 +71,12 @@ const OrderTable = ({
 
   return (
     <motion.div
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      // onMouseEnter={handleMouseEnter}
+      // onMouseLeave={handleMouseLeave}
       onClick={handleClick}
-      animate={{
-        scale: !isClicked && isHovered ? 1.015 : 1,
-      }}
+      // animate={{
+      //   scale: !isClicked ? 1.015 : 1,
+      // }}
       transition={{
         type: "spring",
         stiffness: 500,
@@ -87,18 +87,20 @@ const OrderTable = ({
         !is_accepted
           ? "border-2 border-adminPrimary dark:border-adminPrimaryDark"
           : "border-3 border-adminAction dark:border-adminActionDark"
+      } ${
+        isClicked && "border-8 bg-slowAdminPrimary dark:bg-slowAdminPrimaryDark"
       } my-2 mx-3 rounded-3xl transition-all duration-300 ${
         removingId === id ? "animate-scale-out" : ""
       } ${clickedButtonId === id ? "animate-scale-out" : ""}`}>
       <AnimatePresence>
-        {showItems && (
+        {isClicked && (
           <motion.div
             key="foods"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden border-b-4 border-adminBackgroundColor dark:border-graypalleteDark">
+            className="overflow-hidden grid sm:grid-cols-2 xl:grid-cols-3 border-b-4 border-adminBackgroundColor dark:border-graypalleteDark">
             {foods.map((item, index) => (
               <div key={index}>
                 <OrderItem
@@ -184,24 +186,24 @@ const OrderItem = ({
         pic_url ? `${BASE_PATH}/files/${pic_url.split("/").pop()}` : itemImage
       }
       alt={name}
-      className="w-12 h-12 lg:w-18 lg:h-18 rounded-xl object-cover pointer-events-none touch-none"
+      className="size-12 rounded-xl object-cover pointer-events-none touch-none"
     />
     <div className="flex-1 max-xs:mx-0 max-xs:mr-3 mx-3">
-      <h1 className="font-bold text-black lg:text-2xl dark:text-white text-start">
+      <h1 className="font-bold text-black dark:text-white text-start">
         {name}
       </h1>
-      <p className="text-sm lg:text-xl text-slowgrayDark dark:text-slowgray max-xs:truncate max-xs:max-w-20 max-xs:w-fit">
+      <p className="text-sm text-slowgrayDark dark:text-slowgray max-xs:truncate max-xs:max-w-20 max-xs:w-fit">
         {category_name}
       </p>
     </div>
     <div className="flex flex-col justify-end items-end ml-2">
       <div>
-        <span className="text-lg font-normal lg:text-3xl lg:font-extrabold text-slowgrayDark dark:text-slowgray">
+        <span className="text-lg font-normal lg:font-extrabold text-slowgrayDark dark:text-slowgray">
           {count}x
         </span>
       </div>
       {sale_price == null ? (
-        <h1 className="ftext-sm font-normal lg:text-xl lg:font-bold text-slowgrayDark dark:text-slowgray transition-colors duration-300">
+        <h1 className="ftext-sm font-normal text-slowgrayDark dark:text-slowgray transition-colors duration-300">
           {formatPrice(price)} تومان
         </h1>
       ) : (
@@ -209,7 +211,7 @@ const OrderItem = ({
           <h1 className="text-sm decoration-1 line-through text-highgray dark:text-slowgray transition-colors duration-300 max-xs:truncate max-xs:max-w-12 max-xs:w-fit">
             {formatPrice(price)} <span className="hidden md:inline">تومان</span>
           </h1>
-          <h1 className="ftext-sm font-normal lg:text-xl lg:font-bold text-slowgrayDark dark:text-slowgray transition-colors duration-300 whitespace-nowrap">
+          <h1 className="ftext-sm font-normal text-slowgrayDark dark:text-slowgray transition-colors duration-300 whitespace-nowrap">
             {formatPrice(sale_price)} تومان
           </h1>
         </div>
@@ -365,7 +367,7 @@ const WaiterTableNumber = ({ table_number }) => (
   </div>
 );
 
-function AdminHome() {
+function AdminHome({ setHeaderShrink, setFooterShrink, setHeaderMenuOpen }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   const [items, setItems] = useState([]);
@@ -614,28 +616,64 @@ function AdminHome() {
     return () => clearInterval(intervalId);
   }, []);
 
+  // SCROLL FOOTER -------------------------------------------------
+  const lastScrollTop = useRef(0);
+
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollTop =
+            window.pageYOffset || document.documentElement.scrollTop;
+
+          const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
+          const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
+
+          if (currentScrollTop <= 20) {
+            setHeaderShrink(false);
+          } else {
+            setHeaderShrink(true);
+          }
+
+          if (scrollingDown) {
+            setFooterShrink(true);
+            setHeaderMenuOpen(false);
+          } else if (scrollingUp) {
+            setFooterShrink(false);
+            setHeaderMenuOpen(false);
+          }
+
+          lastScrollTop.current = Math.max(0, currentScrollTop);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
       <div
+        style={{ WebkitOverflowScrolling: "touch" }}
         className={`${
           isPageLoaded
-            ? "transition-colors duration-300"
+            ? "transition-all duration-300"
             : "transition-none duration-0"
-        } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
-        {/* <AdminHeader /> */}
+        } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark min-h-screen overflow-x-hidden`}>
         <div
-          className={`${
-            isPageLoaded
-              ? "transition-colors duration-300"
-              : "transition-none duration-0"
-          } grid grid-cols-1 md:grid-cols-3 gap-2 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark`}>
-          {/* ORDER CONTROL */}
+          className={`grid grid-cols-1 lg:grid-cols-3 gap-2 px-2 pb-20 md:pb-2 lg:h-screen pt-25`}>
+          {/* -------------------------------------------------------- ORDER CONTROL -------------------------------------------------------- */}
           <div
             className={`${
               isPageLoaded
                 ? "transition-colors duration-300"
                 : "transition-none duration-0"
-            } col-span-2 bg-white dark:bg-darkpalleteDark rounded-3xl h-fit max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
+            } col-span-1 lg:col-span-2 bg-white dark:bg-darkpalleteDark rounded-3xl h-fit max-h-full overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
             <h1
               className={`${
                 isPageLoaded
@@ -671,13 +709,13 @@ function AdminHome() {
               ))
             )}
           </div>
-          {/* NOTIFICATION CONTROL */}
+          {/* -------------------------------------------------------- NOTIFICATION CONTROL -------------------------------------------------------- */}
           <div
             className={`${
               isPageLoaded
                 ? "transition-colors duration-300"
                 : "transition-none duration-0"
-            } col-span-1 bg-white dark:bg-darkpalleteDark rounded-3xl h-fit pb-2 max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
+            } col-span-1 pb-3 bg-white dark:bg-darkpalleteDark rounded-3xl h-fit max-h-full overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
             <h1
               className={`${
                 isPageLoaded

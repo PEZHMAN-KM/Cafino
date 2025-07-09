@@ -20,6 +20,7 @@ function WaiterHeader({
   isDark,
   setProfilePic,
   profilePic,
+  logOut,
 }) {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const reduceBlur = useBlur();
@@ -39,18 +40,15 @@ function WaiterHeader({
         const data = await response.json();
         setUserData(data);
         if (data.is_waitress != true) {
-          localStorage.removeItem("user_data");
-          setCurrentPage(0);
+          logOut();
         }
       } else {
         console.error("مشکل در دریافت اطلاعات کاربر");
-        localStorage.removeItem("user_data");
-        setCurrentPage(0);
+        logOut();
       }
     } catch (error) {
       console.error("مشکل در دریافت اطلاعات کاربر. مشکل :", error);
-      localStorage.removeItem("user_data");
-      setCurrentPage(0);
+      logOut();
     }
   }
   async function getProfilePic() {
@@ -107,10 +105,6 @@ function WaiterHeader({
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
-  const logOut = () => {
-    localStorage.removeItem("user_data");
-    setCurrentPage(0);
-  };
 
   return (
     <>
@@ -164,6 +158,7 @@ function WaiterHeader({
                 }
                 setCurrentPage(8);
                 goToTop();
+                setShowMenu(false);
               }}
               className={`${
                 isPageLoaded
@@ -183,6 +178,7 @@ function WaiterHeader({
                 }
                 setCurrentPage(7);
                 goToTop();
+                setShowMenu(false);
               }}
               className={`${
                 isPageLoaded
@@ -222,12 +218,16 @@ function WaiterHeader({
                   <button
                     onClick={() => {
                       setCurrentPage(9);
+                      setShowMenu(false);
                     }}
                     className="cursor-pointer w-full text-start block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
                     تنظیمات
                   </button>
                   <button
-                    onClick={logOut}
+                    onClick={() => {
+                      logOut();
+                      setShowMenu(false);
+                    }}
                     className="cursor-pointer block w-full text-right px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-adminBackgroundColor dark:hover:bg-adminBackgroundColorDark transition-colors duration-300">
                     خروج
                   </button>

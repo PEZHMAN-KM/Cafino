@@ -1,5 +1,5 @@
 import axios, { Axios } from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BASE_PATH } from "../constants/paths";
 import itemImage from "../../public/No_Item.png";
 
@@ -160,7 +160,12 @@ const WaiterItem = ({
   );
 };
 
-const ItemManager = ({ setCurrentPage }) => {
+const ItemManager = ({
+  setCurrentPage,
+  setHeaderShrink,
+  setFooterShrink,
+  setHeaderMenuOpen,
+}) => {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const [removingId, setRemovingId] = useState(null);
   const [clickedButtonId, setClickedButtonId] = useState(null);
@@ -302,43 +307,78 @@ const ItemManager = ({ setCurrentPage }) => {
     }, 300);
   }
 
+  // SCROLL FOOTER -------------------------------------------------
+  const lastScrollTop = useRef(0);
+
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollTop =
+            window.pageYOffset || document.documentElement.scrollTop;
+
+          const scrollingDown = currentScrollTop > lastScrollTop.current + 2;
+          const scrollingUp = currentScrollTop < lastScrollTop.current - 2;
+
+          if (currentScrollTop <= 20) {
+            setHeaderShrink(false);
+          } else {
+            setHeaderShrink(true);
+          }
+
+          if (scrollingDown) {
+            setFooterShrink(true);
+            setHeaderMenuOpen(false);
+          } else if (scrollingUp) {
+            setFooterShrink(false);
+            setHeaderMenuOpen(false);
+          }
+
+          lastScrollTop.current = Math.max(0, currentScrollTop);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
       <div
+        style={{ WebkitOverflowScrolling: "touch" }}
         className={`${
           isPageLoaded
             ? "transition-colors duration-300"
             : "transition-none duration-0"
-        } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-full`}>
+        } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark min-h-screen overflow-x-hidden`}>
         <div
           className={`${
             isPageLoaded
               ? "transition-colors duration-300"
               : "transition-none duration-0"
-          } bg-adminBackgroundColor dark:bg-adminBackgroundColorDark h-screen overflow-y-auto scrollbar scrollbar-none overflow-x-hidden`}>
+          } pt-25 grid grid-cols-1 xl:grid-cols-6 gap-2 pb-20 md:pb-2 xl:h-screen`}>
+          {/* -------------------------------------------------------- ITEM CONTROL -------------------------------------------------------- */}
           <div
             className={`${
               isPageLoaded
                 ? "transition-colors duration-300"
                 : "transition-none duration-0"
-            } grid grid-cols-1 xl:grid-cols-6 gap-2 bg-adminBackgroundColor dark:bg-adminBackgroundColorDark`}>
-            {/* ITEM CONTROL */}
-            <div
-              className={`${
-                isPageLoaded
-                  ? "transition-colors duration-300"
-                  : "transition-none duration-0"
-              } col-span-1 xl:col-span-4 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:mr-2 rounded-3xl h-fit max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
-              <div className="flex justify-between items-center pl-4 py-3">
-                <h1
-                  className={`${
-                    isPageLoaded
-                      ? "transition-colors duration-300"
-                      : "transition-none duration-0"
-                  } text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white`}>
-                  مدیریت آیتم ها
-                </h1>
-                {/* <div className="flex gap-1 md:gap-2">
+            } col-span-1 xl:col-span-4 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:mr-2 rounded-3xl h-fit max-h-full overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
+            <div className="flex justify-between items-center pl-4 py-3">
+              <h1
+                className={`${
+                  isPageLoaded
+                    ? "transition-colors duration-300"
+                    : "transition-none duration-0"
+                } text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white`}>
+                مدیریت آیتم ها
+              </h1>
+              {/* <div className="flex gap-1 md:gap-2">
                   <a href="">
                     <div className="bg-white flex items-center justify-center gap-1 border-3 border-highgray text-highgray p-1 md:p-2 rounded-2xl font-bold">
                       <Setting className={"w-8 stroke-highgray "} />
@@ -346,122 +386,66 @@ const ItemManager = ({ setCurrentPage }) => {
                     </div>
                   </a>
                 </div> */}
-                <button
-                  onClick={() => {
-                    setCurrentPage(3);
-                  }}>
-                  <div className="bg-white dark:bg-black flex items-center justify-center gap-1 border-3 border-black dark:border-white p-2 rounded-2xl font-bold transition-all duration-300">
-                    <Icons.add
-                      className={
-                        "w-8 rotate-180 stroke-black dark:stroke-white transition-colors duration-300"
-                      }
-                    />
-                    <h1 className="hidden md:block text-black dark:text-white transition-all duration-300">
-                      اضافه کردن
-                    </h1>
-                  </div>
-                </button>
+              <button
+                onClick={() => {
+                  setCurrentPage(3);
+                }}>
+                <div className="bg-white dark:bg-black flex items-center justify-center gap-1 border-3 border-black dark:border-white p-2 rounded-2xl font-bold transition-all duration-300">
+                  <Icons.add
+                    className={
+                      "w-8 rotate-180 stroke-black dark:stroke-white transition-colors duration-300"
+                    }
+                  />
+                  <h1 className="hidden md:block text-black dark:text-white transition-all duration-300">
+                    اضافه کردن
+                  </h1>
+                </div>
+              </button>
+            </div>
+            <div className="px-2">
+              <div
+                className={`${
+                  isPageLoaded
+                    ? "transition-colors duration-300"
+                    : "transition-none duration-0"
+                } grid grid-cols-4 lg:grid-cols-5 text-center text-balance md:text-xl font-bold gap-2 pb-2 border-b-2 dark:text-white`}>
+                <h1 className="hidden lg:block md:text-lg lg:text-2xl mt-auto">
+                  عکس
+                </h1>
+                <h1 className="text-lg mt-auto lg:text-2xl">نام آیتم</h1>
+                <h1 className="text-lg mt-auto lg:text-2xl">دسته بندی</h1>
+                <h1 className="text-lg mt-auto lg:text-2xl">
+                  <span>هزینه </span>
+                  <span className="text-xs md:text-sm lg:text-base">
+                    (هزار تومان)
+                  </span>
+                </h1>
+                <h1 className="text-lg mt-auto lg:text-2xl">آپشن</h1>
               </div>
-              <div className="px-2">
+              {allFood.length === 0 ? (
                 <div
                   className={`${
                     isPageLoaded
                       ? "transition-colors duration-300"
                       : "transition-none duration-0"
-                  } grid grid-cols-4 lg:grid-cols-5 text-center text-balance md:text-xl font-bold gap-2 pb-2 border-b-2 dark:text-white`}>
-                  <h1 className="hidden lg:block md:text-lg lg:text-2xl mt-auto">
-                    عکس
-                  </h1>
-                  <h1 className="text-lg mt-auto lg:text-2xl">نام آیتم</h1>
-                  <h1 className="text-lg mt-auto lg:text-2xl">دسته بندی</h1>
-                  <h1 className="text-lg mt-auto lg:text-2xl">
-                    <span>هزینه </span>
-                    <span className="text-xs md:text-sm lg:text-base">
-                      (هزار تومان)
-                    </span>
-                  </h1>
-                  <h1 className="text-lg mt-auto lg:text-2xl">آپشن</h1>
+                  } text-center py-4 text-gray-500 dark:text-gray-400 font-bold`}>
+                  هیچ آیتمی وجود ندارد.
                 </div>
-                {allFood.length === 0 ? (
-                  <div
-                    className={`${
-                      isPageLoaded
-                        ? "transition-colors duration-300"
-                        : "transition-none duration-0"
-                    } text-center py-4 text-gray-500 dark:text-gray-400 font-bold`}>
-                    هیچ آیتمی وجود ندارد.
-                  </div>
-                ) : (
-                  allFood.map((item) => (
-                    <div
-                      className="border-b-1 my-0 md:my-1 md:border-b-0"
-                      key={item.id}>
-                      <ItemTable
-                        id={item.id}
-                        pic_url={item.pic_url}
-                        name={item.name}
-                        category={item.category_name}
-                        price={item.price}
-                        in_sale={item.in_sale}
-                        sale_price={item.sale_price}
-                        deleteFood={deleteFood}
-                        editFood={editFood}
-                        setClickedButtonId={setClickedButtonId}
-                        clickedButtonId={clickedButtonId}
-                        removingId={removingId}
-                      />
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-            {/* WAITER CONTROL */}
-            <div
-              className={`${
-                isPageLoaded
-                  ? "transition-colors duration-300"
-                  : "transition-none duration-0"
-              } col-span-1 xl:col-span-2 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:ml-2 rounded-3xl h-fit pb-2 max-h-[88svh] overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
-              <div className="flex justify-between items-center pl-4 py-3">
-                <h1
-                  className={`${
-                    isPageLoaded
-                      ? "transition-colors duration-300"
-                      : "transition-none duration-0"
-                  } text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white`}>
-                  لیست سالن‌دار ها
-                </h1>
-                <button
-                  onClick={() => {
-                    setCurrentPage(6);
-                  }}>
-                  <div className="bg-white dark:bg-black flex items-center justify-center gap-1 border-3 border-black dark:border-white p-2 rounded-2xl font-bold transition-all duration-300">
-                    <Icons.add
-                      className={
-                        "w-8 rotate-180 stroke-black dark:stroke-white transition-colors duration-300"
-                      }
-                    />
-                    <h1 className="hidden md:block text-black dark:text-white transition-all duration-300">
-                      استخدام سالن‌دار
-                    </h1>
-                  </div>
-                </button>
-              </div>
-              {allWaiter.length === 0 ? (
-                <p className="text-xl text-center pb-4 text-slowgrayDark dark:text-slowgray">
-                  هیچ سالن‌داری وجود ندارد
-                </p>
               ) : (
-                allWaiter.map((item) => (
+                allFood.map((item) => (
                   <div
                     className="border-b-1 my-0 md:my-1 md:border-b-0"
                     key={item.id}>
-                    <WaiterItem
+                    <ItemTable
                       id={item.id}
                       pic_url={item.pic_url}
-                      full_name={item.full_name}
-                      username={item.username}
-                      UnEmployUser={UnEmployUser}
+                      name={item.name}
+                      category={item.category_name}
+                      price={item.price}
+                      in_sale={item.in_sale}
+                      sale_price={item.sale_price}
+                      deleteFood={deleteFood}
+                      editFood={editFood}
                       setClickedButtonId={setClickedButtonId}
                       clickedButtonId={clickedButtonId}
                       removingId={removingId}
@@ -470,6 +454,61 @@ const ItemManager = ({ setCurrentPage }) => {
                 ))
               )}
             </div>
+          </div>
+          {/* -------------------------------------------------------- WAITER CONTROL -------------------------------------------------------- */}
+          <div
+            className={`${
+              isPageLoaded
+                ? "transition-colors duration-300"
+                : "transition-none duration-0"
+            } col-span-1 xl:col-span-2 bg-white dark:bg-darkpalleteDark mx-2 xl:mx-0 xl:ml-2 rounded-3xl h-fit max-h-full overflow-y-auto overflow-x-hidden scrollbar scrollbar-none`}>
+            <div className="flex justify-between items-center pl-4 py-3">
+              <h1
+                className={`${
+                  isPageLoaded
+                    ? "transition-colors duration-300"
+                    : "transition-none duration-0"
+                } text-2xl md:text-3xl font-extrabold pr-8 py-4 dark:text-white`}>
+                لیست سالن‌دار ها
+              </h1>
+              <button
+                onClick={() => {
+                  setCurrentPage(6);
+                }}>
+                <div className="bg-white dark:bg-black flex items-center justify-center gap-1 border-3 border-black dark:border-white p-2 rounded-2xl font-bold transition-all duration-300">
+                  <Icons.add
+                    className={
+                      "w-8 rotate-180 stroke-black dark:stroke-white transition-colors duration-300"
+                    }
+                  />
+                  <h1 className="hidden md:block text-black dark:text-white transition-all duration-300">
+                    استخدام سالن‌دار
+                  </h1>
+                </div>
+              </button>
+            </div>
+            {allWaiter.length === 0 ? (
+              <p className="text-xl text-center pb-4 text-slowgrayDark dark:text-slowgray">
+                هیچ سالن‌داری وجود ندارد
+              </p>
+            ) : (
+              allWaiter.map((item) => (
+                <div
+                  className="border-b-1 my-0 md:my-1 md:border-b-0"
+                  key={item.id}>
+                  <WaiterItem
+                    id={item.id}
+                    pic_url={item.pic_url}
+                    full_name={item.full_name}
+                    username={item.username}
+                    UnEmployUser={UnEmployUser}
+                    setClickedButtonId={setClickedButtonId}
+                    clickedButtonId={clickedButtonId}
+                    removingId={removingId}
+                  />
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

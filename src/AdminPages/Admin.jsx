@@ -3,10 +3,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { AnimationContext } from "../constants/AnimationContext.jsx";
 import LoadingIcon from "../../public/Icon.svg";
 
-import AdminHeader from "./AdminHeader.jsx";
-
 import AdminLogin from "./AdminLogin.jsx";
+
 import WaiterHeader from "./WaiterHeader.jsx";
+import WaiterFooter from "./WaiterFooter.jsx";
+
+import AdminHeader from "./AdminHeader.jsx";
 import AdminFooter from "./AdminFooter.jsx";
 
 const AdminHome = lazy(() => import("./AdminHome.jsx"));
@@ -36,20 +38,39 @@ const Admin = () => {
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(0);
-
   const [isDark, setIsDark] = useState(false);
 
   const [userData, setUserData] = useState(Object);
   const [profilePic, setProfilePic] = useState(null);
+
+  // BACK TO LOGIN -------------------------------------------------
+  const logOut = () => {
+    localStorage.removeItem("user_data");
+    setCurrentPage(0);
+  };
+  //---------------------------------------------------------------
 
   const renderPage = () => {
     switch (currentPage) {
       case 0:
         return <AdminLogin setCurrentPage={setCurrentPage} />;
       case 1:
-        return <AdminHome />;
+        return (
+          <AdminHome
+            setHeaderShrink={setHeaderShrink}
+            setFooterShrink={setFooterShrink}
+            setHeaderMenuOpen={setHeaderMenuOpen}
+          />
+        );
       case 2:
-        return <ItemManager setCurrentPage={setCurrentPage} />;
+        return (
+          <ItemManager
+            setCurrentPage={setCurrentPage}
+            setHeaderShrink={setHeaderShrink}
+            setFooterShrink={setFooterShrink}
+            setHeaderMenuOpen={setHeaderMenuOpen}
+          />
+        );
       case 3:
         return <AddItem setCurrentPage={setCurrentPage} />;
       case 4:
@@ -85,6 +106,17 @@ const Admin = () => {
             profilePic={profilePic}
           />
         );
+      case 10:
+        return (
+          // <AdminSetting
+          //   setIsDark={setIsDark}
+          //   userData={userData}
+          //   setCurrentPage={setCurrentPage}
+          //   profilePic={profilePic}
+          // />
+          // REPORT ----------------------------
+          <div></div>
+        );
       default:
         return <div></div>;
     }
@@ -93,11 +125,22 @@ const Admin = () => {
   return (
     <AnimationContext.Provider value={shouldAnimate}>
       <div className="relative w-full min-h-screen bg-adminBackgroundColor dark:bg-adminBackgroundColorDark">
-        {currentPage != 0 &&
-          currentPage != 5 &&
-          currentPage != 7 &&
-          currentPage != 8 &&
-          currentPage != 9 && <AdminHeader setCurrentPage={setCurrentPage} />}
+        {(currentPage == 1 || currentPage == 2) && (
+          <AdminHeader
+            page={currentPage}
+            setCurrentPage={setCurrentPage}
+            headerShrink={headerShrink}
+            setShowMenu={setHeaderMenuOpen}
+            showMenu={headerMenuOpen}
+            setUserData={setUserData}
+            userData={userData}
+            setIsDark={setIsDark}
+            isDark={isDark}
+            setProfilePic={setProfilePic}
+            profilePic={profilePic}
+            logOut={logOut}
+          />
+        )}
 
         {(currentPage == 7 || currentPage == 8) && (
           <WaiterHeader
@@ -113,6 +156,7 @@ const Admin = () => {
             isDark={isDark}
             setProfilePic={setProfilePic}
             profilePic={profilePic}
+            logOut={logOut}
           />
         )}
 
@@ -139,7 +183,7 @@ const Admin = () => {
           </AnimatePresence>
         </Suspense>
 
-        {(currentPage == 7 || currentPage == 8) && (
+        {(currentPage == 1 || currentPage == 2) && (
           <AdminFooter
             shouldAnimate={shouldAnimate}
             page={currentPage}
@@ -147,6 +191,19 @@ const Admin = () => {
             shrink={footerShrink}
             setFooterShrink={setFooterShrink}
             setHeaderShrink={setHeaderShrink}
+            setHeaderMenuOpen={setHeaderMenuOpen}
+          />
+        )}
+
+        {(currentPage == 7 || currentPage == 8) && (
+          <WaiterFooter
+            shouldAnimate={shouldAnimate}
+            page={currentPage}
+            setPage={setCurrentPage}
+            shrink={footerShrink}
+            setFooterShrink={setFooterShrink}
+            setHeaderShrink={setHeaderShrink}
+            setHeaderMenuOpen={setHeaderMenuOpen}
           />
         )}
       </div>

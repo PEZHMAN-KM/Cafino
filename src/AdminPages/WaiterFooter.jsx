@@ -5,7 +5,7 @@ import { useBlur } from "../constants/BlurContext.jsx";
 
 const size_icon = 10;
 
-export default function AdminFooter({
+export default function WaiterFooter({
   page,
   shrink,
   setFooterShrink,
@@ -54,7 +54,7 @@ export default function AdminFooter({
               className="flex items-center justify-around" // flex-row-reverse
             >
               {/* --------------------------------------------------------- Set Order Button --------------------------------------------------------- */}
-              {/* <button
+              <button
                 onClick={() => {
                   if ("vibrate" in navigator && typeof window !== "undefined") {
                     navigator.vibrate(haptic);
@@ -72,14 +72,22 @@ export default function AdminFooter({
                       : "stroke-highgray dark:stroke-highgrayDark"
                   }`}
                 />
-              </button> */}
-              {/* --------------------------------------------------------- Report Button --------------------------------------------------------- */}
+                <h1
+                  className={`font-bold text-xl hidden xs:block transition-colors duration-300 ${
+                    page == 8
+                      ? "text-adminAction"
+                      : "text-highgray dark:text-highgrayDark"
+                  }`}>
+                  {ADMIN_PAGE_TITLES[8]}
+                </h1>
+              </button>
+              {/* --------------------------------------------------------- Waiter Call Button --------------------------------------------------------- */}
               <button
                 onClick={() => {
                   if ("vibrate" in navigator && typeof window !== "undefined") {
                     navigator.vibrate(haptic);
                   }
-                  //   setPage(3);
+                  setPage(7);
                   setHeaderShrink(false);
                   goToTop();
                   setHeaderMenuOpen(false);
@@ -87,51 +95,19 @@ export default function AdminFooter({
                 className="transition-all duration-300 flex gap-1 justify-center items-center">
                 <Icons.bell
                   className={` w-${size_icon} transition-colors duration-300 ${
-                    page == 10
+                    page == 7
                       ? "stroke-adminAction"
                       : "stroke-highgray dark:stroke-highgrayDark"
                   }`}
                 />
-              </button>
-              {/* --------------------------------------------------------- Item Manager Button --------------------------------------------------------- */}
-              <button
-                onClick={() => {
-                  if ("vibrate" in navigator && typeof window !== "undefined") {
-                    navigator.vibrate(haptic);
-                  }
-                  setPage(2);
-                  setHeaderShrink(false);
-                  goToTop();
-                  setHeaderMenuOpen(false);
-                }}
-                className="transition-all duration-300 flex gap-1 justify-center items-center">
-                <Icons.wallet
-                  className={` w-${size_icon} transition-colors duration-300 ${
-                    page == 2
-                      ? "stroke-adminAction"
-                      : "stroke-highgray dark:stroke-highgrayDark"
-                  }`}
-                />
-              </button>
-              {/* --------------------------------------------------------- Home Button --------------------------------------------------------- */}
-              <button
-                onClick={() => {
-                  if ("vibrate" in navigator && typeof window !== "undefined") {
-                    navigator.vibrate(haptic);
-                  }
-                  setPage(1);
-                  setHeaderShrink(false);
-                  goToTop();
-                  setHeaderMenuOpen(false);
-                }}
-                className="transition-all duration-300 flex gap-1 justify-center items-center">
-                <Icons.home
-                  className={` w-${size_icon} transition-colors duration-300 ${
-                    page == 1
-                      ? "stroke-adminAction fill-adminAction"
-                      : "stroke-highgray dark:stroke-highgrayDark fill-highgray dark:fill-highgrayDark"
-                  }`}
-                />
+                <h1
+                  className={`font-bold text-xl hidden xs:block transition-colors duration-300 ${
+                    page == 7
+                      ? "text-adminAction"
+                      : "text-highgray dark:text-highgrayDark"
+                  }`}>
+                  {ADMIN_PAGE_TITLES[7]}
+                </h1>
               </button>
             </div>
           )}

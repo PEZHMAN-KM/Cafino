@@ -1,7 +1,12 @@
 import { useRef, useEffect, useState } from "react";
 import itemImage from "../../public/No_Item.png";
 import axios from "axios";
-import { BASE_PATH, LIMIT_DATA } from "../constants/paths.js";
+import {
+  BASE_PATH,
+  LIMIT_DATA,
+  GET_TABLE_NUMBER,
+  SET_TABLE_NUMBER,
+} from "../constants/paths.js";
 
 import OrderReceiptOverlay from "../Componnets/OrderReceiptOverlay.jsx";
 import { Icons } from "../Componnets/Icons.jsx";
@@ -328,7 +333,12 @@ function Order({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   const [orderItems, setOrderItems] = useState([]);
-  const [tableNumber, setTableNumber] = useState(null);
+
+  const [tableNumber, setTableNumber] = useState(GET_TABLE_NUMBER());
+  useEffect(() => {
+    SET_TABLE_NUMBER(tableNumber);
+  }, [tableNumber]);
+
   const [timeAdded, setTimeAdded] = useState(null);
 
   const [showReceipt, setShowReceipt] = useState(false);
