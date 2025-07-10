@@ -205,8 +205,8 @@ function Card({
             </div>
 
             <div
-              className={`flex mt-3 h-20 items-center ${
-                !expanded ? "justify-between" : "justify-center"
+              className={`flex mt-3 items-center ${
+                !expanded ? "justify-between" : "justify-center h-20"
               }`}>
               {!expanded &&
                 (count > 0 ? (
@@ -245,7 +245,7 @@ function Card({
                       e.stopPropagation();
                       handleAddToOrder(id);
                     }}
-                    className="flex justify-center items-center cursor-pointer rounded-2xl bg-primary dark:bg-primaryDark md:hover:bg-primaryDark md:dark:hover:bg-primary w-13 h-13 transition-colors duration-300 touch-manipulation">
+                    className="flex justify-center items-center cursor-pointer rounded-2xl bg-primary dark:bg-primaryDark md:hover:bg-primaryDark md:dark:hover:bg-primary size-13 transition-colors duration-300 touch-manipulation">
                     <Icons.plus className={"w-10 stroke-white"} />
                   </button>
                 ))}

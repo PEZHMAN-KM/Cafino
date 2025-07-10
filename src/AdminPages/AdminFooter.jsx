@@ -54,12 +54,12 @@ export default function AdminFooter({
               className="flex items-center justify-around" // flex-row-reverse
             >
               {/* --------------------------------------------------------- Set Order Button --------------------------------------------------------- */}
-              {/* <button
+              <button
                 onClick={() => {
                   if ("vibrate" in navigator && typeof window !== "undefined") {
                     navigator.vibrate(haptic);
                   }
-                  setPage(8);
+                  setPage(11);
                   setHeaderShrink(false);
                   goToTop();
                   setHeaderMenuOpen(false);
@@ -67,19 +67,19 @@ export default function AdminFooter({
                 className="transition-all duration-300 flex gap-1 justify-center items-center">
                 <Icons.bag
                   className={` w-${size_icon} transition-colors duration-300 ${
-                    page == 8
+                    page == 11
                       ? "stroke-adminAction"
                       : "stroke-highgray dark:stroke-highgrayDark"
                   }`}
                 />
-              </button> */}
+              </button>
               {/* --------------------------------------------------------- Report Button --------------------------------------------------------- */}
               <button
                 onClick={() => {
                   if ("vibrate" in navigator && typeof window !== "undefined") {
                     navigator.vibrate(haptic);
                   }
-                  //   setPage(3);
+                  setPage(10);
                   setHeaderShrink(false);
                   goToTop();
                   setHeaderMenuOpen(false);

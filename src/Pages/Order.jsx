@@ -121,13 +121,20 @@ const OrderItem = ({
 );
 // Skeleton For ORFER ITEM ---------------------------------------
 const SkeletonOrderItem = () => (
-  <div className="animate-pulse flex items-center gap-3 px-3 py-2 bg-slowgray/20 dark:bg-slowgrayDark/20 rounded-3xl m-2">
-    <div className="w-16 h-16 bg-neutral-300 dark:bg-neutral-700 rounded-3xl" />
-    <div className="flex flex-col gap-2 flex-1">
-      <div className="w-3/4 h-4 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
-      <div className="w-1/2 h-3 bg-neutral-200 dark:bg-neutral-600 rounded-full" />
+  <div className="animate-scale-up">
+    <div className="animate-pulse flex items-center gap-3 px-3 py-2 bg-slowgray/20 dark:bg-slowgrayDark/20 rounded-3xl m-2">
+      <div className="w-16 h-16 bg-neutral-300 dark:bg-neutral-700 rounded-3xl" />
+      <div className="flex flex-col gap-2 flex-1">
+        <div className="w-1/3 h-4 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
+        <div className="w-2/4 h-3 bg-neutral-200 dark:bg-neutral-600 rounded-full" />
+      </div>
+      {/* <div className="w-25 h-10 flex items-center gap-1">
+      <div className="size-7 bg-primary dark:bg-primaryDark rounded-full hover:bg-primaryDark dark:hover:bg-primary transition-colors duration-300" />
+      <div className="w-9 h-full rounded-2xl bg-neutral-200 dark:bg-neutral-600" />
+      <div className="size-7 border-2 border-primary dark:border-primaryDark rounded-full flex items-center justify-center hover:bg-primary dark:hover:bg-primaryDark transition-colors duration-300" />
+    </div> */}
+      <div className="w-25 h-7 bg-primary dark:bg-primaryDark rounded-full" />
     </div>
-    <div className="w-16 h-7 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
   </div>
 );
 
@@ -458,6 +465,7 @@ function Order({
     } catch (err) {
       console.log(err);
       setOrderItems([]);
+      setHasInitialOrder(false);
     }
     setIsLoadingItems(false);
   }

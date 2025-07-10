@@ -173,7 +173,7 @@ function EditItem({ setCurrentPage }) {
                 className="flex flex-col gap-4 px-8 py-4"
                 onSubmit={updateFood}>
                 <div
-                  className="border-2 border-dashed border-gray-300 dark:border-graypalleteDark rounded-lg p-4 text-center cursor-pointer hover:border-adminAction dark:hover:border-adminActionDark transition-colors w-full max-w-md"
+                  className="border-2 border-dashed mx-auto border-gray-300 dark:border-graypalleteDark rounded-lg p-4 text-center cursor-pointer hover:border-adminAction dark:hover:border-adminActionDark transition-colors w-full max-w-md"
                   onClick={() => fileInputRef.current.click()}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}

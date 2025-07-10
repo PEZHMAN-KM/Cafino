@@ -134,7 +134,7 @@ function AdminHeader({
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
               }`}>
-              خانه
+              {ADMIN_PAGE_TITLES[1]}
             </button>
             <button
               onClick={() => {
@@ -150,11 +150,11 @@ function AdminHeader({
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
               }`}>
-              آیتم ها
+              {ADMIN_PAGE_TITLES[2]}
             </button>
             <button
               onClick={() => {
-                // setCurrentPage(2);
+                setCurrentPage(10);
                 setShowMenu(false);
               }}
               className={`${
@@ -167,7 +167,23 @@ function AdminHeader({
                   ? "transition-colors duration-300"
                   : "transition-none duration-0"
               }`}>
-              گزارش گیری
+              {ADMIN_PAGE_TITLES[10]}
+            </button>
+            <button
+              onClick={() => {
+                setCurrentPage(11);
+                setShowMenu(false);
+              }}
+              className={`${
+                page == 11
+                  ? "text-adminAction"
+                  : "text-highgray dark:text-highgrayDark"
+              } hover:text-adminPrimary dark:hover:text-adminPrimaryDark ${
+                isPageLoaded
+                  ? "transition-colors duration-300"
+                  : "transition-none duration-0"
+              }`}>
+              {ADMIN_PAGE_TITLES[11]}
             </button>
           </div>
           <button

@@ -117,6 +117,15 @@ const Admin = () => {
           // REPORT ----------------------------
           <div></div>
         );
+      case 11:
+        return (
+          <WaiterOrder
+            setFooterShrink={setFooterShrink}
+            setHeaderMenuOpen={setHeaderMenuOpen}
+            setHeaderShrink={setHeaderShrink}
+            footerShrink={footerShrink}
+          />
+        );
       default:
         return <div></div>;
     }
@@ -125,7 +134,10 @@ const Admin = () => {
   return (
     <AnimationContext.Provider value={shouldAnimate}>
       <div className="relative w-full min-h-screen bg-adminBackgroundColor dark:bg-adminBackgroundColorDark">
-        {(currentPage == 1 || currentPage == 2) && (
+        {(currentPage == 1 ||
+          currentPage == 2 ||
+          currentPage == 10 ||
+          currentPage == 11) && (
           <AdminHeader
             page={currentPage}
             setCurrentPage={setCurrentPage}
@@ -183,7 +195,10 @@ const Admin = () => {
           </AnimatePresence>
         </Suspense>
 
-        {(currentPage == 1 || currentPage == 2) && (
+        {(currentPage == 1 ||
+          currentPage == 2 ||
+          currentPage == 10 ||
+          currentPage == 11) && (
           <AdminFooter
             shouldAnimate={shouldAnimate}
             page={currentPage}

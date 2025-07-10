@@ -185,48 +185,48 @@ const startApp = async () => {
   const netType = connection?.effectiveType || "unknown";
 
   const speed = await testNetworkSpeed();
-  if (
-    netType === "2g" ||
-    netType === "slow-2g" ||
-    (speed < 80 && netType === "unknown") ||
-    speed < 50 ||
-    isOldDevice
-  ) {
-    // window.location.replace("/lite.html");
-    return;
+  // if (
+  //   netType === "2g" ||
+  //   netType === "slow-2g" ||
+  //   (speed < 80 && netType === "unknown") ||
+  //   speed < 50 ||
+  //   isOldDevice
+  // ) {
+  //   // window.location.replace("/lite.html");
+  //   return;
+  // } else {
+  // CHECK FOR OLD PHONE ------------------------------------------
+  const PowerSaving_LOW_BATTERY = await PowerSaving_LowBattery();
+
+  let REDUCE_BLUR = false;
+  const blurControl = localStorage.getItem("blurControl");
+  if (blurControl == "True") {
+    REDUCE_BLUR = false;
+  } else if (blurControl == "False") {
+    REDUCE_BLUR = true;
   } else {
-    // CHECK FOR OLD PHONE ------------------------------------------
-    const PowerSaving_LOW_BATTERY = await PowerSaving_LowBattery();
-
-    let REDUCE_BLUR = false;
-    const blurControl = localStorage.getItem("blurControl");
-    if (blurControl == "True") {
-      REDUCE_BLUR = false;
-    } else if (blurControl == "False") {
-      REDUCE_BLUR = true;
-    } else {
-      const REDUCE_BLUR_FEATURE = lacksModernFeatures();
-      REDUCE_BLUR = PowerSaving_LOW_BATTERY || REDUCE_BLUR_FEATURE;
-    }
-
-    // APPLIED VISION CHANGES ( ANIMATION AND ... ) ---------------------------------------
-    applyAnimationSettings(PowerSaving_LOW_BATTERY);
-    applyTheme();
-
-    createRoot(document.getElementById("admin-root")).render(
-      <StrictMode>
-        <BlurProvider reduceBlur={REDUCE_BLUR}>
-          <BrowserRouter>
-            <RouteProgress />
-            <Routes>
-              <Route path="/admin" element={<Admin />} />
-              {/* <Route path="/AdminLogin" element={<AdminLogin />}></Route> */}
-            </Routes>
-          </BrowserRouter>
-        </BlurProvider>
-      </StrictMode>
-    );
+    const REDUCE_BLUR_FEATURE = lacksModernFeatures();
+    REDUCE_BLUR = PowerSaving_LOW_BATTERY || REDUCE_BLUR_FEATURE;
   }
+
+  // APPLIED VISION CHANGES ( ANIMATION AND ... ) ---------------------------------------
+  applyAnimationSettings(PowerSaving_LOW_BATTERY);
+  applyTheme();
+
+  createRoot(document.getElementById("admin-root")).render(
+    <StrictMode>
+      <BlurProvider reduceBlur={REDUCE_BLUR}>
+        <BrowserRouter>
+          <RouteProgress />
+          <Routes>
+            <Route path="/admin" element={<Admin />} />
+            {/* <Route path="/AdminLogin" element={<AdminLogin />}></Route> */}
+          </Routes>
+        </BrowserRouter>
+      </BlurProvider>
+    </StrictMode>
+  );
+  // }
 };
 
 startApp();

@@ -61,10 +61,10 @@ const Waiter = ({
 
 // Skeleton For ITEMS ---------------------------------------
 const SkeletonItems = () => (
-  <div className="animate-pulse flex items-center gap-3 px-3 py-2 bg-slowgray/20 dark:bg-slowgrayDark/20 rounded-3xl m-2">
-    <div className="size-12 bg-neutral-300 dark:bg-neutral-700 rounded-2xl" />
+  <div className="animate-pulse flex items-center gap-2 md:gap-4 shadow-lg p-2 h-16 md:h-19 bg-slowgray/20 dark:bg-slowgrayDark/20 rounded-3xl">
+    <div className="size-10 md:size-15 bg-neutral-300 dark:bg-neutral-700 rounded-2xl" />
     <div className="flex flex-col gap-2 flex-1">
-      <div className="w-3/4 h-4 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
+      <div className="w-1/4 h-4 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
       <div className="w-1/2 h-3 bg-neutral-200 dark:bg-neutral-600 rounded-full" />
     </div>
     <div className="flex flex-col justify-end items-end gap-2 w-1/4">
@@ -209,12 +209,16 @@ function EasyPage({ setCurrentPage, setIsDark, isDark }) {
           </button>
         </div>
         {isLoadingItems ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-y-2 gap-x-2 justify-center items-center">
-            {Array.from({ length: 100 }).map((_, index) => (
-              <div key={index}>
-                <SkeletonItems />
-              </div>
-            ))}
+          <div className="mb-5 w-full">
+            <div className="h-6 transition-colors duration-300 mx-auto md:mx-0 w-1/4 md:w-1/8 mb-2 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
+            <div className="border-neutral-300 dark:border-neutral-700 border-b-2 mt-4 mb-3" />
+            <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-y-2 gap-x-2 justify-center items-center">
+              {Array.from({ length: 100 }).map((_, index) => (
+                <div key={index}>
+                  <SkeletonItems />
+                </div>
+              ))}
+            </div>
           </div>
         ) : error ? (
           <p className="text-primary text-center">{error}</p>

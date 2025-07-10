@@ -75,7 +75,7 @@ const SkeletonItems = () => (
         </div>
       </div>
       <div className="flex w-full h-12 md:h-15 items-center justify-between">
-        <div className="flex justify-center items-center cursor-pointer rounded-2xl bg-adminAction dark:bg-adminActionDark size-10 md:size-12 md:mr-1.5 transition-colors duration-300">
+        <div className="flex justify-center items-center cursor-pointer rounded-2xl bg-adminAction dark:bg-adminActionDark size-10 md:size-12 md:mr-1.5">
           <Icons.plus className={"w-7 md:w-9 stroke-white"} />
         </div>
         <div className="flex flex-col justify-end items-end gap-2 w-1/4">
@@ -548,8 +548,8 @@ function WaiterOrder({
         </div> */}
         {isLoadingItems ? (
           <div className="mb-5 w-full">
-            <div className="h-6 transition-colors duration-300 mx-auto md:mx-0 w-1/4 md:w-1/8 mb-2 bg-neutral-300 dark:bg-neutral-700 rounded-full"></div>
-            <div className="border-neutral-300 dark:border-neutral-700 border-b-2 mt-4 mb-3"></div>
+            <div className="h-6 transition-colors duration-300 mx-auto md:mx-0 w-1/4 md:w-1/8 mb-2 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
+            <div className="border-neutral-300 dark:border-neutral-700 border-b-2 mt-4 mb-3" />
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-y-2 gap-x-2 justify-center items-center">
               {Array.from({ length: 100 }).map((_, index) => (
                 <div key={index}>
